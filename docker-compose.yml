@@ -1,0 +1,25 @@
+networks:
+  transcendence:
+    name: transcendence
+services:
+
+  pong-server-backend:
+    expose:
+      - "3000"
+    build: ./backend/
+    networks:
+      - transcendence
+
+  pong-server-frontend:
+    expose:
+      - "3000"
+    ports:
+      - "443:443"
+    build: ./frontend/
+    networks:
+      - transcendence
+    depends_on:
+      - pong-server-backend
+
+
+
