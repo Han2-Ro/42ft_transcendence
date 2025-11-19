@@ -1,2 +1,4 @@
 .env
 .last_build
+dist
+node_modules
