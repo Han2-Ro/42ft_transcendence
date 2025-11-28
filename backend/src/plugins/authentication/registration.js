@@ -1,9 +1,14 @@
-import {DB} from './connect.js';
+import {DB} from '../../DB/connect.js';
+import fp from 'fastify-plugin'
 
 //replace
 const users = [];
 
-export async function registerHandler(req, reply) {
+async function registration(fastify, opts) {
+
+	fastify.decorate('register', register)
+
+	async function register(req, reply) {
 	const { email, password, username } = req.body;
 
     if (!email || !password || !username) {
@@ -37,4 +42,15 @@ export async function registerHandler(req, reply) {
     users.push(user);
 
     reply.send({ success: true, userId: user.id });
+	
   };
+
+}
+
+  export default fp(registration, {
+	// Protip: if you name your plugins, the stack trace in case of errors
+	//         will be easier to read and other plugins can declare their dependency
+	//         on this one. `fastify-autoload` will take care of loading the plugins
+	//         in the correct order.
+	name: 'registration'
+  })
