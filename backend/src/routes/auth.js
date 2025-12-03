@@ -1,7 +1,7 @@
-export default async function auth(fastify, opts) {
+export default async function auth(fastify, opts) {	
+	
 	//Add Security
-	
-	
+
 	fastify.route({
 		method: 'POST',
 		path: '/register',
@@ -14,28 +14,18 @@ export default async function auth(fastify, opts) {
     	if (!email || !password || !username) {
        		return reply.code(400).send({ error: "Email, password and username required." });
    		}
-    	// Check if user exists
-		//replace
-    	const existing = users.find(u => u.email === email);
-    	if (existing) {
+    	// Check if username / email already exists in DB
+    	if (fastify.is_email_used(email)) {
     	    return reply.code(400).send({ error: "Email already registered." });
     	}
-		const existing2 = users.find(u => u.username === username);
-    	if (existing2) {
+    	if (fastify.is_username_used(username)) {
     	    return reply.code(400).send({ error: "Username already taken." });
     	}
     	// Hash password
     	const passwordHash = await app.bcrypt.hash(password);
     	// Create user
-    	const user = {
-    	    id: users.length + 1,
-    	    email,
-    	    username: username,
-    	    passwordHash
-    	};
-		//replace
-    	users.push(user);
-    	reply.send({ success: true, userId: user.id });
+		id = fastify.add_user(username, email, passwordHash)
+    	reply.send({ success: true, userId: id });
 
 	}
 	fastify.route({
@@ -45,6 +35,6 @@ export default async function auth(fastify, opts) {
 	  })
 	
 	async function onLoginAttempt (req, reply) {
-	
+
 	}
 }
