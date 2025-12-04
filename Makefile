@@ -24,6 +24,8 @@ nuke:
 	docker compose -f $(COMPOSE_FILE) down -v;
 	docker system prune -fa;
 
+dev:
+
 check_changes:
 	@if [ ! -f .last_build ] || [ `find $(WATCHED_FILES) -newer .last_build | wc -l` -gt 0 ]; then \
 		echo "Changes detected! Removing volumes and resetting databases..."; \

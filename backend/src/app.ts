@@ -1,10 +1,20 @@
 import fastifyBcrypt from "fastify-bcrypt";
 import fastifyJwt from "fastify-jwt";
 import Env from '@fastify/env'
-import AutoLoad from '@fastify/autoload'
-import { join } from 'desm'
+import AutoLoad from '@fastify/autoload';
+import { join } from 'desm';
+import fastify, { FastifyInstance, FastifyPluginOptions, FastifyPluginAsync } from "fastify";
 
-export default async function app(fastify, opts) {
+
+export interface PluginOpts {
+}
+export type Plugin = FastifyPluginAsync<PluginOpts>
+
+const adawdpp: Plugin = async (server, opts) => {
+
+}
+
+export default async function app: Plugin(fastify: FastifyInstance, opts: FastifyPluginOptions) {
 	await fastify.register(fastifyBcrypt, { saltWorkFactor: 12 });
 	await fastify.register(fastifyJwt, { secret: "SUPER_SECRET_KEY" });
 	

@@ -1,14 +1,7 @@
-export default async function auth(fastify, opts) {	
+import fastify from 'fastify';
+import { FastifyRequest, FastifyReply } from "fastify";
 	
-	//Add Security
-
-	fastify.route({
-		method: 'POST',
-		path: '/register',
-		handler: onRegisterAttempt
-	  })
-
-	async function onRegisterAttempt (req, reply) {
+export async function onRegisterAttempt (req :FastifyRequest, reply: FastifyReply) {
 		const { email, password, username } = req.body;
 
     	if (!email || !password || !username) {
@@ -24,17 +17,7 @@ export default async function auth(fastify, opts) {
     	// Hash password
     	const passwordHash = await app.bcrypt.hash(password);
     	// Create user
-		id = fastify.add_user(username, email, passwordHash)
+		var id = fastify.add_user(username, email, passwordHash)
     	reply.send({ success: true, userId: id });
 
 	}
-	fastify.route({
-		method: 'POST',
-		path: '/login',
-		handler: onLoginAttempt
-	  })
-	
-	async function onLoginAttempt (req, reply) {
-
-	}
-}

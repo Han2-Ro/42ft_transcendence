@@ -5,6 +5,6 @@ const server = fastify({ logger: true });
 
 server.register(app);
 
-server.listen({ port: 3000 }, err => {
+server.listen({ port: 3000 }, (err: Error | null) => {
   if (err) throw err;
 });
