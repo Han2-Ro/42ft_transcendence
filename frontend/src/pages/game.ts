@@ -2,9 +2,9 @@ const canvas = document.getElementById('pong-canvas') as HTMLCanvasElement;
 const ctx = canvas.getContext('2d')!;
 
 // Game objects
-let ball = { x: 400, y: 300, vx: 4, vy: 4, radius: 10 };
-let paddleLeft = { x: 20, y: 250, width: 10, height: 100};
-let paddleRight = { x: 770, y: 250, width: 10, height: 100};
+const ball = { x: 400, y: 300, vx: 4, vy: 4, radius: 10 };
+const paddleLeft = { x: 20, y: 250, width: 10, height: 100 };
+const paddleRight = { x: 770, y: 250, width: 10, height: 100 };
 
 // Draw everything
 function draw() {
