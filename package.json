@@ -7,6 +7,8 @@
         "dev": "pnpm --parallel --stream run dev",
         "build": "pnpm --recursive run build",
         "eslint": "eslint .",
+        "format": "prettier --write .",
+        "format:check": "prettier --check .",
         "frontend:dev": "pnpm --filter frontend run dev",
         "backend:dev": "pnpm --filter backend run dev",
         "frontend:build": "pnpm --filter frontend run build",
