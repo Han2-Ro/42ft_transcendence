@@ -1,0 +1,22 @@
+{
+    "name": "ft-transcendence",
+    "private": true,
+    "version": "1.0.0",
+    "description": "ft_transcendence monorepo",
+    "scripts": {
+        "dev": "pnpm --parallel --stream run dev",
+        "build": "pnpm --recursive run build",
+        "eslint": "eslint .",
+        "frontend:dev": "pnpm --filter frontend run dev",
+        "backend:dev": "pnpm --filter backend run dev",
+        "frontend:build": "pnpm --filter frontend run build",
+        "backend:build": "pnpm --filter backend run build"
+    },
+    "devDependencies": {
+        "@eslint/js": "^9.39.1",
+        "eslint": "^9.39.1",
+        "globals": "^16.5.0",
+        "jiti": "^2.6.1",
+        "typescript-eslint": "^8.48.1"
+    }
+}
