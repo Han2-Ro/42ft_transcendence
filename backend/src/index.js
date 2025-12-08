@@ -6,6 +6,8 @@ let ball = { x: 400, y: 300, vx: 4, vy: 4, radius: 10 };
 let paddleLeft = { x: 20, y: 250, width: 10, height: 100, dy: 0 };
 let paddleRight = { x: 770, y: 250, width: 10, height: 100, dy: 0 };
 
+const canvas = { width: 800, height: 600 };
+
 // Update game state
 function updateGame() {
 	// Move paddles
@@ -52,10 +54,6 @@ function updateGame() {
 	}
   }
 
-function update() {
-
-}
-
 fastify.get('/status', async () => {
   return { ball };
 });
@@ -63,7 +61,7 @@ fastify.get('/status', async () => {
 const start = async () => {
 	try {
 	  await fastify.listen({ port: 3000, host: "0.0.0.0" });
-	  update();
+	  updateGame();
 	} catch (err) {
 	  fastify.log.error(err);
 	  process.exit(1);
