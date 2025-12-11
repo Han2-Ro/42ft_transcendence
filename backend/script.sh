@@ -4,11 +4,14 @@
 
 #Install database
 #npm install sqlite3
-npm install @tsconfig/node20
-npm install typescript
+
+npm install
 
 npm run build
 
 npm run start
+
+sleep infinite
+
 #node dist/index.js
 #node ./src/server.js

@@ -1,4 +1,4 @@
-FROM node:20-alpine 
+FROM node:20-alpine
 
 RUN apk update && apk add --no-cache \
 	bash 
@@ -11,11 +11,10 @@ WORKDIR /app
 #Copy the necessary files
 COPY . .
 
-RUN npm install
+#RUN npm install
 
 #Make script executable
 RUN chmod +x ./script.sh
-RUN chmod +x ./src/app.ts
 
 #execute script
 CMD ["./script.sh"]

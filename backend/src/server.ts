@@ -1,10 +1,21 @@
 import fastify from 'fastify';
 import app from './app.js';
 
-const server = fastify({ logger: true });
 
-server.register(app);
+const start = async () => {
+	const server = fastify({ logger: true });
+	
+	server.register(app);
 
-server.listen({ port: 3000 }, (err: Error | null) => {
-  if (err) throw err;
-});
+  	try {
+    	await server.listen({port: 3000});
+  	} catch (err) {
+    	console.log(err);
+    	server.log.error(err);
+		process.exit(1);
+  	}
+};
+
+start();
+
+
