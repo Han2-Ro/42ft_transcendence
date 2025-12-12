@@ -2,3 +2,4 @@
 .last_build
 dist
 node_modules
+tsconfig.tsbuildinfo

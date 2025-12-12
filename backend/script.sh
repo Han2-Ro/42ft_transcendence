@@ -1,5 +1,9 @@
 #!/bin/bash
 
-npm install fastify --save
+npm install
 
-node ./src/index.js
+npm run build
+
+npm run start
+
+#sleep infinite

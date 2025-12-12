@@ -1,5 +1,5 @@
 COMPOSE_FILE=./docker-compose.yml
-WATCHED_FILES=$(shell find ./ -type f)
+WATCHED_FILES=$(shell find ./ -type f -not -path '*/node_modules/*')
 
 all: up
 
@@ -23,6 +23,9 @@ re: stop down up start
 nuke:
 	docker compose -f $(COMPOSE_FILE) down -v;
 	docker system prune -fa;
+
+dev:
+	sh ./dev_build.sh;
 
 check_changes:
 	@if [ ! -f .last_build ] || [ `find $(WATCHED_FILES) -newer .last_build | wc -l` -gt 0 ]; then \

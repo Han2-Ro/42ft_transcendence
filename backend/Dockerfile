@@ -15,7 +15,6 @@ RUN npm install
 
 #Make script executable
 RUN chmod +x ./script.sh
-RUN chmod +x ./src/index.js
 
 #execute script
 CMD ["./script.sh"]
