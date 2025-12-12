@@ -4,9 +4,9 @@
 	"author": "Felix Stark <felix.stark.26.7@gmail.com>",
 	"type": "module",
 	"scripts": {
-		"dev": "ts-node src/server.ts",
+		"dev": "ts-node src/app.ts",
 		"build": "tsc -p tsconfig.json",
-		"start": "node dist/server.js"
+		"start": "node dist/app.js"
 	},
 	"dependencies": {
 		"@fastify/autoload": "^5.4.1",

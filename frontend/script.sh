@@ -1,8 +1,5 @@
 #!/bin/bash
 
-npm install -D vite
-npm i -D tailwindcss @tailwindcss/vite
-
 npm run build
 
 openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
