@@ -2,8 +2,10 @@ let ball = { x: 400, y: 300, vx: 4, vy: 4, radius: 10 };
 let paddleLeft = { x: 20, y: 250, width: 10, height: 100, dy: 0 };
 let paddleRight = { x: 770, y: 250, width: 10, height: 100, dy: 0 };
 
+const canvas = { width: 800, height: 600 };
+
 // Update game state
-function updateGame() {
+export function updateGame() {
 	// Move paddles
 	paddleLeft.y += paddleLeft.dy;
 	paddleRight.y += paddleRight.dy;
@@ -46,8 +48,4 @@ function updateGame() {
 	  ball.vx = 4 * (Math.random() > 0.5 ? 1 : -1);
 	  ball.vy = 4 * (Math.random() > 0.5 ? 1 : -1);
 	}
-  }
-
-function update() {
-
 }

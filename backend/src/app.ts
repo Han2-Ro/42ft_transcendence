@@ -1,6 +1,5 @@
 import fastifyBcrypt from "fastify-bcrypt";
 import fastifyJwt from "@fastify/jwt";
-import Env from '@fastify/env'
 import AutoLoad from '@fastify/autoload';
 import fastify from "fastify";
 import blippPlugin from "fastify-blipp";

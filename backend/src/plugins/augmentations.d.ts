@@ -1,4 +1,4 @@
-import { FastifyPlugin } from "fastify";
+import { FastifyPluginAsync } from "fastify";
 
 declare module 'fastify' {
 	interface FastifyInstance {
@@ -6,3 +6,7 @@ declare module 'fastify' {
 		authorize: (req: FastifyRequest) => Promise<boolean>;
 	}
 }
+
+declare const fastifyOurPlugins: FastifyPluginAsync;
+
+export default fastifyOurPlugins;

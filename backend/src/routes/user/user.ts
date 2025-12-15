@@ -1,6 +1,5 @@
-import { FastifyInstance, FastifyPluginOptions } from "fastify";
-import fp from "fastify-plugin";
+import { FastifyInstance} from "fastify";
 
-export default async function user(fastify:FastifyInstance, opts:FastifyPluginOptions) {
-	
+export default async function user(fastify:FastifyInstance) {
+	void fastify;
 }

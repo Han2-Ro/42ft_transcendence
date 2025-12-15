@@ -16,6 +16,6 @@ export async function onRegisterAttempt (req :FastifyRequest, reply: FastifyRepl
 	//const passwordHash = await app.bcrypt.hash(password);
 	// Create user
 	//var id = fastify.add_user(username, email, passwordHash)
-	var id = 1;
+	const id = 1;
 	reply.send({ success: true, userId: id });
 }
