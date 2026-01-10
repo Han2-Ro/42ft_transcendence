@@ -1,6 +1,6 @@
 # ft_transcendence
-A 42 school asignment
 
+A 42 school asignment
 
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 

@@ -2,7 +2,6 @@ networks:
   transcendence:
     name: transcendence
 services:
-
   pong-server-backend:
     expose:
       - "3000"
@@ -20,6 +19,3 @@ services:
       - transcendence
     depends_on:
       - pong-server-backend
-
-
-
