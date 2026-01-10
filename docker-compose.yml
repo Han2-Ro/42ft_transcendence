@@ -14,7 +14,7 @@ services:
     expose:
       - "3000"
     ports:
-      - "443:443"
+      - "${PORT}:443"
     build: ./frontend/
     networks:
       - transcendence

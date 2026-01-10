@@ -18,10 +18,7 @@ on:
 
 jobs:
   eslint-backend:
-    strategy:
-      matrix:
-        directory: [backend, frontend]
-    name: Run eslint scanning (${{ matrix.directory }})
+    name: Eslint check
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -31,11 +28,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Install ESLint
-        run: |
-          npm install eslint
-        working-directory: ${{ matrix.directory }}
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+          cache: true
+      - name: Install dependencies
+        run: pnpm install
 
       - name: Run ESLint
-        run: npx eslint .
-        working-directory: ${{ matrix.directory }}
+        run: pnpm run eslint
