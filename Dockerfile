@@ -1,26 +1,13 @@
 FROM node:20-alpine
 
-RUN apk update && apk add --no-cache \
-	bash \
-	nginx \
-    openssl \
-	bash \
-    ca-certificates \
-    curl
-
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+RUN corepack enable
+COPY . /app
 WORKDIR /app
 
-COPY . .
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+RUN pnpm run build
 
-RUN npm install
-
-# Replace NGINX configuration file
-RUN rm -rf /etc/nginx/conf.d/default.conf
-COPY nginx.conf /etc/nginx/nginx.conf
-
-#Open port in
-EXPOSE 443
-
-RUN chmod +x ./script.sh
-
-CMD ["./script.sh"]
+EXPOSE 3000
+CMD [ "pnpm", "start" ]
