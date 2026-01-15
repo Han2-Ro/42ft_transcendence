@@ -4,4 +4,11 @@ services:
       - "3000"
     ports:
       - "${PORT}:3000"
-    build: .
+    build: ./nextjs/
+
+  gamesserver:
+    build: ./game-server/
+    expose:
+      - "4000"
+    ports:
+      - "4000:4000"
