@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "tsx watch server.ts",
     "build": "tsc",
-    "start": "node dist/server.js"
+    "start": "node dist/server.js",
+    "lint": "eslint"
   },
   "dependencies": {
     "socket.io": "^4.7.0"
