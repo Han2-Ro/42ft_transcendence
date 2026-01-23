@@ -1,29 +1,23 @@
 {
-  "name": "ft_transcandence",
-  "version": "0.1.0",
+  "name": "ft-transcendence",
   "private": true,
+  "version": "1.0.0",
+  "description": "ft_transcendence monorepo",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "eslint",
+    "dev": "pnpm --parallel --stream run dev",
+    "start": "pnpm --parallel --stream run start",
+    "build": "pnpm --recursive run build",
+    "lint": "pnpm --recursive run lint",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },
-  "dependencies": {
-    "next": "16.1.1",
-    "react": "19.2.3",
-    "react-dom": "19.2.3"
-  },
   "devDependencies": {
-    "@tailwindcss/postcss": "^4.1.18",
-    "@types/node": "^20.19.28",
-    "@types/react": "^19.2.8",
-    "@types/react-dom": "^19.2.3",
-    "eslint": "^9.39.2",
+    "@eslint/js": "^9.39.1",
+    "eslint": "^9.39.1",
     "eslint-config-next": "16.1.1",
-    "prettier": "^3.7.4",
-    "tailwindcss": "^4.1.18",
-    "typescript": "^5.9.3"
+    "globals": "^16.5.0",
+    "jiti": "^2.6.1",
+    "prettier": "3.7.4",
+    "typescript-eslint": "^8.48.1"
   }
 }
