@@ -3,7 +3,7 @@ services:
     expose:
       - "3000"
     ports:
-      - "${PORT}:3000"
+      - "${PORT}:${PORT}"
     build: ./nextjs/
     env_file:
       - .env
