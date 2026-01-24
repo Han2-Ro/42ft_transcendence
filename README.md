@@ -12,6 +12,7 @@ A 42 school assignment
 Run the development server:
 
 ```bash
+pnpm install # run this at root of git directory to install dependecies
 pnpm run dev
 ```
 

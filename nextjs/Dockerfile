@@ -7,6 +7,7 @@ COPY . /app
 WORKDIR /app
 
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install
+RUN pnpm prisma generate
 RUN pnpm run build
 
 EXPOSE 3000

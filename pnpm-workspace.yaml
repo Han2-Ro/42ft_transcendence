@@ -1,6 +1,12 @@
 packages:
   - nextjs
   - game-server
+
 ignoredBuiltDependencies:
   - sharp
   - unrs-resolver
+
+onlyBuiltDependencies:
+  - '@prisma/engines'
+  - esbuild
+  - prisma
