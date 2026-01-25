@@ -3,10 +3,11 @@ packages:
   - game-server
 
 ignoredBuiltDependencies:
+  - bcrypt
   - sharp
   - unrs-resolver
 
 onlyBuiltDependencies:
-  - "@prisma/engines"
+  - '@prisma/engines'
   - esbuild
   - prisma
