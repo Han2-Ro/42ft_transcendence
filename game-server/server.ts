@@ -1,6 +1,12 @@
-import { Server } from "socket.io";
+import { Server, Socket } from "socket.io";
+import { createGame } from "./src/game/game.js"
+import { ClientToServerEvents, ServerToClientEvents} from "../shared/socketEvents.js"
 
-const io = new Server(4000, {
+const io = new Server<
+  ClientToServerEvents,
+  ServerToClientEvents
+>
+(4000, {
   cors: {
     // Allow connections from any localhost port for development
     origin: (origin, callback) => {
@@ -14,17 +20,28 @@ const io = new Server(4000, {
   },
 });
 
-let sharedCount = 0;
+const matchmakingQueue: Socket<
+  ClientToServerEvents,
+  ServerToClientEvents
+>[] = []
 
 io.on("connection", (socket) => {
   console.log("Client connected:", socket.id);
 
-  socket.emit("update-count", sharedCount);
+  socket.on("find_match", () => {
+  matchmakingQueue.push(socket)
 
-  socket.on("increment", () => {
-    sharedCount++;
-    io.emit("update-count", sharedCount);
-  });
+  if (matchmakingQueue.length >= 2) {
+    const player1 = matchmakingQueue.shift()
+    const player2 = matchmakingQueue.shift()
+
+    if (player1 && player2) {
+      createGame(player1, player2)
+    }
+  }
+})
+
+
 });
 
 console.log("Game Server running on port 4000");

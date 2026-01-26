@@ -1,0 +1,1 @@
+export type BoardState = Array<128>

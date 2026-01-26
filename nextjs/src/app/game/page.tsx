@@ -1,46 +1,53 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { io } from "socket.io-client";
+import { io, Socket } from "socket.io-client";
+import Lobby from "../../componets/game/lobby"
+import Game from "../../componets/game/game"
+
+import {
+  ClientToServerEvents,
+  ServerToClientEvents
+} from "../../../../shared/socketEvents"
 
 // Connect to the exposed backend port
-const socket = io("http://localhost:4000");
+const socket : Socket<
+  ServerToClientEvents,
+  ClientToServerEvents
+> = io("http://localhost:4000");
 
 export default function Home() {
-  const [count, setCount] = useState(0);
+	const [gameData, setGameData] = useState(null);
 
   useEffect(() => {
     // Listen for updates from the server
-    socket.on("update-count", (newCount) => {
-      setCount(newCount);
+    socket.on("game_start", (data) => {
+		setGameData(data);
+    });
+
+	socket.on("move_made", (data) => {
+		gameData.board = data.board
     });
 
     return () => {
-      socket.off("update-count");
+      socket.off("game_start");
+	  socket.off("move_made");
     };
+
   }, []);
 
-  const handleClick = () => {
-    socket.emit("increment");
+  const EmitFindMatch = () => {
+    socket.emit("find_match");
   };
 
-  return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        marginTop: "50px",
-      }}
-    >
-      <h1>Shared Chess Counter</h1>
-      <div style={{ fontSize: "100px", fontWeight: "bold" }}>{count}</div>
-      <button
-        onClick={handleClick}
-        style={{ padding: "10px 20px", fontSize: "20px", cursor: "pointer" }}
-      >
-        Increment
-      </button>
-    </div>
-  );
+  const EmitPlayerMove = (move) => {
+    socket.emit("find_match");
+  };
+  const EmitPlayerResign = (gameId : string) => {
+    socket.emit("resign", (gameId));
+  };
+
+	return gameData ? 
+	<Game gameData={gameData} onPlayerMove={EmitPlayerMove} onPlayerResign={EmitPlayerResign} /> : 
+	<Lobby onFindMatchPressed={EmitFindMatch} />;
 }
