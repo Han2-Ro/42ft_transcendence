@@ -1,9 +1,10 @@
-import { BoardState } from "./chess"
+import { BoardState } from "./chess/types"
 
 
 // shared/socketEvents.ts
 export interface ClientToServerEvents {
   find_match: () => void
+
   move: (data: {
     gameId: string
     from: string

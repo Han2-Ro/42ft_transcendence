@@ -29,6 +29,7 @@ io.on("connection", (socket) => {
   console.log("Client connected:", socket.id);
 
   socket.on("find_match", () => {
+	console.log("Client searching for opponent:", socket.id);
   matchmakingQueue.push(socket)
 
   if (matchmakingQueue.length >= 2) {
@@ -40,7 +41,6 @@ io.on("connection", (socket) => {
     }
   }
 })
-
 
 });
 
