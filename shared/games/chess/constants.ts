@@ -1,4 +1,4 @@
-import { Color, Board, BoardState} from "./types";
+import { Color, Board, BoardState} from "./types.js";
 
 export const startingBoard: Board = [
 	{ color: 'black', type: 'rook', hasMoved: false},

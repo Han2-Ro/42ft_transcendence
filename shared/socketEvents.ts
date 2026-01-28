@@ -1,23 +1,28 @@
-import { BoardState } from "./chess/types"
+import { BoardState, Color, Move } from "./games/chess/types.js"
 
+export type GameStartData = {
+    gameId: string
+    color: Color
+	board: BoardState
+}
+
+export type result = "win" | "lose" | "draw"
 
 // shared/socketEvents.ts
-export interface ClientToServerEvents {
+export interface CToSEvents {
   find_match: () => void
 
   move: (data: {
     gameId: string
-    from: string
-    to: string
+	move : Move
   }) => void
-
   resign: (gameId: string) => void
 }
 
-export interface ServerToClientEvents {
+export interface SToCEvents {
   game_start: (data: {
-    gameId: string
-    color: "white" | "black"
+	gameId: string
+    color: Color
 	board: BoardState
   }) => void
 
@@ -25,5 +30,9 @@ export interface ServerToClientEvents {
     board: BoardState
   }) => void
 
-  opponent_disconnected: () => void
+  game_over: (data: {
+	result : result
+	reason : string
+  })=> void
+
 }

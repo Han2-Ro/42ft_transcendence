@@ -6,14 +6,14 @@ import Lobby from "../../componets/game/lobby"
 import Game from "../../componets/game/game"
 
 import {
-  ClientToServerEvents,
-  ServerToClientEvents
+  CToSEvents,
+  SToCEvents
 } from "../../../../shared/socketEvents"
 
 // Connect to the exposed backend port
 const socket : Socket<
-  ServerToClientEvents,
-  ClientToServerEvents
+  SToCEvents,
+  CToSEvents
 > = io("http://localhost:4000");
 
 export default function Home() {
@@ -41,7 +41,7 @@ export default function Home() {
   };
 
   const EmitPlayerMove = (move) => {
-    socket.emit("find_match");
+    socket.emit("move", {gameId: gameData.gameId , move: move});
   };
   const EmitPlayerResign = (gameId : string) => {
     socket.emit("resign", (gameId));

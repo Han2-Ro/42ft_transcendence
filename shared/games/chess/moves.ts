@@ -1,21 +1,35 @@
-import { Board, BoardState, Color, Move, Square} from "./types";
+import { Board, BoardState, Color, Move} from "./types.js";
+import { Chess } from "./chess";
 
-export function validateMove(move : Move, board : BoardState) : boolean
+
+export function PlayMove(this: Chess, move : Move, played_by: Color) : boolean
+{
+	if (validateMove(move, this.board, played_by) == true)
+	{
+		this.board.board[move.to] = this.board.board[move.from]
+		this.board.board[move.from] == null
+		return true
+	}
+	return false
+}
+
+
+function validateMove(move : Move, board : BoardState, played_by : Color) : boolean
 {
 	if (
 	checkBounds(move.from) 
 	&& checkBounds(move.to) 
 	&& board.board[move.from] != null 
+	&& board.turn == played_by
 	&& board.board[move.from].color == board.turn
-	&& generateMoves(board, move.from).includes(move)
-		)
+	&& generateMoves(board, move.from).includes(move))
 	{
 		return true
 	}
 	return false
 }
 
-export function generateAllMoves(Board : BoardState) : Array<Move>
+/* function generateAllMoves(Board : BoardState) : Array<Move>
 {
 	const moves: Move[] = [];
 	for (let sq = 0; sq < 64; sq++) {
@@ -32,7 +46,7 @@ export function generateAllMoves(Board : BoardState) : Array<Move>
 		moves.push(...pieceMoves);
 	}
 	return moves;
-}
+} */
 
 export function generateMoves(Board : BoardState, sq : number) : Array<Move>
 {
