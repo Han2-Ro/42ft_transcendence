@@ -30,7 +30,7 @@ export default function Home() {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        marginTop: "50px",
+        margin: "50px",
       }}
     >
       <h1>Shared Chess Counter</h1>
