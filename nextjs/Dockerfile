@@ -10,5 +10,7 @@ RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install
 RUN pnpm prisma generate
 RUN pnpm run build
 
+RUN chmod +x /app/entrypoint.sh
+
 EXPOSE 3000
-CMD [ "pnpm", "start" ]
+ENTRYPOINT ["/app/entrypoint.sh"]
