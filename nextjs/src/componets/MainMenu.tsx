@@ -1,9 +1,9 @@
 "use client";
 
-import Link from "next/link";
 import { PlayIcon } from "./icons/PlayIcon";
 import { LoginIcon } from "./icons/LoginIcon";
 import { LoginModal } from "./LoginModal";
+import { MenuButton } from "./MenuButton";
 import { useState } from "react";
 
 export default function MainMenu() {
@@ -14,20 +14,17 @@ export default function MainMenu() {
     <>
       {showLogin && <LoginModal onClose={toggleLogin} />}
       <nav className=" bg-black/70 lg:bg-inherit h-full w-full p-6 flex flex-col justify-center gap-4 items-center">
-        <Link
+        <MenuButton
           href="/game"
-          className=" w-full p-4 bg-background-primary rounded-2xl flex items-center justify-center gap-4"
-        >
-          <PlayIcon size={50} className=" text-accent-primary" />
-          <p className=" text-4xl">Play</p>
-        </Link>
-        <button
+          icon={<PlayIcon size={50} className=" text-accent-primary" />}
+          label="Play"
+        />
+        <MenuButton
           onClick={toggleLogin}
-          className=" w-full p-4 bg-background-primary rounded-2xl flex items-center justify-center gap-4"
-        >
-          <LoginIcon size={50} className=" text-accent-primary" />
-          <p className=" text-4xl">Log In</p>
-        </button>
+          icon={<LoginIcon size={50} className=" text-accent-primary" />}
+          label="Log In"
+        />
+        <MenuButton href="/test" label="Test" />
       </nav>
     </>
   );
