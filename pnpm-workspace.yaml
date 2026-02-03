@@ -3,6 +3,7 @@ packages:
   - game-server
 
 ignoredBuiltDependencies:
+  - bcrypt
   - sharp
   - unrs-resolver
 
