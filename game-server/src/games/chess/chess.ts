@@ -1,16 +1,18 @@
-import { BoardState, Color} from "./types.js"
+import { BoardState, Color} from "../../../../shared/gameTypes.js"
 import { startingBoardState } from "./constants.js"
 import { PlayMove } from "./moves.js"
 import { Game } from "../game.js"
-import { GameStartData } from "../../socketEvents.js"
 
 export class Chess extends Game
 {
 	board : BoardState
-	constructor()
+	constructor(state? : BoardState)
 	{
 		super();
-		this.board = startingBoardState
+		if (state !== undefined)
+      		this.board = state
+		else
+			this.board = startingBoardState
 	}
 	public playMove = PlayMove.bind(this)
 	GetBoardState(): BoardState {

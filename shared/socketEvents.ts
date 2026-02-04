@@ -1,4 +1,4 @@
-import { BoardState, Color, Move } from "./games/chess/types.js"
+import { BoardState, Color, Move } from "./gameTypes"
 
 export type GameStartData = {
     gameId: string
@@ -16,6 +16,7 @@ export interface CToSEvents {
     gameId: string
 	move : Move
   }) => void
+
   resign: (gameId: string) => void
 }
 

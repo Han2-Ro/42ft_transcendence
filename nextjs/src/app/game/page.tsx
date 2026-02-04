@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { io, Socket } from "socket.io-client";
 import Lobby from "../../componets/game/lobby"
-import Game from "../../componets/game/game"
+import Game from "../../componets/game/game";
 
 import {
   CToSEvents,
@@ -16,17 +16,21 @@ const socket : Socket<
   CToSEvents
 > = io("http://localhost:4000");
 
-export default function Home() {
-	const [gameData, setGameData] = useState(null);
+export default function Page() {
+	const [gameId, setGameId] = useState(null);
+	const [color, setColor] = useState(null);
+	const [board, setBoard] = useState(null);
 
   useEffect(() => {
-    // Listen for updates from the server
     socket.on("game_start", (data) => {
-		setGameData(data);
+		setGameId(data.gameId)
+		setBoard(data.board)
+		setColor(data.color);
     });
 
 	socket.on("move_made", (data) => {
-		gameData.board = data.board
+		console.log("move_recieved", board)
+		setBoard(data.board)
     });
 
     return () => {
@@ -41,13 +45,13 @@ export default function Home() {
   };
 
   const EmitPlayerMove = (move) => {
-    socket.emit("move", {gameId: gameData.gameId , move: move});
+    socket.emit("move", {gameId: gameId , move: move});
   };
-  const EmitPlayerResign = (gameId : string) => {
+  const EmitPlayerResign = () => {
     socket.emit("resign", (gameId));
   };
 
-	return gameData ? 
-	<Game gameData={gameData} onPlayerMove={EmitPlayerMove} onPlayerResign={EmitPlayerResign} /> : 
+	return board ? 
+	<Game board={board} color={color} onPlayerMove={EmitPlayerMove} onPlayerResign={EmitPlayerResign} /> : 
 	<Lobby onFindMatchPressed={EmitFindMatch} />;
 }

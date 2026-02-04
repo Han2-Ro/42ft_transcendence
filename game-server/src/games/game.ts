@@ -1,5 +1,5 @@
-import { GameStartData } from "../socketEvents.js";
-import { BoardState, Color, Move } from "./chess/types.js";
+import { GameStartData } from "../../../shared/socketEvents.js";
+import { BoardState, Color, Move } from "../../../shared/gameTypes.js";
 
 export type GameType = "chess" | "TimedChess"
 

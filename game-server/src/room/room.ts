@@ -1,8 +1,9 @@
 import { Socket } from "socket.io";
 import { CToSEvents, SToCEvents} from "../../../shared/socketEvents.js"
-import { Game, GameType } from "../../../shared/games/game.js";
-import { Chess } from "../../../shared/games/chess/chess.js"
-import { Move, Color} from "../../../shared/games/chess/types.js";
+import { Move, Color} from "../../../shared/gameTypes.js";
+
+import { Game, GameType } from "../games/game.js";
+import { Chess } from "../games/chess/chess.js"
 import { GameSocket } from "../../server.js";
 
 export type Game_status = "checkmate" | "timeout" | "Stalemate" | "move_played" | null
@@ -39,17 +40,19 @@ export class Room {
 		for (let i = 0; i < this.Players.length; i++)
 		{
 			if (client.id == this.Players[i].id)
-				colorPos = i;
+				colorPos = i
 		}
-		if (colorPos = -1)
-			return null
+		if (colorPos == -1)
+			return;
 		if (this.gameLogic.playMove(move, this.AssignedColors[colorPos]))
+		{
 			this.positionUpdated = true
+		}
 	}
 
-	public CheckForUpdate(time_passed : number) : Game_status
+	public CheckForUpdate(time_passed : number) : string
 	{
-		if (this.timed = true)
+		if (this.timed == true)
 		{
 			let index = this.AssignedColors.indexOf(this.gameLogic.GetTurn())
 			this.PlayerTimes[index] = this.PlayerTimes[index] - time_passed
@@ -57,13 +60,13 @@ export class Room {
 			{
 				return "timeout"
 			}
-			if (this.positionUpdated == true)
+		}			
+		if (this.positionUpdated == true)
 			{
 				this.positionUpdated = false
 				return "move_played"
 			}
-		}
-		return null
+		return ""
 	}
 
 	public GetColor(index: number) : Color
