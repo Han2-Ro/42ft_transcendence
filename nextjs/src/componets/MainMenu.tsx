@@ -2,7 +2,7 @@
 
 import { PlayIcon } from "./icons/PlayIcon";
 import { LoginIcon } from "./icons/LoginIcon";
-import { LoginModal } from "./LoginModal";
+import { AuthModal } from "./LoginModal";
 import { MenuButton } from "./MenuButton";
 import { useState } from "react";
 
@@ -12,7 +12,7 @@ export default function MainMenu() {
 
   return (
     <>
-      {showLogin && <LoginModal onClose={toggleLogin} />}
+      {showLogin && <AuthModal onClose={toggleLogin} />}
       <nav className=" bg-black/70 lg:bg-inherit h-full w-full p-6 flex flex-col justify-center gap-4 items-center">
         <MenuButton
           href="/game"
