@@ -1,6 +1,6 @@
 import { Socket } from "socket.io";
-import { CToSEvents, SToCEvents} from "../../../shared/socketEvents.js"
-import { Move, Color} from "../../../shared/gameTypes.js";
+import { CToSEvents, SToCEvents} from "../../../shared/src/socketEvents.js"
+import { Move, Color} from "../../../shared/src/gameTypes.js";
 
 import { Game, GameType } from "../games/game.js";
 import { Chess } from "../games/chess/chess.js"

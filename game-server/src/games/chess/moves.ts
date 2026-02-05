@@ -1,4 +1,4 @@
-import { Board, BoardState, Color, Move} from "../../../../shared/gameTypes.js";
+import { Board, BoardState, Color, Move} from "../../../../shared/src/gameTypes.js";
 import { Chess } from "./chess.js";
 
 

@@ -7,7 +7,7 @@ export type Piece = {
   hasMoved: boolean;
 }
 
-export type PieceOrNull = Piece | null
+type PieceOrNull = Piece | null
 
 export type Square =
   | 'a8' | 'b8' | 'c8' | 'd8' | 'e8' | 'f8' | 'g8' | 'h8'

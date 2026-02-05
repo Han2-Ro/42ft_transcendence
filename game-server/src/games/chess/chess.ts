@@ -1,4 +1,4 @@
-import { BoardState, Color} from "../../../../shared/gameTypes.js"
+import { BoardState, Color} from "../../../../shared/src/gameTypes.js"
 import { startingBoardState } from "./constants.js"
 import { PlayMove } from "./moves.js"
 import { Game } from "../game.js"

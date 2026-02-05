@@ -30,7 +30,7 @@
     "**/*.mts",
     "**/*.ts",
     "**/*.tsx",
-    "../shared/**/*.ts",
+    //"../shared/**/*.ts",
     "src/app/game/helpers"
   ],
   "exclude": [
