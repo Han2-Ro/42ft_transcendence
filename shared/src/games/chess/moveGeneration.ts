@@ -1,23 +1,32 @@
-import { Board, BoardState, Color, Move, Piece, PieceType} from "../../gameTypes";
+import { Board, BoardState, Color, Move, PieceOrNull, PieceType} from "../../gameTypes";
+
+export function validateMove(move : Move, board : BoardState, played_by : Color) : boolean
+{
+	const piece = board.board[move.from];
+	if (
+	checkBounds(move.from) 
+	&& checkBounds(move.to) 
+	&& piece !== null 
+	&& piece.color == board.turn
+	&& board.turn == played_by
+	&& generateMoves(board.board, move.from).includes(move))
+	{
+		return true
+	}
+	return false
+}
 
 export function generateMovesNumber(board : Board, sq : number) : Array<number>
 {
 	let moves = generateMoves(board, sq)
-	//return moves.map(move => move.to)
-	console.log("generate_moves called")
-	return [1, 2]
-}
-
-export function hi() : string
-{
-	console.log("hi called")
-	return "hello"
+	return moves.map(move => move.to)
 }
 
 export function generateMoves(board : Board, sq : number) : Array<Move>
 {
 	let moves: Move[] = [];
-	let piece = board[sq];
+
+	let piece : PieceOrNull = board[sq];
 	if (!piece) return moves;
 	let pieceMoves = 
 		piece.type === 'pawn' ? generatePawnMoves(board, sq, piece.color, piece.hasMoved) :
@@ -37,7 +46,7 @@ export function generateMoves(board : Board, sq : number) : Array<Move>
 }
 
 //Piece Move Generation
-/* function generatePawnMoves(board: Board, sq : number, color : Color, hasMoved : boolean) : Array<Move>
+function generatePawnMoves(board: Board, sq : number, color : Color, hasMoved : boolean) : Array<Move>
 {
 	let moves: Move[] = [];
 	let dir = 1
@@ -59,13 +68,6 @@ export function generateMoves(board : Board, sq : number) : Array<Move>
 	newPos = sq + (7 * dir)
 	if (checkSqare(board, newPos, color) && !checkSqareEmpty(board, newPos))
 		moves.push({ from: sq, to: newPos })
-	return moves
-} */
-
-function generatePawnMoves(board: Board, sq : number, color : Color, hasMoved : boolean) : Array<Move>
-{
-	let moves: Move[] = [];
-		moves.push({ from: sq, to: sq + 1})
 	return moves
 }
 

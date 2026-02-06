@@ -5,11 +5,12 @@
   "scripts": {
     "dev": "tsx watch server.ts",
     "build": "tsc",
-    "start": "node dist/game-server/server.js",
+    "start": "node dist/server.js",
     "lint": "eslint"
   },
   "dependencies": {
-    "socket.io": "^4.7.0"
+    "socket.io": "^4.7.0",
+	"shared": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^22.10.5",

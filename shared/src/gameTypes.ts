@@ -1,13 +1,13 @@
 export type Color = 'white' | 'black';
 export type PieceType = 'pawn' | 'rook' | 'knight' | 'bishop' | 'queen' | 'king';
 
-export type Piece = {
+type Piece = {
   color: Color;
   type: PieceType;
   hasMoved: boolean;
 }
 
-type PieceOrNull = Piece | null
+export type PieceOrNull = Piece | null
 
 export type Square =
   | 'a8' | 'b8' | 'c8' | 'd8' | 'e8' | 'f8' | 'g8' | 'h8'

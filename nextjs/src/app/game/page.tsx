@@ -8,7 +8,7 @@ import Game from "../../componets/game/game";
 import {
   CToSEvents,
   SToCEvents
-} from "../../../../shared/src/socketEvents"
+} from "shared"
 
 // Connect to the exposed backend port
 const socket : Socket<

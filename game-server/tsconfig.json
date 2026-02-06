@@ -1,16 +1,17 @@
 {
+  "type": "module",
   "compilerOptions": {
     "target": "ES2022",
     "module": "esnext",
     "moduleResolution": "node",
     "outDir": "./dist",
-    "rootDir": "../",
+    "rootDir": "./",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true
   },
-  "include": ["../game-server/**/*.ts", "../shared/**/*.ts"],
+  "include": ["./**/*.ts"],
   "exclude": ["node_modules", "dist"]
 }

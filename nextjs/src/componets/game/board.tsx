@@ -1,15 +1,17 @@
-import { useState } from "react";
-import { Move } from "shared";
+import { useEffect, useState } from "react";
+import { Move, PieceOrNull } from "shared";
 import {generateMovesNumber} from "shared";
 
 export default function Board({board, onPlayerMove}) {
 const [selectedSquare, setSelectedSquare] = useState(null);
 const [movesFromSqare, setMovesFromSqare] = useState(null);
 
-const handleSquareClick = (square) => {
+const handleSquareClick = (square : number) => {
+	
     if (!selectedSquare) {
       setSelectedSquare(square);
-	  setMovesFromSqare(generateMovesNumber(board, square))
+	  let moves = generateMovesNumber(board.board, square)
+	  setMovesFromSqare(moves)
       return;
     }
 
@@ -23,10 +25,14 @@ const handleSquareClick = (square) => {
     onPlayerMove(move);
   };
 
+  useEffect(() => {
+  console.log("State updated:", movesFromSqare);
+}, [movesFromSqare]);
+
   return (
 	<div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
 		<div style={{ display: "grid", gridTemplateColumns: "repeat(8, 100px)"}}>
-			{board.board.map((sq, index) => (
+			{board.board.map((sq : PieceOrNull, index : number) => (
 		<button
 		key={index}
 		onClick={() => handleSquareClick(index)}
@@ -37,7 +43,7 @@ const handleSquareClick = (square) => {
 			}}
 		>
 			{sq && <img src={`/chess/${sq.color}/${sq.type}.svg`} alt={sq.color + sq.type} style={{ width: "100%", height: "100%" }} />}
-			{movesFromSqare && movesFromSqare.size > 0 && movesFromSqare.contains(sq) && <img src={`/chess/circle.svg`} alt={"Position that the selected Piece can move to."} style={{ width: "100%", height: "100%" }} />}
+			{movesFromSqare && movesFromSqare.length > 0 && movesFromSqare.includes(index) && <img src={`/chess/circle.svg`} alt={"Position that the selected Piece can move to."} style={{ width: "100%", height: "100%" }} />}
 		</button>
 	  ))}
 		</div>

@@ -30,8 +30,6 @@
     "**/*.mts",
     "**/*.ts",
     "**/*.tsx",
-    //"../shared/**/*.ts",
-    "src/app/game/helpers"
   ],
   "exclude": [
     "node_modules",

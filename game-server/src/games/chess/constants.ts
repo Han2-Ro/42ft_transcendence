@@ -1,4 +1,4 @@
-import { Color, Board, BoardState} from "../../../../shared/src/gameTypes.js";
+import { Color, Board, BoardState} from "shared/dist/src/gameTypes.js";
 
 export const startingBoard: Board = [
 	{ color: 'black', type: 'rook', hasMoved: false},

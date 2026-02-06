@@ -1,4 +1,5 @@
-import { Board, BoardState, Color, Move} from "../../../../shared/src/gameTypes.js";
+import { Board, BoardState, Color, Move} from "shared/dist/src/gameTypes.js";
+import {validateMove} from "shared/dist/src/games/chess/moveGeneration.js";
 import { Chess } from "./chess.js";
 
 
@@ -14,7 +15,7 @@ export function PlayMove(this: Chess, move : Move, played_by: Color) : boolean
 }
 
 
-function validateMove(move : Move, board : BoardState, played_by : Color) : boolean
+/* function validateMove(move : Move, board : BoardState, played_by : Color) : boolean
 {
 	const piece = board.board[move.from];
 	if (
@@ -28,7 +29,7 @@ function validateMove(move : Move, board : BoardState, played_by : Color) : bool
 		return true
 	}
 	return false
-}
+} */
 
 /* export function generateAllMoves(Board : BoardState) : Array<Move>
 {
@@ -49,7 +50,7 @@ function validateMove(move : Move, board : BoardState, played_by : Color) : bool
 	return moves;
 } */
 
-export function generateMoves(Board : BoardState, sq : number) : Array<Move>
+/* export function generateMoves(Board : BoardState, sq : number) : Array<Move>
 {
 	const moves: Move[] = [];
 	const piece = Board.board[sq];
@@ -193,7 +194,7 @@ function generateKingMoves(board: Board, sq : number, color : Color) : Array<Mov
 	}
 	return moves
 	//Add Castle
-}
+} */
 
 
 
