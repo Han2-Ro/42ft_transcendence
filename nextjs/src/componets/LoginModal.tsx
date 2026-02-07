@@ -134,7 +134,11 @@ export const AuthModal = ({ onClose }: Props) => {
               />
             </>
           )}
-          <button type="submit" disabled={loading} className="mt-8 p-1 bg-accent-primary rounded-lg">
+          <button
+            type="submit"
+            disabled={loading}
+            className="mt-8 p-1 bg-accent-primary rounded-lg"
+          >
             {loading
               ? mode === "login"
                 ? "Logging in..."

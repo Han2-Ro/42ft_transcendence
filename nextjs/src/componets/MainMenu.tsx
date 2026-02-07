@@ -9,6 +9,7 @@ import { useState } from "react";
 export default function MainMenu() {
   const [showLogin, setShowLogin] = useState(false);
   const toggleLogin = () => setShowLogin(!showLogin);
+  const logged_in = false; // TODO: placeholder (don't know yet how to check for logged in state)
 
   return (
     <>
@@ -19,11 +20,19 @@ export default function MainMenu() {
           icon={<PlayIcon size={50} className=" text-accent-primary" />}
           label="Play"
         />
-        <MenuButton
-          onClick={toggleLogin}
-          icon={<LoginIcon size={50} className=" text-accent-primary" />}
-          label="Log In"
-        />
+        {logged_in ? (
+          <MenuButton
+            onClick={() => {}} // TODO: actually logout (does this need an api root?)
+            icon={<LoginIcon size={50} className=" text-accent-primary" />}
+            label="Log Out"
+          />
+        ) : (
+          <MenuButton
+            onClick={toggleLogin}
+            icon={<LoginIcon size={50} className=" text-accent-primary" />}
+            label="Log In"
+          />
+        )}
         <MenuButton href="/test" label="Test" />
       </nav>
     </>
