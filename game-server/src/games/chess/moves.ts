@@ -5,10 +5,17 @@ import { Chess } from "./chess.js";
 
 export function PlayMove(this: Chess, move : Move, played_by: Color) : boolean
 {
+
 	if (validateMove(move, this.board, played_by) == true)
 	{
+		let piece = this.board.board[move.from]
+		if (piece) piece.hasMoved = true
 		this.board.board[move.to] = this.board.board[move.from]
 		this.board.board[move.from] = null
+		if (this.board.turn == "white")
+			this.board.turn = "black"
+		else
+			this.board.turn = "white"
 		return true
 	}
 	return false

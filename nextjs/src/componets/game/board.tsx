@@ -8,12 +8,12 @@ const [movesFromSqare, setMovesFromSqare] = useState(null);
 
 const handleSquareClick = (square : number) => {
 	
-    if (!selectedSquare) {
-      setSelectedSquare(square);
+	if (selectedSquare === null) {
+	  setSelectedSquare(square);
 	  let moves = generateMovesNumber(board.board, square)
 	  setMovesFromSqare(moves)
-      return;
-    }
+	  return;
+	}
 
     const move : Move = {
       from: selectedSquare,
@@ -40,10 +40,11 @@ const handleSquareClick = (square : number) => {
 		  width: 100,
 		  height: 100, 
 		  background: (index + Math.floor(index / 8)) % 2 === 1 ? selectedSquare === index ? "#4b4b4bff" : "#202020ff" : selectedSquare === index ? "#aaaaaaff" : "#eee",
+		  position: "relative",
 			}}
 		>
 			{sq && <img src={`/chess/${sq.color}/${sq.type}.svg`} alt={sq.color + sq.type} style={{ width: "100%", height: "100%" }} />}
-			{movesFromSqare && movesFromSqare.length > 0 && movesFromSqare.includes(index) && <img src={`/chess/circle.svg`} alt={"Position that the selected Piece can move to."} style={{ width: "100%", height: "100%" }} />}
+			{movesFromSqare && movesFromSqare.length > 0 && movesFromSqare.includes(index) && <img src={`/chess/circle.svg`} alt={"Position that the selected Piece can move to."} style={{ width: "100%", height: "100%", position: "absolute", top: 0, left: 0 }} />}
 		</button>
 	  ))}
 		</div>

@@ -7,6 +7,11 @@ type Piece = {
   hasMoved: boolean;
 }
 
+export type Pos2 = {
+	x : number
+	y : number
+}
+
 export type PieceOrNull = Piece | null
 
 export type Square =
