@@ -270,10 +270,11 @@ function CheckIsAttacked(board: Board, pos : number, color: Color)
 	let dir = -1
 	if (color == "black")
 		dir = 1
-	const pawn_offsets : Array<number> = [(9 * dir), (7* dir)]
-	for (let i = 0; i < pawn_offsets.length; i++)
+	const pawn_offsets : Array<Pos2> = [{x: 1, y: dir}, {x: -1, y: dir}]
+	let pawn_pos = generateOffsets(pos, pawn_offsets)
+	for (let i = 0; i < pawn_pos.length; i++)
 	{
-		let newPos = pos + pawn_offsets[i]
+		let newPos = pawn_pos[i]
 		if (checkSqarePiece(board, newPos, color, "pawn"))
 			return true
 	}
