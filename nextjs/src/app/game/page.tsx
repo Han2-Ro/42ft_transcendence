@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { io, Socket } from "socket.io-client";
 import Lobby from "../../componets/game/lobby"
 import Game from "../../componets/game/game";
+import EndScreen from "../../componets/game/endScreen";
 
 import {
   CToSEvents,
@@ -20,6 +21,8 @@ export default function Page() {
 	const [gameId, setGameId] = useState(null);
 	const [color, setColor] = useState(null);
 	const [board, setBoard] = useState(null);
+	const [result, setResult] = useState(null);
+	const [resultReason, setResultReason] = useState(null);
 
   useEffect(() => {
     socket.on("game_start", (data) => {
@@ -33,12 +36,26 @@ export default function Page() {
 		setBoard(data.board)
     });
 
+	socket.on("game_over", (data) => {
+		setResult(data.result)
+		setResultReason(data.reason)
+		setGameId(null)
+		setBoard(null)
+		setColor(null);
+	});
+
     return () => {
       socket.off("game_start");
 	  socket.off("move_made");
+	  socket.off("game_over")
     };
 
   }, []);
+
+  const CloseResultScreen = () => {
+    setResult(null)
+	setResultReason(null)
+  };
 
   const EmitFindMatch = () => {
     socket.emit("find_match");
@@ -53,5 +70,7 @@ export default function Page() {
 
 	return board ? 
 	<Game board={board} color={color} onPlayerMove={EmitPlayerMove} onPlayerResign={EmitPlayerResign} /> : 
+	result ? 
+	<EndScreen result={result} reason={resultReason} onClose={CloseResultScreen} /> :
 	<Lobby onFindMatchPressed={EmitFindMatch} />;
 }

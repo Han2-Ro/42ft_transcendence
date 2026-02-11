@@ -44,15 +44,11 @@ socket.on("find_match", () => {
 	if (player1 && player2) 
 	{
 		let gameId = crypto.randomUUID()
-		player1.join(gameId)
-		player2.join(gameId)
 	  	let players : GameSocket[] = []
 	  	players.push(player1)
 	  	players.push(player2)
-	  	let new_room = new Room(players, "chess")
+	  	let new_room = new Room(players, "chess", gameId)
       	rooms.set(gameId, new_room)
-        player1.emit("game_start", { gameId, color: new_room.GetColor(0), board: new_room.gameLogic.GetBoardState()})
-	    player2.emit("game_start", { gameId, color: new_room.GetColor(1), board: new_room.gameLogic.GetBoardState()})
     }
   }
 }
@@ -61,10 +57,14 @@ socket.on("find_match", () => {
 socket.on("move", ({gameId, move}) => {
 	let room = rooms.get(gameId)
 	if (room)
-	{
-		console.log("player attempted move")
 		room.ClientMove(move, socket)
-	}
+}
+)
+
+socket.on("resign", (gameId) => {
+	let room = rooms.get(gameId)
+	if (room)
+		room.ClientResign(socket)
 }
 )
 
@@ -86,20 +86,8 @@ function nowSeconds(): number {
 
 function CheckRunningGames(time_passed : number) {
 	rooms.forEach((value: Room, key: string) => {
-		let status = value.CheckForUpdate(time_passed)
-		console.log(status)
-    	if (status == "checkmate" || status == "timeout")
-		{
-			//todo: save results
-			io.to(key).emit("game_over", {result: "win", reason: "smth"})
-			//rooms.delete(key)
-		}
-		if (status == "move_played")
-		{
-			io.to(key).emit("move_made", {board: value.gameLogic.GetBoardState()})
-			console.log("move sent to:", key)
-		}
-			
+		if (value.UpdateAndCheckOver(time_passed) === true)
+			rooms.delete(key)
 });
 }
 

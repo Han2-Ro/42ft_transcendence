@@ -38,6 +38,6 @@ export const startingBoard: Board = [
 export const startingBoardState: BoardState = {
 	board: startingBoard,
 	turn: 'white',
-	moves_played: 0,
+	movesPlayed: 0,
 };
 

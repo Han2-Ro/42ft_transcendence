@@ -1,4 +1,3 @@
-import { useState } from "react";
 import Board from "./board";
 
 export default function Game({ board, color, onPlayerMove, onPlayerResign}) {
@@ -9,7 +8,7 @@ export default function Game({ board, color, onPlayerMove, onPlayerResign}) {
 	  <Board board={board} onPlayerMove={onPlayerMove}></Board>
       <p>You are playing as {color}</p>
 	    <button
-        onClick={onPlayerResign()}
+        onClick={onPlayerResign}
         style={{
           padding: "10px 20px",
           fontSize: "20px",

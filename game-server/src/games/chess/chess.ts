@@ -1,24 +1,70 @@
-import { BoardState, Color} from "shared/dist/src/gameTypes.js"
+import { BoardState, Color, GameStatus, Move} from "shared/dist/src/gameTypes.js"
+import {checkKingInCheck, generateAllMoves, validateMove} from "shared/dist/src/games/chess/moveGeneration.js";
 import { startingBoardState } from "./constants.js"
-import { PlayMove } from "./moves.js"
 import { Game } from "../game.js"
 
 export class Chess extends Game
 {
-	board : BoardState
+	boardState : BoardState
+	GameStatus : GameStatus
 	constructor(state? : BoardState)
 	{
 		super();
 		if (state !== undefined)
-      		this.board = state
+      		this.boardState = state
 		else
-			this.board = startingBoardState
+			this.boardState = startingBoardState
+		this.GameStatus = {isOver : false, winner: null, reason: ""}
 	}
-	public playMove = PlayMove.bind(this)
+
+	playMove(move : Move, played_by: Color) : boolean
+	{
+		if (validateMove(move, this.boardState, played_by) == true)
+		{
+			let piece = this.boardState.board[move.from]
+			if (piece) piece.hasMoved = true
+			this.boardState.board[move.to] = this.boardState.board[move.from]
+			this.boardState.board[move.from] = null
+			if (this.boardState.turn == "white")
+				this.boardState.turn = "black"
+			else
+				this.boardState.turn = "white"
+			let moves = generateAllMoves(this.boardState.board, this.boardState.turn)
+			if (moves.length == 0)
+			{
+				if (checkKingInCheck(this.boardState.board, this.boardState.turn))
+				{
+					let winner : Color
+					if (this.boardState.turn == "white")
+						winner = "black"
+					else
+						winner = "white"
+					this.GameStatus = {isOver : true, winner: winner, reason: "Checkmate"}
+				}
+				else
+					this.GameStatus = {isOver : true, winner: null, reason: "Stalemate"}
+
+			}
+			return true
+		}
+		return false
+	}
+	playResign(played_by: Color): void {
+		let winner : Color
+		if (played_by == "white")
+			winner = "black"
+		else
+			winner = "white"
+		this.GameStatus = {isOver : true, winner: winner, reason: "Resignation"}
+	}
+
 	GetBoardState(): BoardState {
-		return this.board
+		return this.boardState
 	}
 	GetTurn(): Color {
-		return this.board.turn
+		return this.boardState.turn
+	}
+	GetGameStatus(): GameStatus {
+		return this.GameStatus
 	}
 }

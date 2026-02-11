@@ -19,10 +19,8 @@ export class Room {
 	PlayerTimes : number[]
 	last_move : number = 0
 	
-	constructor(
-	  players: GameSocket[], type : GameType)
+	constructor(players: GameSocket[], type : GameType, gameId : string)
 	{
-
 		this.Players = players
 		//change when more gamemodes
 		//if (GameType == Chess)
@@ -30,11 +28,12 @@ export class Room {
 		this.AssignedColors = ["white", "black"]
 		this.timed = false
 		this.PlayerTimes = [-1, -1]
+		this.Players.forEach((value : GameSocket, index : number) => {
+			value.emit("game_start", { gameId, color: this.AssignedColors[index], board: this.gameLogic.GetBoardState()})
+		})
+
 
 	}
-	/**
-	 * ClientMove
-	 */
 	public ClientMove(move : Move, client: GameSocket) {
 		let colorPos = -1
 		for (let i = 0; i < this.Players.length; i++)
@@ -50,23 +49,67 @@ export class Room {
 		}
 	}
 
-	public CheckForUpdate(time_passed : number) : string
+	public ClientResign(client: GameSocket) {
+		let colorPos = -1
+		for (let i = 0; i < this.Players.length; i++)
+		{
+			if (client.id == this.Players[i].id)
+				colorPos = i
+		}
+		if (colorPos == -1)
+			return;
+		this.gameLogic.playResign(this.AssignedColors[colorPos])
+	}
+
+
+	public UpdateAndCheckOver(time_passed : number) : boolean
 	{
+		//check for timeout
 		if (this.timed == true)
 		{
-			let index = this.AssignedColors.indexOf(this.gameLogic.GetTurn())
-			this.PlayerTimes[index] = this.PlayerTimes[index] - time_passed
-			if (this.PlayerTimes[index] < 0)
+			let TurnIndex = this.AssignedColors.indexOf(this.gameLogic.GetTurn())
+			this.PlayerTimes[TurnIndex] = this.PlayerTimes[TurnIndex] - time_passed
+			if (this.PlayerTimes[TurnIndex] < 0)
 			{
-				return "timeout"
+				this.Players[TurnIndex].emit("game_over", {result: "lose", reason: "timeout"})
+				this.Players.forEach((value : GameSocket, index : number) => {
+					if (index !== TurnIndex)
+						value.emit("game_over", {result: "win", reason: "timeout"})
+				})
+				return true
 			}
-		}			
+		}
+		//Check if game is Over
+		if (this.gameLogic.GetGameStatus().isOver === true)
+		{
+			let result = this.gameLogic.GetGameStatus()
+			let winner = result.winner
+			if (winner != null)
+			{
+				let WinnerIndex = this.AssignedColors.indexOf(winner)
+				this.Players.forEach((value : GameSocket, index : number) => {
+				if (index == WinnerIndex)
+					value.emit("game_over", {result: "win", reason: result.reason})
+				else
+					value.emit("game_over", {result: "lose", reason: result.reason})
+				})
+			}
+			else
+			{
+				this.Players.forEach((value : GameSocket, index : number) => {
+					value.emit("game_over", {result: "draw", reason: result.reason})
+				})
+			}
+			return true
+		}	
 		if (this.positionUpdated == true)
-			{
-				this.positionUpdated = false
-				return "move_played"
-			}
-		return ""
+		{
+			this.positionUpdated = false
+			this.Players.forEach((value : GameSocket, index : number) => {
+				value.emit("move_made", {board: this.gameLogic.GetBoardState()})
+			})
+		}
+		return false
 	}
 
 	public GetColor(index: number) : Color
