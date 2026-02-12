@@ -1,4 +1,4 @@
-import { Color, Board, BoardState } from "shared/dist/src/gameTypes.js";
+import { Board, BoardState } from "shared/dist/src/gameTypes.js";
 
 /**
  * The standard chess starting board configuration.

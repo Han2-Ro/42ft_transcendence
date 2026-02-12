@@ -50,7 +50,7 @@ export default function Page() {
 	  socket.off("game_over")
     };
 
-  }, []);
+  },);
 
   const CloseResultScreen = () => {
     setResult(null)

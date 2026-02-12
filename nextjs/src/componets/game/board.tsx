@@ -1,33 +1,43 @@
 import { useEffect, useState } from "react";
-import { Move, PieceOrNull } from "shared";
-import {generateMovesNumber} from "shared";
+import { generateMoves, Move, PieceOrNull } from "shared";
 
 export default function Board({board, onPlayerMove}) {
 const [selectedSquare, setSelectedSquare] = useState(null);
+const [movesFromSqareInt, setMovesFromSqareInt] = useState(null);
 const [movesFromSqare, setMovesFromSqare] = useState(null);
 
 const handleSquareClick = (square : number) => {
 	
 	if (selectedSquare === null) {
 	  setSelectedSquare(square);
-	  let moves = generateMovesNumber(board.board, square)
+	  const moves = generateMoves(board.board, square)
+	  const moves_numbers = moves.map(move => move.to)
 	  setMovesFromSqare(moves)
+	  setMovesFromSqareInt(moves_numbers)
 	  return;
 	}
 
-    const move : Move = {
-      from: selectedSquare,
-      to: square,
-    };
-
+	if (!movesFromSqareInt || !movesFromSqare) return;
+	const index = movesFromSqareInt.indexOf(square)
+	if (index == -1)
+	{
+		setSelectedSquare(null)
+		setMovesFromSqareInt(null)
+		setMovesFromSqare(null)
+		return;
+	}
+    const move : Move = { ...movesFromSqare[index] }
+	//todo: make some kind of ui element, that makes player choose which piece to promote to
+	if (move.special == "promotion")
+		move.promotion = "queen"
     setSelectedSquare(null)
+	setMovesFromSqareInt(null)
 	setMovesFromSqare(null)
     onPlayerMove(move);
   };
 
   useEffect(() => {
-  console.log("State updated:", movesFromSqare);
-}, [movesFromSqare]);
+}, [movesFromSqareInt]);
 
   return (
 	<div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
@@ -44,7 +54,7 @@ const handleSquareClick = (square : number) => {
 			}}
 		>
 			{sq && <img src={`/chess/${sq.color}/${sq.type}.svg`} alt={sq.color + sq.type} style={{ width: "100%", height: "100%" }} />}
-			{movesFromSqare && movesFromSqare.length > 0 && movesFromSqare.includes(index) && <img src={`/chess/circle.svg`} alt={"Position that the selected Piece can move to."} style={{ width: "100%", height: "100%", position: "absolute", top: 0, left: 0 }} />}
+			{movesFromSqareInt && movesFromSqareInt.length > 0 && movesFromSqareInt.includes(index) && <img src={`/chess/circle.svg`} alt={"Position that the selected Piece can move to."} style={{ width: "100%", height: "100%", position: "absolute", top: 0, left: 0 }} />}
 		</button>
 	  ))}
 		</div>

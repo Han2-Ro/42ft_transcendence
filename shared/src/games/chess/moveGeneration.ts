@@ -1,10 +1,10 @@
-import { Board, BoardState, Color, Move, PieceOrNull, PieceType, Pos2} from "../../gameTypes";
+import { Board, BoardState, Color, GameStatus, Move, PieceOrNull, PieceType, Pos2} from "../../gameTypes";
 
 export function validateMove(move : Move, boardState : BoardState, played_by : Color) : boolean
 {
 	const piece = boardState.board[move.from];
 	let moves = generateMoves(boardState.board, move.from)
-	const moveExists = moves.some(m => m.from === move.from && m.to === move.to);
+	const moveExists = moves.some(m => m.from === move.from && m.to === move.to && m.special === move.special);
 	if (
 	checkBounds(move.from) 
 	&& checkBounds(move.to) 
@@ -14,30 +14,82 @@ export function validateMove(move : Move, boardState : BoardState, played_by : C
 	&& moveExists
 	)
 	{
+		if (move.special == "promotion")
+		{
+			if (move.promotion && move.promotion != "pawn" && move.promotion != "king")
+				return true
+			else
+				return false
+		}
 		return true
 	}
 	return false
 }
 
-export function updateBoard(board : Board, move : Move)
+export function updateBoardState(boardState : BoardState, move : Move)
 {
-	let piece = this.boardState.board[move.from]
+	let piece = boardState.board[move.from]
 	if (piece) piece.hasMoved = true
-	if (move.special = false)
+	boardState.board[move.to] = boardState.board[move.from] 
+	boardState.board[move.from] = null
+	if (move.special !== null)
 	{
-		this.boardState.board[move.to] = this.boardState.board[move.from]
-		this.boardState.board[move.from] = null
+		if (move.special == "0-0-0")
+		{
+			if (boardState.turn == "black")
+			{
+				boardState.board[0] = null
+				boardState.board[3] = {type: "rook", hasMoved: true, color: "black"}
+			}
+			else
+			{
+				boardState.board[56] = null
+				boardState.board[59] = {type: "rook", hasMoved: true, color: "white"}
+			}
+		}
+		if (move.special == "0-0")
+		{
+			if (boardState.turn == "black")
+			{
+				boardState.board[7] = null
+				boardState.board[5] = {type: "rook", hasMoved: true, color: "black"}
+			}
+			else
+			{
+				boardState.board[63] = null
+				boardState.board[61] = {type: "rook", hasMoved: true, color: "white"}
+			}
+		}
+		if (move.special == "promotion")
+		{
+			if (move.promotion)
+				boardState.board[move.to].type = move.promotion
+		}
 	}
+	if (boardState.turn == "white")
+		boardState.turn = "black"
 	else
-	{
-
-	}
+		boardState.turn = "white"
 }
 
-export function generateMovesNumber(board : Board, sq : number) : Array<number>
+export function checkMates(board: Board, turn : Color) : GameStatus
 {
-	let moves = generateMoves(board, sq)
-	return moves.map(move => move.to)
+	let moves = generateAllMoves(board, turn)
+	if (moves.length == 0)
+	{
+		if (checkKingInCheck(board, turn))
+		{
+			let winner : Color
+			if (turn == "white")
+				winner = "black"
+			else
+				winner = "white"
+			return {isOver : true, winner: winner, reason: "Checkmate"}
+		}
+		else
+			return {isOver : true, winner: null, reason: "Stalemate"}
+	}
+	return {isOver : false, winner: null, reason: ""}
 }
 
 export function generateAllMoves(board : Board, color: Color) : Array<Move>
@@ -71,29 +123,6 @@ export function generateMoves(board : Board, sq : number) : Array<Move>
 	return moves;
 }
 
-function generateOffset(pos : number, offset :Pos2) : number | null
-{
-	let pos2 : Pos2 = {x: -1, y: -1}
-	pos2.x = (pos % 8) + 1
-	pos2.y	 = Math.floor(pos / 8) + 1
-	let new_pos : Pos2 = {x: (pos2.x + offset.x), y: (pos2.y + offset.y)}
-	if (new_pos.x > 0 && new_pos.x <= 8 && new_pos.y > 0 && new_pos.y <= 8)
-			return (((new_pos.y -1) * 8) + (new_pos.x -1))
-	return null
-}
-
-function generateOffsets(pos : number, offsets :Array<Pos2>) : Array<number>
-{
-	let num_offsets: number[] = [];
-	for (let i = 0; i < offsets.length; i++)
-	{
-		let num = generateOffset(pos, offsets[i])
-		if (num !== null)
-			num_offsets.push(num)
-	}
-	return num_offsets
-}
-
 //Piece Move Generation
 function generatePawnMoves(board: Board, sq : number, color : Color, hasMoved : boolean) : Array<Move>
 {
@@ -106,23 +135,23 @@ function generatePawnMoves(board: Board, sq : number, color : Color, hasMoved : 
 	let newPos2 = generateOffset(sq, {x: 0, y: dir})
 	if (hasMoved == false)
 		if (newPos != null && newPos2 != null && checkSqareEmpty(board, newPos) && checkSqareEmpty(board, newPos2))
-			moves.push({ from: sq, to: newPos, special: false})
+			moves.push({ from: sq, to: newPos, special: null})
 	//Move
 	newPos = generateOffset(sq, {x: 0, y: dir})
 	if (newPos != null && checkSqareEmpty(board, newPos))
 	{
-		if ((color == "white" && newPos > 0 && newPos < 8) || (color == "black" && newPos > 55 && newPos < 64))
-			moves.push({ from: sq, to: newPos, special: true})
+		if ((color == "white" && newPos > -1 && newPos < 8) || (color == "black" && newPos > 55 && newPos < 64))
+			moves.push({ from: sq, to: newPos, special: "promotion"})
 		else
-			moves.push({ from: sq, to: newPos, special: false})
+			moves.push({ from: sq, to: newPos, special: null})
 	}
 	//Attacks
 	newPos = generateOffset(sq, {x: 1, y: dir})
 	if (newPos != null && checkSqare(board, newPos, color) && !checkSqareEmpty(board, newPos))
-		moves.push({ from: sq, to: newPos, special: false})
+		moves.push({ from: sq, to: newPos, special: null})
 	newPos = generateOffset(sq, {x: -1, y: dir})
 	if (newPos != null && checkSqare(board, newPos, color) && !checkSqareEmpty(board, newPos))
-		moves.push({ from: sq, to: newPos, special: false})
+		moves.push({ from: sq, to: newPos, special: null})
 	return moves
 }
 
@@ -135,7 +164,7 @@ function generateKnightMoves(board: Board, sq : number, color : Color) : Array<M
 	{
 		let newPos = move_pos[i]
 		if (checkSqare(board, newPos, color))
-			moves.push({ from: sq, to: newPos, special: false})
+			moves.push({ from: sq, to: newPos, special: null})
 	}
 	return moves
 }
@@ -168,16 +197,6 @@ function generateQueenMoves(board: Board, sq : number, color : Color) : Array<Mo
 	return moves
 }
 
-function checkSqaresEmptyAndNotAttacked(board: Board, sqs : Array<number>, color : Color) : boolean
-{
-	for (let i = 0; i < sqs.length; i++)
-	{
-		if (CheckIsAttacked(board, sqs[i], color) || !checkSqareEmpty(board, 60))
-			return false
-	}
-	return true
-}
-
 function generateKingMoves(board: Board, sq : number, color : Color) : Array<Move>
 {
 	let moves: Move[] = [];
@@ -187,7 +206,7 @@ function generateKingMoves(board: Board, sq : number, color : Color) : Array<Mov
 	{
 		let newPos = move_pos[i]
 		if (checkSqare(board, newPos, color))
-			moves.push({ from: sq, to: newPos, special: false})
+			moves.push({ from: sq, to: newPos, special: null})
 	}
 	//Add Castle
 	if (board[sq].hasMoved == false)
@@ -195,50 +214,54 @@ function generateKingMoves(board: Board, sq : number, color : Color) : Array<Mov
 		if (board[sq].color == "white")
 		{
 			const left_rook = board[56]
-			const left_king_movements : Array<number> = [60, 59, 58]
+			const left_king_movements : Array<number> = [59, 58]
 			if (left_rook != null 
 			&& left_rook.type == "rook" 
 			&& left_rook.hasMoved == false
+			&& !CheckIsAttacked(board, sq, board[sq].color)
 			&& checkSqaresEmptyAndNotAttacked(board, left_king_movements, "white"))
 			{
-				moves.push({ from: sq, to: 58, special: true})
+				moves.push({ from: sq, to: 58, special: "0-0-0"})
 			}
 			let right_rook = board[63]
-			let right_king_movements : Array<number> = [60, 61, 62]
+			let right_king_movements : Array<number> = [61, 62]
 			if (right_rook != null 
 			&& right_rook.type == "rook" 
 			&& right_rook.hasMoved == false
+			&& !CheckIsAttacked(board, sq, board[sq].color)
 			&& checkSqaresEmptyAndNotAttacked(board, right_king_movements, "white"))
 			{
-				moves.push({ from: sq, to: 62, special: true})
+				moves.push({ from: sq, to: 62, special: "0-0"})
 			}
 		}
 		else
 		{
 			const left_rook = board[0]
-			const left_king_movements : Array<number> = [4, 3, 2]
+			const left_king_movements : Array<number> = [3, 2]
 			if (left_rook != null 
 			&& left_rook.type == "rook" 
 			&& left_rook.hasMoved == false
+			&& !CheckIsAttacked(board, sq, board[sq].color)
 			&& checkSqaresEmptyAndNotAttacked(board, left_king_movements, "black"))
 			{
-				moves.push({ from: sq, to: 58, special: true})
+				moves.push({ from: sq, to: 2, special: "0-0-0"})
 			}
 			const right_rook = board[7]
-			const right_king_movements : Array<number> = [4, 5, 6]
+			const right_king_movements : Array<number> = [5, 6]
 			if (right_rook != null 
 			&& right_rook.type == "rook" 
 			&& right_rook.hasMoved == false
+			&& !CheckIsAttacked(board, sq, board[sq].color)
 			&& checkSqaresEmptyAndNotAttacked(board, right_king_movements, "black"))
 			{
-				moves.push({ from: sq, to: 62, special: true})
+				moves.push({ from: sq, to: 6, special: "0-0"})
 			}
 		}
 	}
 	return moves
 }
 
-//helpers
+//Generic Generators
 function generateOffsetLine(board: Board, sq: number, color: Color, offset: Pos2) : Array<Move>
 {
 	let moves: Move[] = [];
@@ -246,18 +269,57 @@ function generateOffsetLine(board: Board, sq: number, color: Color, offset: Pos2
 	let newPos = generateOffset(sq, offset)
 	while (newPos != null && checkSqareEmpty(board, newPos))
 	{
-		moves.push({ from: sq, to: newPos, special: false})
+		moves.push({ from: sq, to: newPos, special: null})
 		newPos = generateOffset(newPos, offset)
 	}
 	if (newPos != null && checkSqare(board, newPos, color))
 	{
-		moves.push({ from: sq, to: newPos, special: false})
+		moves.push({ from: sq, to: newPos, special: null})
 	}
 	return moves
 }
 
+function generateOffset(pos : number, offset :Pos2) : number | null
+{
+	let pos2 : Pos2 = {x: -1, y: -1}
+	pos2.x = (pos % 8) + 1
+	pos2.y	 = Math.floor(pos / 8) + 1
+	let new_pos : Pos2 = {x: (pos2.x + offset.x), y: (pos2.y + offset.y)}
+	if (new_pos.x > 0 && new_pos.x <= 8 && new_pos.y > 0 && new_pos.y <= 8)
+			return (((new_pos.y -1) * 8) + (new_pos.x -1))
+	return null
+}
+
+function generateOffsets(pos : number, offsets :Array<Pos2>) : Array<number>
+{
+	let num_offsets: number[] = [];
+	for (let i = 0; i < offsets.length; i++)
+	{
+		let num = generateOffset(pos, offsets[i])
+		if (num !== null)
+			num_offsets.push(num)
+	}
+	return num_offsets
+}
+
+//Checkers
+function checkSqaresEmptyAndNotAttacked(board: Board, sqs : Array<number>, color : Color) : boolean
+{
+	for (let i = 0; i < sqs.length; i++)
+	{
+		console.log(sqs[i])
+		if (CheckIsAttacked(board, sqs[i], color) || !checkSqareEmpty(board, sqs[i]))
+		{
+			console.log("failed")
+			return false
+		}
+	}
+	return true
+}
+
 function CheckIsAttacked(board: Board, pos : number, color: Color)
 {
+	//check for bishops (and half of queens)
 	let moves = generateBishopMoves(board, pos, color)
 	for (let i = 0; i < moves.length; i++)
 	{
@@ -265,6 +327,7 @@ function CheckIsAttacked(board: Board, pos : number, color: Color)
 		if (pos && pos.color != color && (pos.type == "bishop" || pos.type == "queen"))
 			return true
 	}
+	//check for rooks (and other half of queens)
 	moves = generateRookMoves(board, pos, color)
 	for (let i = 0; i < moves.length; i++)
 	{
@@ -272,13 +335,16 @@ function CheckIsAttacked(board: Board, pos : number, color: Color)
 		if (pos && pos.color != color && (pos.type == "rook" || pos.type == "queen"))
 			return true
 	}
-	moves = generateKingMoves(board, pos, color)
-	for (let i = 0; i < moves.length; i++)
+	//check for kings
+	let king_offsets : Array<Pos2> = [{x: 1, y: 0}, {x: 0, y: 1}, {x: 1, y: 1}, {x: -1, y: 0}, {x: 0, y: -1}, {x: -1, y: -1}, {x: -1, y: 1}, {x: 1, y: -1}]
+	let king_pos = generateOffsets(pos, king_offsets)
+	for (let i = 0; i < king_pos.length; i++)
 	{
-		let pos = board[moves[i].to]
-		if (pos && pos.color != color && pos.type == "king")
+		let pos = board[king_pos[i]]
+		if (pos && pos.color != color && (pos.type == "king"))
 			return true
 	}
+	//check for knights
 	moves = generateKnightMoves(board, pos, color)
 	for (let i = 0; i < moves.length; i++)
 	{

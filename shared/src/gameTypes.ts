@@ -17,6 +17,7 @@ export type GameStatus = {
 	winner : Color | null
 	reason : string
 }
+
 export type PieceOrNull = Piece | null
 
 export type Square =
@@ -41,7 +42,6 @@ export type BoardState = {
 export type Move = {
   from: number
   to: number
-  special: boolean
-  //special_type?: SpecialMoves
+  special: "0-0-0" | "0-0" | "promotion" | null
   promotion?: PieceType
 }

@@ -1,6 +1,6 @@
 import { Server, Socket } from "socket.io";
 import { Room } from "./src/room/room.js"
-import { CToSEvents, SToCEvents, GameStartData} from "shared/dist/src/socketEvents.js"
+import { CToSEvents, SToCEvents} from "shared/dist/src/socketEvents.js"
 
 export type GameSocket = Socket<CToSEvents, SToCEvents>;
 
@@ -20,7 +20,7 @@ const io = new Server<
     },
     credentials: true,
   },
-});
+})
 
 const matchmakingQueue: GameSocket[] = []
 //const rooms : Room[] = []
@@ -43,42 +43,39 @@ socket.on("find_match", () => {
     
 	if (player1 && player2) 
 	{
-		let gameId = crypto.randomUUID()
-	  	let players : GameSocket[] = []
+		const gameId = crypto.randomUUID()
+	  	const players : GameSocket[] = []
 	  	players.push(player1)
 	  	players.push(player2)
-	  	let new_room = new Room(players, "chess", gameId)
+	  	const new_room = new Room(players, "chess", gameId)
       	rooms.set(gameId, new_room)
     }
   }
-}
-)
+})
 
 socket.on("move", ({gameId, move}) => {
-	let room = rooms.get(gameId)
+	const room = rooms.get(gameId)
 	if (room)
 		room.ClientMove(move, socket)
-}
-)
+})
 
 socket.on("resign", (gameId) => {
-	let room = rooms.get(gameId)
+	const room = rooms.get(gameId)
 	if (room)
 		room.ClientResign(socket)
-}
-)
+})
 
 });
 
 
-const TICK_RATE = 20;                // ticks per second         
-const DT = 1 / TICK_RATE; // fixed timestep in seconds
-const MAX_CATCHUP_TICKS = 5;          // safety limit
+const TICK_RATE = 20;           
+const DT = 1 / TICK_RATE;
+const MAX_CATCHUP_TICKS = 5;
 
 
 let lastTime = process.hrtime.bigint();
 let accumulator = 0;
-let running = true;
+//let running = true;
 
 function nowSeconds(): number {
   return Number(process.hrtime.bigint()) / 1e9;
@@ -92,9 +89,10 @@ function CheckRunningGames(time_passed : number) {
 }
 
 async function serverLoop() {
-  while (running) {
+  //while (running) {
+  while (1) {
     const currentTime = nowSeconds();
-    let frameTime = currentTime - Number(lastTime) / 1e9;
+    const frameTime = currentTime - Number(lastTime) / 1e9;
     lastTime = process.hrtime.bigint();
 
     accumulator += frameTime;

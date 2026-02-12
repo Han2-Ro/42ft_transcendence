@@ -1,5 +1,3 @@
-import { Socket } from "socket.io";
-import { CToSEvents, SToCEvents} from "shared/dist/src/socketEvents.js"
 import { Move, Color} from "shared/dist/src/gameTypes.js";
 
 import { Game, GameType } from "../games/game.js";
@@ -67,7 +65,7 @@ export class Room {
 		//check for timeout
 		if (this.timed == true)
 		{
-			let TurnIndex = this.AssignedColors.indexOf(this.gameLogic.GetTurn())
+			const TurnIndex = this.AssignedColors.indexOf(this.gameLogic.GetTurn())
 			this.PlayerTimes[TurnIndex] = this.PlayerTimes[TurnIndex] - time_passed
 			if (this.PlayerTimes[TurnIndex] < 0)
 			{
@@ -82,11 +80,11 @@ export class Room {
 		//Check if game is Over
 		if (this.gameLogic.GetGameStatus().isOver === true)
 		{
-			let result = this.gameLogic.GetGameStatus()
-			let winner = result.winner
+			const result = this.gameLogic.GetGameStatus()
+			const winner = result.winner
 			if (winner != null)
 			{
-				let WinnerIndex = this.AssignedColors.indexOf(winner)
+				const WinnerIndex = this.AssignedColors.indexOf(winner)
 				this.Players.forEach((value : GameSocket, index : number) => {
 				if (index == WinnerIndex)
 					value.emit("game_over", {result: "win", reason: result.reason})
@@ -96,7 +94,7 @@ export class Room {
 			}
 			else
 			{
-				this.Players.forEach((value : GameSocket, index : number) => {
+				this.Players.forEach((value : GameSocket) => {
 					value.emit("game_over", {result: "draw", reason: result.reason})
 				})
 			}
@@ -105,7 +103,7 @@ export class Room {
 		if (this.positionUpdated == true)
 		{
 			this.positionUpdated = false
-			this.Players.forEach((value : GameSocket, index : number) => {
+			this.Players.forEach((value : GameSocket) => {
 				value.emit("move_made", {board: this.gameLogic.GetBoardState()})
 			})
 		}

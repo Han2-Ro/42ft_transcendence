@@ -1,5 +1,5 @@
 import { BoardState, Color, GameStatus, Move} from "shared/dist/src/gameTypes.js"
-import {checkKingInCheck, generateAllMoves, validateMove} from "shared/dist/src/games/chess/moveGeneration.js";
+import { checkMates, updateBoardState, validateMove} from "shared/dist/src/games/chess/moveGeneration.js";
 import { startingBoardState } from "./constants.js"
 import { Game } from "../game.js"
 
@@ -21,30 +21,8 @@ export class Chess extends Game
 	{
 		if (validateMove(move, this.boardState, played_by) == true)
 		{
-			let piece = this.boardState.board[move.from]
-			if (piece) piece.hasMoved = true
-			this.boardState.board[move.to] = this.boardState.board[move.from]
-			this.boardState.board[move.from] = null
-			if (this.boardState.turn == "white")
-				this.boardState.turn = "black"
-			else
-				this.boardState.turn = "white"
-			let moves = generateAllMoves(this.boardState.board, this.boardState.turn)
-			if (moves.length == 0)
-			{
-				if (checkKingInCheck(this.boardState.board, this.boardState.turn))
-				{
-					let winner : Color
-					if (this.boardState.turn == "white")
-						winner = "black"
-					else
-						winner = "white"
-					this.GameStatus = {isOver : true, winner: winner, reason: "Checkmate"}
-				}
-				else
-					this.GameStatus = {isOver : true, winner: null, reason: "Stalemate"}
-
-			}
+			updateBoardState(this.boardState, move)
+			this.GameStatus = checkMates(this.boardState.board, this.boardState.turn)
 			return true
 		}
 		return false
