@@ -73,4 +73,5 @@ export default function Page() {
 	result ? 
 	<EndScreen result={result} reason={resultReason} onClose={CloseResultScreen} /> :
 	<Lobby onFindMatchPressed={EmitFindMatch} />;
+
 }

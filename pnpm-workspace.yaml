@@ -4,6 +4,7 @@ packages:
   - shared
 
 ignoredBuiltDependencies:
+  - bcrypt
   - sharp
   - unrs-resolver
 

@@ -5,8 +5,7 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client"
-  output   = "../src/generated/prisma"
+  provider = "prisma-client-js"
 }
 
 datasource db {
@@ -20,6 +19,58 @@ model User {
   passwordHash     String
   twoFactorSecret  String?
   twoFactorEnabled Boolean  @default(false)
+  
+  // Stats
+  wins             Int      @default(0)
+  losses           Int      @default(0)
+  draws            Int      @default(0)
+  
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
+  
+  // Relations to Games
+  gamesAsWhite     Game[]   @relation("GamesAsWhite")
+  gamesAsBlack     Game[]   @relation("GamesAsBlack")
+  moves            Move[]
+}
+
+model Game {
+  id            Int       @id @default(autoincrement())
+  
+  whitePlayerId Int
+  blackPlayerId Int?
+  
+  status        GameStatus @default(WAITING)
+  winner        String?    // 'white', 'black', or 'draw'
+  
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+  finishedAt    DateTime?
+  
+  // Relations to the Users
+  whitePlayer   User       @relation("GamesAsWhite", fields: [whitePlayerId], references: [id])
+  blackPlayer   User?      @relation("GamesAsBlack", fields: [blackPlayerId], references: [id])
+  moves         Move[]
+}
+
+model Move {
+  id           Int      @id @default(autoincrement())
+  
+  gameId       Int
+  playerId     Int
+  
+  moveNotation String   // example "e2e4"
+  moveNumber   Int      // move number 1, 2, 3...
+  
+  createdAt    DateTime @default(now())
+  
+  // Relations to the Game and User
+  game         Game     @relation(fields: [gameId], references: [id], onDelete: Cascade)
+  player       User     @relation(fields: [playerId], references: [id])
+}
+
+enum GameStatus {
+  WAITING      // Waiting for second player
+  IN_PROGRESS  // Game is active
+  FINISHED     // Game ended
 }
