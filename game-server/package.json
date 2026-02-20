@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "socket.io": "^4.7.0",
-	"shared": "workspace:*"
+    "shared": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^22.10.5",

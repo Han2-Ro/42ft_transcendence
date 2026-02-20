@@ -4,6 +4,7 @@ ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable
 COPY . /app
+#COPY ../shared /app
 WORKDIR /app
 
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install
