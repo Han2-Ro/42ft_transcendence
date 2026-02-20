@@ -3,12 +3,12 @@ import {
   Color,
   GameStatus,
   Move,
-} from "shared/dist/src/gameTypes.js";
+} from "../../shared/src/gameTypes.js";
 import {
   checkMates,
   updateBoardState,
   validateMove,
-} from "shared/dist/src/games/chess/moveGeneration.js";
+} from "../../shared/index.js";
 import { startingBoardState } from "./constants.js";
 import { Game } from "../game.js";
 

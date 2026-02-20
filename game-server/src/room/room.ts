@@ -1,4 +1,4 @@
-import { Move, Color } from "shared/dist/src/gameTypes.js";
+import { Move, Color } from "../shared/index.js";
 
 import { Game, GameType } from "../games/game.js";
 import { Chess } from "../games/chess/chess.js";

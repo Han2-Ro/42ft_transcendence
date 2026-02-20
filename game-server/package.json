@@ -9,8 +9,7 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "socket.io": "^4.7.0",
-    "shared": "workspace:*"
+    "socket.io": "^4.7.0"
   },
   "devDependencies": {
     "@types/node": "^22.10.5",

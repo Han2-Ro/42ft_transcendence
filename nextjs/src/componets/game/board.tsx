@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { generateMoves, Move, PieceOrNull } from "shared";
+import { generateMoves, Move, PieceOrNull } from "../../shared";
 
 export default function Board({ board, onPlayerMove }) {
   const [selectedSquare, setSelectedSquare] = useState(null);

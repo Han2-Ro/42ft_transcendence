@@ -1,7 +1,6 @@
 packages:
   - nextjs
   - game-server
-  - shared
 
 ignoredBuiltDependencies:
   - bcrypt
