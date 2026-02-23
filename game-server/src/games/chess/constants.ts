@@ -1,18 +1,5 @@
 import { Board, BoardState } from "../../shared/index.js";
 
-/**
- * The standard chess starting board configuration.
- *
- * @remarks
- * This board uses `Array.fill()` to populate pawn positions. Be aware that `fill()`
- * with object references will create a single object instance and fill all elements
- * with references to that same object. This means all black pawns share the same
- * reference, and all white pawns share the same reference. Mutating one pawn object
- * will affect all pawns of that color.
- *
- * @type {Board}
- * @const
- */
 export const startingBoard: Board = [
   { color: "black", type: "rook", hasMoved: false },
   { color: "black", type: "knight", hasMoved: false },

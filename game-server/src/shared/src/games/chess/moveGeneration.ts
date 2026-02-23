@@ -43,36 +43,41 @@ export function validateMove(
 }
 
 export function updateBoardState(boardState: BoardState, move: Move) {
-  const piece = boardState.board[move.from];
+  updateBoard(boardState.board, move, boardState.turn)
+  if (boardState.turn == "white") boardState.turn = "black";
+  else boardState.turn = "white";
+}
+
+function updateBoard(board: Board, move: Move, turn: Color)
+{
+  const piece = board[move.from];
   if (piece) piece.hasMoved = true;
-  boardState.board[move.to] = boardState.board[move.from];
-  boardState.board[move.from] = null;
+  board[move.to] = board[move.from];
+  board[move.from] = null;
   if (move.special !== null) {
     if (move.special == "0-0-0") {
-      if (boardState.turn == "black") {
-        boardState.board[0] = null;
-        boardState.board[3] = { type: "rook", hasMoved: true, color: "black" };
+      if (turn == "black") {
+        board[0] = null;
+        board[3] = { type: "rook", hasMoved: true, color: "black" };
       } else {
-        boardState.board[56] = null;
-        boardState.board[59] = { type: "rook", hasMoved: true, color: "white" };
+        board[56] = null;
+        board[59] = { type: "rook", hasMoved: true, color: "white" };
       }
     }
     if (move.special == "0-0") {
-      if (boardState.turn == "black") {
-        boardState.board[7] = null;
-        boardState.board[5] = { type: "rook", hasMoved: true, color: "black" };
+      if (turn == "black") {
+        board[7] = null;
+        board[5] = { type: "rook", hasMoved: true, color: "black" };
       } else {
-        boardState.board[63] = null;
-        boardState.board[61] = { type: "rook", hasMoved: true, color: "white" };
+        board[63] = null;
+        board[61] = { type: "rook", hasMoved: true, color: "white" };
       }
     }
     if (move.special == "promotion") {
-      const piece = boardState.board[move.to];
+      const piece = board[move.to];
       if (move.promotion && piece) piece.type = move.promotion;
     }
   }
-  if (boardState.turn == "white") boardState.turn = "black";
-  else boardState.turn = "white";
 }
 
 export function checkMates(board: Board, turn: Color): GameStatus {
@@ -159,18 +164,32 @@ function generatePawnMoves(
   //Attacks
   newPos = generateOffset(sq, { x: 1, y: dir });
   if (
-    newPos != null &&
-    checkSqare(board, newPos, color) &&
-    !checkSqareEmpty(board, newPos)
+	newPos != null &&
+	checkSqare(board, newPos, color) &&
+	!checkSqareEmpty(board, newPos)
   )
-    moves.push({ from: sq, to: newPos, special: null });
+  {
+	if (
+	  (color == "white" && newPos > -1 && newPos < 8) ||
+	  (color == "black" && newPos > 55 && newPos < 64)
+	)
+	  moves.push({ from: sq, to: newPos, special: "promotion" });
+	else moves.push({ from: sq, to: newPos, special: null });
+  }
   newPos = generateOffset(sq, { x: -1, y: dir });
   if (
-    newPos != null &&
-    checkSqare(board, newPos, color) &&
-    !checkSqareEmpty(board, newPos)
+	newPos != null &&
+	checkSqare(board, newPos, color) &&
+	!checkSqareEmpty(board, newPos)
   )
-    moves.push({ from: sq, to: newPos, special: null });
+  {
+	if (
+	  (color == "white" && newPos > -1 && newPos < 8) ||
+	  (color == "black" && newPos > 55 && newPos < 64)
+	)
+	  moves.push({ from: sq, to: newPos, special: "promotion" });
+	else moves.push({ from: sq, to: newPos, special: null });
+  }
   return moves;
 }
 
