@@ -27,14 +27,14 @@ export class Room {
     //change when more gamemodes
     //if (GameType == Chess)
     this.gameLogic = new Chess();
-    this.AssignedColors = ["white", "black"];
+    this.AssignedColors = this.GenerateRandomColors2p();
     this.timed = false;
     this.PlayerTimes = [-1, -1];
     this.Players.forEach((value: GameSocket, index: number) => {
       value.emit("game_start", {
         gameId,
         color: this.AssignedColors[index],
-        board: this.gameLogic.GetBoardState(),
+        boardState: this.gameLogic.GetBoardState(),
       });
     });
   }
@@ -94,10 +94,11 @@ export class Room {
       }
       return true;
     }
+    //Check if move was made
     if (this.positionUpdated == true) {
       this.positionUpdated = false;
       this.Players.forEach((value: GameSocket) => {
-        value.emit("move_made", { board: this.gameLogic.GetBoardState() });
+        value.emit("move_made", { boardState: this.gameLogic.GetBoardState() });
       });
     }
     return false;
@@ -105,5 +106,11 @@ export class Room {
 
   public GetColor(index: number): Color {
     return this.AssignedColors[index];
+  }
+
+  private GenerateRandomColors2p(): Color[] {
+    const rand = Math.random() < 0.5;
+    if (rand) return ["white", "black"];
+    else return ["black", "white"];
   }
 }

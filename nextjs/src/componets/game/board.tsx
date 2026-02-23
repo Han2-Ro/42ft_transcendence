@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { generateMoves, Move, PieceOrNull } from "../../shared";
+import Image from "next/image";
 
-export default function Board({ board, onPlayerMove }) {
+export default function Board({ boardState, onPlayerMove }) {
   const [selectedSquare, setSelectedSquare] = useState(null);
   const [movesFromSqareInt, setMovesFromSqareInt] = useState(null);
   const [movesFromSqare, setMovesFromSqare] = useState(null);
@@ -9,7 +10,7 @@ export default function Board({ board, onPlayerMove }) {
   const handleSquareClick = (square: number) => {
     if (selectedSquare === null) {
       setSelectedSquare(square);
-      const moves = generateMoves(board.board, square);
+      const moves = generateMoves(boardState.board, square);
       const moves_numbers = moves.map((move) => move.to);
       setMovesFromSqare(moves);
       setMovesFromSqareInt(moves_numbers);
@@ -44,7 +45,7 @@ export default function Board({ board, onPlayerMove }) {
       }}
     >
       <div style={{ display: "grid", gridTemplateColumns: "repeat(8, 100px)" }}>
-        {board.board.map((sq: PieceOrNull, index: number) => (
+        {boardState.board.map((sq: PieceOrNull, index: number) => (
           <button
             key={index}
             onClick={() => handleSquareClick(index)}
@@ -63,7 +64,7 @@ export default function Board({ board, onPlayerMove }) {
             }}
           >
             {sq && (
-              <img
+              <Image
                 src={`/chess/${sq.color}/${sq.type}.svg`}
                 alt={sq.color + sq.type}
                 style={{ width: "100%", height: "100%" }}
@@ -72,7 +73,7 @@ export default function Board({ board, onPlayerMove }) {
             {movesFromSqareInt &&
               movesFromSqareInt.length > 0 &&
               movesFromSqareInt.includes(index) && (
-                <img
+                <Image
                   src={`/chess/circle.svg`}
                   alt={"Position that the selected Piece can move to."}
                   style={{

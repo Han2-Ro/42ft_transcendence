@@ -21,10 +21,10 @@ export interface SToCEvents {
   game_start: (data: {
     gameId: string;
     color: Color;
-    board: BoardState;
+    boardState: BoardState;
   }) => void;
 
-  move_made: (data: { board: BoardState }) => void;
+  move_made: (data: { boardState: BoardState }) => void;
 
   game_over: (data: { result: result; reason: string }) => void;
 }

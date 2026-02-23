@@ -14,27 +14,27 @@ const socket: Socket<SToCEvents, CToSEvents> = io("http://localhost:4000");
 export default function Page() {
   const [gameId, setGameId] = useState(null);
   const [color, setColor] = useState(null);
-  const [board, setBoard] = useState(null);
+  const [boardState, setBoardState] = useState(null);
   const [result, setResult] = useState(null);
   const [resultReason, setResultReason] = useState(null);
 
   useEffect(() => {
     socket.on("game_start", (data) => {
       setGameId(data.gameId);
-      setBoard(data.board);
+      setBoardState(data.boardState);
       setColor(data.color);
     });
 
     socket.on("move_made", (data) => {
-      console.log("move_recieved", board);
-      setBoard(data.board);
+      console.log("move_recieved", boardState);
+      setBoardState(data.boardState);
     });
 
     socket.on("game_over", (data) => {
       setResult(data.result);
       setResultReason(data.reason);
       setGameId(null);
-      setBoard(null);
+      setBoardState(null);
       setColor(null);
     });
 
@@ -61,9 +61,9 @@ export default function Page() {
     socket.emit("resign", gameId);
   };
 
-  return board ? (
+  return boardState ? (
     <Game
-      board={board}
+      boardState={boardState}
       color={color}
       onPlayerMove={EmitPlayerMove}
       onPlayerResign={EmitPlayerResign}
