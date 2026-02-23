@@ -41,4 +41,6 @@ yarn-error.log*
 next-env.d.ts
 
 /game-server/dist
-/shared/dist
+
+# docker compose local overrides
+docker-compose.override.yml
