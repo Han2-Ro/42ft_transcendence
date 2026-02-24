@@ -80,6 +80,19 @@ function updateBoard(board: Board, move: Move, turn: Color)
   }
 }
 
+export function checkMates(board: Board, turn: Color): GameStatus {
+  const moves = generateAllMoves(board, turn);
+  if (moves.length == 0) {
+    if (checkKingInCheck(board, turn)) {
+      let winner: Color;
+      if (turn == "white") winner = "black";
+      else winner = "white";
+      return { isOver: true, winner: winner, reason: "Checkmate" };
+    } else return { isOver: true, winner: null, reason: "Stalemate" };
+  }
+  return { isOver: false, winner: null, reason: "" };
+}
+
 export function generateAllMoves(board: Board, color: Color): Array<Move> {
   const moves: Move[] = [];
   for (let sq = 0; sq < 64; sq++) {
@@ -439,16 +452,8 @@ function checkKingInCheckAfterMove(
   color: Color,
 ): boolean {
   const board_copy = [...board];
-
-  board_copy[move.to] = board_copy[move.from];
-  board_copy[move.from] = null;
-  let king_pos = -1;
-  for (let sq = 0; sq < 64; sq++) {
-    const piece = board_copy[sq];
-    if (piece == null) continue;
-    if (piece.type == "king" && piece.color == color) king_pos = sq;
-  }
-  if (CheckIsAttacked(board_copy, king_pos, color)) return true;
+  updateBoard(board_copy, move, color)
+  if (checkKingInCheck(board_copy, color)) return true;
   return false;
 }
 

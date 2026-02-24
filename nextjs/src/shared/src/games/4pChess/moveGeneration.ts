@@ -7,7 +7,7 @@ import {
   PieceOrNull,
   PieceType,
   Pos2,
-} from "../../gameTypes.js";
+} from "../../gameTypes";
 
 export function validateMove(
   move: Move,

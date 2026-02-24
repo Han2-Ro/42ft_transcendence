@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { generateMoves, Move, PieceOrNull } from "../../shared";
 import Image from "next/image";
 
-export default function Board({ boardState, onPlayerMove }) {
+export default function TwoPlayerBoard({ boardState, onPlayerMove }) {
   const [selectedSquare, setSelectedSquare] = useState(null);
   const [movesFromSqareInt, setMovesFromSqareInt] = useState(null);
   const [movesFromSqare, setMovesFromSqare] = useState(null);

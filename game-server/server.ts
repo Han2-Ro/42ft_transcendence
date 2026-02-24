@@ -1,6 +1,6 @@
 import { Server, Socket } from "socket.io";
 import { Room } from "./src/room/room.js";
-import { CToSEvents, SToCEvents } from "./src/shared/index.js";
+import { CToSEvents, SToCEvents, Games } from "./src/shared/index.js";
 
 export type GameSocket = Socket<CToSEvents, SToCEvents>;
 
@@ -18,33 +18,53 @@ const io = new Server<CToSEvents, SToCEvents>(4000, {
   },
 });
 
-const matchmakingQueue: GameSocket[] = [];
-//const rooms : Room[] = []
+type Player = {
+	socket: GameSocket
+	status: "lobby" | "in_game"
+	game_id: String | null
+	searching: Games[]
+}; 
 
-//const rooms : Record<, Room> = []
+const PlayerStates: Player[] = [];
 const rooms: Map<string, Room> = new Map();
 
 io.on("connection", (socket) => {
+  PlayerStates.push({socket: socket, status: "lobby", game_id: null, searching: []})
   console.log("Client connected:", socket.id);
 
-  socket.on("find_match", () => {
-    if (matchmakingQueue.includes(socket)) return;
-    console.log("Client searching for opponent:", socket.id);
-    matchmakingQueue.push(socket);
+/*   socket.on('disconnect', ()=> {
+      console.log('Got disconnect!');
+  }); */
 
-    if (matchmakingQueue.length >= 2) {
-      const player1 = matchmakingQueue.shift();
-      const player2 = matchmakingQueue.shift();
-
-      if (player1 && player2) {
-        const gameId = crypto.randomUUID();
-        const players: GameSocket[] = [];
-        players.push(player1);
-        players.push(player2);
-        const new_room = new Room(players, "chess", gameId);
+  socket.on("find_match", (type) => {
+	//add type to searching
+	const player = GetPlayer(socket)
+	if (player === null || player.status !== "lobby" || player.searching.includes(type))
+		return
+	player.searching.push(type)
+    console.log("Client searching for opponent:", socket.id, ", for type:", type);
+	//check if Room can be created
+	let players: Player[] = [];
+	let sockets: GameSocket[] = [];
+	PlayerStates.forEach((value: Player) => {
+		if (value.searching.includes(type))
+		{
+			sockets.push(value.socket)
+			players.push(value)
+		}
+	})
+	if (((type === "4pChess" || type === "4pTimedChess") && players.length === 4) 
+		|| ((type === "chess" || type === "timedChess") && players.length === 2))
+	{
+		const gameId = crypto.randomUUID();
+		players.forEach((value: Player) => {
+			value.game_id = gameId
+			value.status = "in_game"
+			value.searching = []
+		})
+		const new_room = new Room(sockets, type, gameId);
         rooms.set(gameId, new_room);
-      }
-    }
+	}
   });
 
   socket.on("move", ({ gameId, move }) => {
@@ -57,6 +77,11 @@ io.on("connection", (socket) => {
     if (room) room.ClientResign(socket);
   });
 });
+
+function GetPlayer(socket: GameSocket): Player | null
+{
+	return PlayerStates.find((value: Player) => value.socket.id === socket.id) || null;
+}
 
 const TICK_RATE = 20;
 const DT = 1 / TICK_RATE;
@@ -72,7 +97,18 @@ function nowSeconds(): number {
 
 function CheckRunningGames(time_passed: number) {
   rooms.forEach((value: Room, key: string) => {
-    if (value.UpdateAndCheckOver(time_passed) === true) rooms.delete(key);
+    if (value.UpdateAndCheckOver(time_passed) === true) 
+	{	
+		value.Players.forEach((value: GameSocket) => {
+			const player = GetPlayer(value)
+			if (player !== null)
+			{
+				player.status = "lobby"
+				player.game_id = null
+			}
+		})
+		rooms.delete(key);
+	}
   });
 }
 

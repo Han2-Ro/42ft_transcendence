@@ -6,13 +6,14 @@ import Lobby from "../../componets/game/lobby";
 import Game from "../../componets/game/game";
 import EndScreen from "../../componets/game/endScreen";
 
-import { CToSEvents, SToCEvents } from "../../shared";
+import { CToSEvents, SToCEvents, Games } from "../../shared";
 
 // Connect to the exposed backend port
 const socket: Socket<SToCEvents, CToSEvents> = io("http://localhost:4000");
 
 export default function Page() {
   const [gameId, setGameId] = useState(null);
+  const [gameType, setGameType] = useState(null); 
   const [color, setColor] = useState(null);
   const [boardState, setBoardState] = useState(null);
   const [result, setResult] = useState(null);
@@ -21,6 +22,7 @@ export default function Page() {
   useEffect(() => {
     socket.on("game_start", (data) => {
       setGameId(data.gameId);
+	  setGameType(data.type);
       setBoardState(data.boardState);
       setColor(data.color);
     });
@@ -34,6 +36,7 @@ export default function Page() {
       setResult(data.result);
       setResultReason(data.reason);
       setGameId(null);
+	  setGameType(null);
       setBoardState(null);
       setColor(null);
     });
@@ -50,8 +53,8 @@ export default function Page() {
     setResultReason(null);
   };
 
-  const EmitFindMatch = () => {
-    socket.emit("find_match");
+  const EmitFindMatch = (type : Games) => {
+    socket.emit("find_match", type);
   };
 
   const EmitPlayerMove = (move) => {
@@ -64,6 +67,7 @@ export default function Page() {
   return boardState ? (
     <Game
       boardState={boardState}
+	  gameType={gameType}
       color={color}
       onPlayerMove={EmitPlayerMove}
       onPlayerResign={EmitPlayerResign}

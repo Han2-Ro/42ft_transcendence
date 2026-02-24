@@ -10,7 +10,7 @@ import {
 import { startingBoardState } from "./constants.js";
 import { Game } from "../game.js";
 
-export class Chess extends Game {
+export class FourPlayerChess extends Game {
   boardState: BoardState;
   GameStatus: GameStatus;
   constructor(state?: BoardState) {
