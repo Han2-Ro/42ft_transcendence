@@ -42,5 +42,9 @@ next-env.d.ts
 
 /game-server/dist
 
+# playwright
+tests/playwright-report/
+tests/test-results/
+
 # docker compose local overrides
 docker-compose.override.yml
