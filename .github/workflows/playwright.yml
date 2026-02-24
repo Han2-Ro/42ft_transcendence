@@ -20,12 +20,27 @@ jobs:
           POSTGRES_USER=${{ secrets.POSTGRES_USER }}
           POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
           POSTGRES_DB=${{ secrets.POSTGRES_DB }}
-          DATABASE_URL=${{ secrets.DATABASE_URL }}
+          DATABASE_URL=postgresql://${{ secrets.POSTGRES_USER }}:${{ secrets.POSTGRES_PASSWORD }}@db:5432/${{ secrets.POSTGRES_DB }}}
           JWT_SECRET=${{ secrets.JWT_SECRET }}
           EOF
 
       - name: Start services
         run: docker compose up --build -d
+
+      - name: Wait for Next.js to be ready
+        run: |
+          echo "Waiting for app on port 8080..."
+          for i in $(seq 1 10); do
+            if curl -sf http://localhost:8080 > /dev/null 2>&1; then
+              echo "App is ready."
+              exit 0
+            fi
+            echo "Attempt $i/10 - not ready yet, retrying in 5s..."
+            sleep 5
+          done
+          echo "App did not become ready in time."
+          docker compose logs
+          exit 1
 
       - name: Install pnpm
         uses: pnpm/action-setup@v4
@@ -39,21 +54,6 @@ jobs:
       - name: Install Playwright browsers
         run: pnpm exec playwright install --with-deps chromium
         working-directory: tests
-
-      - name: Wait for Next.js to be ready
-        run: |
-          echo "Waiting for app on port 8080..."
-          for i in $(seq 1 30); do
-            if curl -sf http://localhost:8080 > /dev/null 2>&1; then
-              echo "App is ready."
-              exit 0
-            fi
-            echo "Attempt $i/30 - not ready yet, retrying in 5s..."
-            sleep 5
-          done
-          echo "App did not become ready in time."
-          docker compose logs
-          exit 1
 
       - name: Run Playwright tests
         run: pnpm test
