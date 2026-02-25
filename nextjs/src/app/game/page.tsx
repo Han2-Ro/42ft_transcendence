@@ -50,7 +50,7 @@ export default function Page() {
     setResultReason(null);
   };
 
-  const EmitFindMatch = () => {
+  const emitFindMatch = () => {
     socket.emit("find_match");
   };
 
