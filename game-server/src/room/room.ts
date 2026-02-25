@@ -76,7 +76,7 @@ export class Room {
       }
     }
     //Check if game is Over
-    if (this.gameLogic.GetGameStatus().isOver === true) {
+    if (this.gameLogic.GetGameStatus().isOver) {
       const result = this.gameLogic.GetGameStatus();
       const winner = result.winner;
       if (winner != null) {
