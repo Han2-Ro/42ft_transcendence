@@ -61,7 +61,9 @@ export class Room {
   public UpdateAndCheckOver(time_passed: number): boolean {
     //check for timeout
     if (this.timed == true) {
-      const TurnIndex = this.AssignedColors.indexOf(this.gameLogic.boardState.turn);
+      const TurnIndex = this.AssignedColors.indexOf(
+        this.gameLogic.boardState.turn,
+      );
       this.PlayerTimes[TurnIndex] = this.PlayerTimes[TurnIndex] - time_passed;
       if (this.PlayerTimes[TurnIndex] < 0) {
         this.Players[TurnIndex].emit("game_over", {
