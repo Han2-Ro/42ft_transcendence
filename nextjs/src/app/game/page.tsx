@@ -75,6 +75,6 @@ export default function Page() {
       onClose={CloseResultScreen}
     />
   ) : (
-    <Lobby onFindMatchPressed={EmitFindMatch} />
+    <Lobby onFindMatchPressed={() => socket.emit("find_match")} />
   );
 }
