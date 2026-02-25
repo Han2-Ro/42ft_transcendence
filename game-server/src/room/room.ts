@@ -34,7 +34,7 @@ export class Room {
       value.emit("game_start", {
         gameId,
         color: this.AssignedColors[index],
-        boardState: this.gameLogic.GetBoardState(),
+        boardState: this.gameLogic.boardState,
       });
     });
   }
@@ -61,7 +61,7 @@ export class Room {
   public UpdateAndCheckOver(time_passed: number): boolean {
     //check for timeout
     if (this.timed == true) {
-      const TurnIndex = this.AssignedColors.indexOf(this.gameLogic.GetTurn());
+      const TurnIndex = this.AssignedColors.indexOf(this.gameLogic.boardState.turn);
       this.PlayerTimes[TurnIndex] = this.PlayerTimes[TurnIndex] - time_passed;
       if (this.PlayerTimes[TurnIndex] < 0) {
         this.Players[TurnIndex].emit("game_over", {
@@ -76,8 +76,8 @@ export class Room {
       }
     }
     //Check if game is Over
-    if (this.gameLogic.GetGameStatus().isOver) {
-      const result = this.gameLogic.GetGameStatus();
+    if (this.gameLogic.gameStatus.isOver) {
+      const result = this.gameLogic.gameStatus;
       const winner = result.winner;
       if (winner != null) {
         const WinnerIndex = this.AssignedColors.indexOf(winner);
@@ -98,7 +98,7 @@ export class Room {
     if (this.positionUpdated == true) {
       this.positionUpdated = false;
       this.Players.forEach((value: GameSocket) => {
-        value.emit("move_made", { boardState: this.gameLogic.GetBoardState() });
+        value.emit("move_made", { boardState: this.gameLogic.boardState });
       });
     }
     return false;

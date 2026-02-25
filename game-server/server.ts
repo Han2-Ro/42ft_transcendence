@@ -54,7 +54,7 @@ io.on("connection", (socket) => {
 
   socket.on("resign", (gameId) => {
     const room = rooms.get(gameId);
-    if (room) room.ClientResign(socket);
+    if (room) room.clientResign(socket);
   });
 });
 
@@ -62,7 +62,7 @@ const TICK_RATE = 20;
 const DT = 1 / TICK_RATE;
 const MAX_CATCHUP_TICKS = 5;
 
-let lastTime = process.hrtime.bigint();
+let lastTime = nowSeconds();
 let accumulator = 0;
 //let running = true;
 

@@ -50,14 +50,10 @@ export default function Page() {
     setResultReason(null);
   };
 
-  const emitFindMatch = () => {
-    socket.emit("find_match");
-  };
-
-  const EmitPlayerMove = (move) => {
+  const emitPlayerMove = (move) => {
     socket.emit("move", { gameId: gameId, move: move });
   };
-  const EmitPlayerResign = () => {
+  const emitPlayerResign = () => {
     socket.emit("resign", gameId);
   };
 
@@ -65,14 +61,14 @@ export default function Page() {
     <Game
       boardState={boardState}
       color={color}
-      onPlayerMove={EmitPlayerMove}
-      onPlayerResign={EmitPlayerResign}
+      onPlayerMove={emitPlayerMove}
+      onPlayerResign={emitPlayerResign}
     />
   ) : result ? (
     <EndScreen
       result={result}
       reason={resultReason}
-      onClose={CloseResultScreen}
+      onClose={closeResultScreen}
     />
   ) : (
     <Lobby onFindMatchPressed={() => socket.emit("find_match")} />
