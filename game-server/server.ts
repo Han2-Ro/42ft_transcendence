@@ -81,7 +81,7 @@ async function serverLoop() {
   while (1) {
     const currentTime = nowSeconds();
     const frameTime = currentTime - lastTime;
-    lastTime = process.hrtime.bigint();
+    lastTime = currentTime;
 
     accumulator += frameTime;
 
