@@ -14,7 +14,7 @@ import { Game } from "../game.js";
 
 export class Chess extends Game {
   boardState: BoardState;
-  GameStatus: GameStatus;
+  gameStatus: GameStatus;
   constructor(state?: BoardState) {
     super();
     if (state !== undefined) this.boardState = state;
