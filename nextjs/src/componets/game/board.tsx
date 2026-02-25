@@ -65,6 +65,8 @@ export default function Board({ boardState, onPlayerMove }) {
           >
             {sq && (
               <Image
+                width="45"
+                height="45"
                 src={`/chess/${sq.color}/${sq.type}.svg`}
                 alt={sq.color + sq.type}
                 style={{ width: "100%", height: "100%" }}
