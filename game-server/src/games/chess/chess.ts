@@ -23,7 +23,7 @@ export class Chess extends Game {
   }
 
   playMove(move: Move, played_by: Color): boolean {
-    if (validateMove(move, this.boardState, played_by) == true) {
+    if (validateMove(move, this.boardState, played_by)) {
       updateBoardState(this.boardState, move);
       this.GameStatus = checkMates(this.boardState.board, this.boardState.turn);
       return true;
