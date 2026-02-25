@@ -21,7 +21,7 @@ export interface SToCEvents {
   game_start: (data: {
     gameId: string;
     color: Color;
-	type: Games;
+    type: Games;
     boardState: BoardState;
   }) => void;
 

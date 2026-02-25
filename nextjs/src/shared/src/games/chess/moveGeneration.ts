@@ -43,13 +43,12 @@ export function validateMove(
 }
 
 export function updateBoardState(boardState: BoardState, move: Move) {
-  updateBoard(boardState.board, move, boardState.turn)
+  updateBoard(boardState.board, move, boardState.turn);
   if (boardState.turn == "white") boardState.turn = "black";
   else boardState.turn = "white";
 }
 
-function updateBoard(board: Board, move: Move, turn: Color)
-{
+function updateBoard(board: Board, move: Move, turn: Color) {
   const piece = board[move.from];
   if (piece) piece.hasMoved = true;
   board[move.to] = board[move.from];
@@ -164,31 +163,29 @@ function generatePawnMoves(
   //Attacks
   newPos = generateOffset(sq, { x: 1, y: dir });
   if (
-	newPos != null &&
-	checkSqare(board, newPos, color) &&
-	!checkSqareEmpty(board, newPos)
-  )
-  {
-	if (
-	  (color == "white" && newPos > -1 && newPos < 8) ||
-	  (color == "black" && newPos > 55 && newPos < 64)
-	)
-	  moves.push({ from: sq, to: newPos, special: "promotion" });
-	else moves.push({ from: sq, to: newPos, special: null });
+    newPos != null &&
+    checkSqare(board, newPos, color) &&
+    !checkSqareEmpty(board, newPos)
+  ) {
+    if (
+      (color == "white" && newPos > -1 && newPos < 8) ||
+      (color == "black" && newPos > 55 && newPos < 64)
+    )
+      moves.push({ from: sq, to: newPos, special: "promotion" });
+    else moves.push({ from: sq, to: newPos, special: null });
   }
   newPos = generateOffset(sq, { x: -1, y: dir });
   if (
-	newPos != null &&
-	checkSqare(board, newPos, color) &&
-	!checkSqareEmpty(board, newPos)
-  )
-  {
-	if (
-	  (color == "white" && newPos > -1 && newPos < 8) ||
-	  (color == "black" && newPos > 55 && newPos < 64)
-	)
-	  moves.push({ from: sq, to: newPos, special: "promotion" });
-	else moves.push({ from: sq, to: newPos, special: null });
+    newPos != null &&
+    checkSqare(board, newPos, color) &&
+    !checkSqareEmpty(board, newPos)
+  ) {
+    if (
+      (color == "white" && newPos > -1 && newPos < 8) ||
+      (color == "black" && newPos > 55 && newPos < 64)
+    )
+      moves.push({ from: sq, to: newPos, special: "promotion" });
+    else moves.push({ from: sq, to: newPos, special: null });
   }
   return moves;
 }
@@ -452,7 +449,7 @@ function checkKingInCheckAfterMove(
   color: Color,
 ): boolean {
   const board_copy = [...board];
-  updateBoard(board_copy, move, color)
+  updateBoard(board_copy, move, color);
   if (checkKingInCheck(board_copy, color)) return true;
   return false;
 }

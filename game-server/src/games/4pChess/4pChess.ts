@@ -3,10 +3,9 @@ import {
   Color,
   GameStatus,
   Move,
-  checkMates,
-  updateBoardState,
-  validateMove,
+  fourPlayer,
 } from "../../shared/index.js";
+
 import { startingBoardState } from "./constants.js";
 import { Game } from "../game.js";
 
@@ -14,34 +13,38 @@ export class FourPlayerChess extends Game {
   boardState: BoardState;
   GameStatus: GameStatus;
   constructor(state?: BoardState) {
-	super();
-	if (state !== undefined) this.boardState = state;
-	else this.boardState = startingBoardState;
-	this.GameStatus = { isOver: false, winner: null, reason: "" };
+    super();
+    if (state !== undefined) this.boardState = state;
+    else this.boardState = startingBoardState;
+    this.GameStatus = { isOver: false, winner: null, reason: "" };
   }
 
   playMove(move: Move, played_by: Color): boolean {
-	if (validateMove(move, this.boardState, played_by) == true) {
-	  updateBoardState(this.boardState, move);
-	  this.GameStatus = checkMates(this.boardState.board, this.boardState.turn);
-	  return true;
-	}
-	return false;
+	console.log(played_by)
+    if (fourPlayer.validateMove(move, this.boardState, played_by) == true) {
+      fourPlayer.updateBoardState(this.boardState, move);
+      this.GameStatus = fourPlayer.checkMates(
+        this.boardState.board,
+        this.boardState.turn,
+      );
+      return true;
+    }
+    return false;
   }
   playResign(played_by: Color): void {
-	let winner: Color;
-	if (played_by == "white") winner = "black";
-	else winner = "white";
-	this.GameStatus = { isOver: true, winner: winner, reason: "Resignation" };
+    let winner: Color;
+    if (played_by == "white") winner = "black";
+    else winner = "white";
+    this.GameStatus = { isOver: true, winner: winner, reason: "Resignation" };
   }
 
   GetBoardState(): BoardState {
-	return this.boardState;
+    return this.boardState;
   }
   GetTurn(): Color {
-	return this.boardState.turn;
+    return this.boardState.turn;
   }
   GetGameStatus(): GameStatus {
-	return this.GameStatus;
+    return this.GameStatus;
   }
 }

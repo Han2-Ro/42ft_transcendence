@@ -20,7 +20,7 @@ export default function Lobby({ onFindMatchPressed }) {
       >
         Find chess Match
       </button>
-	  <button
+      <button
         onClick={() => onFindMatchPressed("4pChess")}
         style={{
           padding: "10px 20px",

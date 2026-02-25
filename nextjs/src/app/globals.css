@@ -32,3 +32,9 @@ body {
 a:hover {
   @apply underline;
 }
+
+.FourPlayerBoard {
+  display: grid;
+  grid-template-columns: repeat(14, 50px);
+  grid-template-rows: repeat(14, 50px);
+}

@@ -1,8 +1,8 @@
 import { Move, Color, Games } from "../shared/index.js";
 
-import { Game} from "../games/game.js";
+import { Game } from "../games/game.js";
 import { Chess } from "../games/chess/chess.js";
-import { FourPlayerChess } from "../games/4pChess/4pChess.js"
+import { FourPlayerChess } from "../games/4pChess/4pChess.js";
 import { GameSocket } from "../../server.js";
 
 export type Game_status =
@@ -26,47 +26,37 @@ export class Room {
   constructor(players: GameSocket[], type: Games, gameId: string) {
     this.Players = players;
     //change when more gamemodes
-    if (type == "chess" || type == "timedChess")
-	{
-    	this.gameLogic = new Chess();
-    	this.AssignedColors = this.GenerateRandomColors2p();
-		if (type == "timedChess")
-		{
-			this.timed = true;
-    		this.PlayerTimes = [10, 10];
-		}
-		else
-		{
-    		this.timed = false;
-    		this.PlayerTimes = [-1, -1];
-		}
-	}
-	else
-	{
-		this.gameLogic = new FourPlayerChess();
-    	this.AssignedColors = this.GenerateRandomColors4p();
-		if (type == "4pTimedChess")
-		{
-			this.timed = true;
-    		this.PlayerTimes = [10, 10, 10, 10];
-		}
-		else
-		{
-    		this.timed = false;
-    		this.PlayerTimes = [-1, -1, -1, -1];
-		}
-
-	}
+    if (type == "chess" || type == "timedChess") {
+      this.gameLogic = new Chess();
+      this.AssignedColors = this.GenerateRandomColors2p();
+      if (type == "timedChess") {
+        this.timed = true;
+        this.PlayerTimes = [10, 10];
+      } else {
+        this.timed = false;
+        this.PlayerTimes = [-1, -1];
+      }
+    } else {
+      this.gameLogic = new FourPlayerChess();
+      this.AssignedColors = this.GenerateRandomColors4p();
+      if (type == "4pTimedChess") {
+        this.timed = true;
+        this.PlayerTimes = [10, 10, 10, 10];
+      } else {
+        this.timed = false;
+        this.PlayerTimes = [-1, -1, -1, -1];
+      }
+    }
     this.Players.forEach((value: GameSocket, index: number) => {
       value.emit("game_start", {
         gameId,
-		type,
+        type,
         color: this.AssignedColors[index],
         boardState: this.gameLogic.GetBoardState(),
       });
     });
   }
-  
+
   public ClientMove(move: Move, client: GameSocket) {
     let colorPos = -1;
     for (let i = 0; i < this.Players.length; i++) {
@@ -138,20 +128,20 @@ export class Room {
   }
 
   private shuffleArray<T>(array: T[]): T[] {
-  const length = array.length;
-  for (let i = length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]];
+    const length = array.length;
+    for (let i = length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
   }
-  return array;
-}
   private GenerateRandomColors2p(): Color[] {
-	const colors: Color[] = ["white", "black"];
-	return this.shuffleArray(colors);
+    const colors: Color[] = ["white", "black"];
+    return this.shuffleArray(colors);
   }
-  
-private GenerateRandomColors4p(): Color[] {
-	const colors: Color[] = ["green", "blue", "red", "yellow"];
-	return this.shuffleArray(colors);
-	}
+
+  private GenerateRandomColors4p(): Color[] {
+    const colors: Color[] = ["green", "blue", "red", "yellow"];
+    return this.shuffleArray(colors);
+  }
 }

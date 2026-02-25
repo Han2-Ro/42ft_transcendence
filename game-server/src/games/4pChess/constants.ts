@@ -12,9 +12,9 @@ export const startingBoard: Board = [
   { color: "yellow", type: "rook", hasMoved: false },
   //row 2
   ...Array.from({ length: 8 }, () => ({
-	color: "yellow",
-	type: "pawn",
-	hasMoved: false,
+    color: "yellow",
+    type: "pawn",
+    hasMoved: false,
   })),
   //row 3
   ...Array(8).fill(null),
@@ -70,9 +70,9 @@ export const startingBoard: Board = [
   ...Array(8).fill(null),
   //row 13
   ...Array.from({ length: 8 }, () => ({
-	color: "red",
-	type: "pawn",
-	hasMoved: false,
+    color: "red",
+    type: "pawn",
+    hasMoved: false,
   })),
   //row 14
   { color: "red", type: "rook", hasMoved: false },

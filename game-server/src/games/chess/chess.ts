@@ -3,11 +3,7 @@ import {
   Color,
   GameStatus,
   Move,
-} from "../../shared/src/gameTypes.js";
-import {
-  checkMates,
-  updateBoardState,
-  validateMove,
+  twoPlayer,
 } from "../../shared/index.js";
 import { startingBoardState } from "./constants.js";
 import { Game } from "../game.js";
@@ -23,9 +19,12 @@ export class Chess extends Game {
   }
 
   playMove(move: Move, played_by: Color): boolean {
-    if (validateMove(move, this.boardState, played_by) == true) {
-      updateBoardState(this.boardState, move);
-      this.GameStatus = checkMates(this.boardState.board, this.boardState.turn);
+    if (twoPlayer.validateMove(move, this.boardState, played_by) == true) {
+      twoPlayer.updateBoardState(this.boardState, move);
+      this.GameStatus = twoPlayer.checkMates(
+        this.boardState.board,
+        this.boardState.turn,
+      );
       return true;
     }
     return false;

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { generateMoves, Move, PieceOrNull } from "../../shared";
+import { Move, PieceOrNull, twoPlayer } from "../../shared";
 import Image from "next/image";
 
 export default function TwoPlayerBoard({ boardState, onPlayerMove }) {
@@ -10,7 +10,7 @@ export default function TwoPlayerBoard({ boardState, onPlayerMove }) {
   const handleSquareClick = (square: number) => {
     if (selectedSquare === null) {
       setSelectedSquare(square);
-      const moves = generateMoves(boardState.board, square);
+      const moves = twoPlayer.generateMoves(boardState.board, square);
       const moves_numbers = moves.map((move) => move.to);
       setMovesFromSqare(moves);
       setMovesFromSqareInt(moves_numbers);
