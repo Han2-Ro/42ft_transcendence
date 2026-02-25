@@ -49,7 +49,7 @@ export class Room {
     }
   }
 
-  public ClientResign(client: GameSocket) {
+  public clientResign(client: GameSocket) {
     let colorPos = -1;
     for (let i = 0; i < this.Players.length; i++) {
       if (client.id == this.Players[i].id) colorPos = i;
