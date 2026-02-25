@@ -367,7 +367,7 @@ function checkSqaresEmptyAndNotAttacked(
   return true;
 }
 
-function CheckIsAttacked(board: Board, pos: number, color: Color) {
+function checkIsAttacked(board: Board, pos: number, color: Color) {
   //check for bishops (and half of queens)
   let moves = generateBishopMoves(board, pos, color);
   for (let i = 0; i < moves.length; i++) {
