@@ -45,7 +45,7 @@ export default function Page() {
     };
   });
 
-  const CloseResultScreen = () => {
+  const closeResultScreen = () => {
     setResult(null);
     setResultReason(null);
   };
