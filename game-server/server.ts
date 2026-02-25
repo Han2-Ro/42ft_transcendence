@@ -72,7 +72,7 @@ function nowSeconds(): number {
 
 function CheckRunningGames(time_passed: number) {
   rooms.forEach((value: Room, key: string) => {
-    if (value.UpdateAndCheckOver(time_passed) === true) rooms.delete(key);
+    if (value.UpdateAndCheckOver(time_passed)) rooms.delete(key);
   });
 }
 
