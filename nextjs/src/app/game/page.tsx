@@ -1,46 +1,76 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { io } from "socket.io-client";
+import { io, Socket } from "socket.io-client";
+import Lobby from "../../componets/game/lobby";
+import Game from "../../componets/game/game";
+import EndScreen from "../../componets/game/endScreen";
+
+import { CToSEvents, SToCEvents } from "../../shared";
 
 // Connect to the exposed backend port
-const socket = io("http://localhost:4000");
+const socket: Socket<SToCEvents, CToSEvents> = io("http://localhost:4000");
 
-export default function Home() {
-  const [count, setCount] = useState(0);
+export default function Page() {
+  const [gameId, setGameId] = useState(null);
+  const [color, setColor] = useState(null);
+  const [boardState, setBoardState] = useState(null);
+  const [result, setResult] = useState(null);
+  const [resultReason, setResultReason] = useState(null);
 
   useEffect(() => {
-    // Listen for updates from the server
-    socket.on("update-count", (newCount) => {
-      setCount(newCount);
+    socket.on("game_start", (data) => {
+      setGameId(data.gameId);
+      setBoardState(data.boardState);
+      setColor(data.color);
+    });
+
+    socket.on("move_made", (data) => {
+      console.log("move_recieved", boardState);
+      setBoardState(data.boardState);
+    });
+
+    socket.on("game_over", (data) => {
+      setResult(data.result);
+      setResultReason(data.reason);
+      setGameId(null);
+      setBoardState(null);
+      setColor(null);
     });
 
     return () => {
-      socket.off("update-count");
+      socket.off("game_start");
+      socket.off("move_made");
+      socket.off("game_over");
     };
-  }, []);
+  });
 
-  const handleClick = () => {
-    socket.emit("increment");
+  const closeResultScreen = () => {
+    setResult(null);
+    setResultReason(null);
   };
 
-  return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        margin: "50px",
-      }}
-    >
-      <h1>Shared Chess Counter</h1>
-      <div style={{ fontSize: "100px", fontWeight: "bold" }}>{count}</div>
-      <button
-        onClick={handleClick}
-        style={{ padding: "10px 20px", fontSize: "20px", cursor: "pointer" }}
-      >
-        Increment
-      </button>
-    </div>
+  const emitPlayerMove = (move) => {
+    socket.emit("move", { gameId: gameId, move: move });
+  };
+  const emitPlayerResign = () => {
+    socket.emit("resign", gameId);
+  };
+
+  return boardState ? (
+    <Game
+      boardState={boardState}
+      color={color}
+      onPlayerMove={emitPlayerMove}
+      onPlayerResign={emitPlayerResign}
+    />
+  ) : result ? (
+    <EndScreen
+      result={result}
+      reason={resultReason}
+      onClose={closeResultScreen}
+    />
+  ) : (
+    <Lobby onFindMatchPressed={() => socket.emit("find_match")} />
   );
 }

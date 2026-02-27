@@ -6,7 +6,6 @@
     "skipLibCheck": true,
     "strict": false,
     "noEmit": true,
-    "incremental": true,
     "module": "esnext",
     "esModuleInterop": true,
     "moduleResolution": "node",
@@ -21,7 +20,8 @@
       {
         "name": "next"
       }
-    ]
+    ],
+    "incremental": true
   },
   "include": [
     "next-env.d.ts",
