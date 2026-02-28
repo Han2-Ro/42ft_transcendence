@@ -1,6 +1,8 @@
 import { defineConfig, devices } from "@playwright/test";
+import dotenv from 'dotenv';
+dotenv.config({ path: '../.env' });
 
-const BASE_URL = process.env.BASE_URL || "http://localhost:8080";
+const BASE_URL = process.env.BASE_URL || `http://localhost:${process.env.PORT}`;
 
 export default defineConfig({
   testDir: ".",
