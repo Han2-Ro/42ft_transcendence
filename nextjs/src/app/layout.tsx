@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import NavigationBar from "../componets/NavigationBar";
+import { getSession } from "@/lib/auth/session";
+import AuthProvider from "@/componets/AuthProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -18,18 +20,22 @@ export const metadata: Metadata = {
   description: "Better than chess.com",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const user = await getSession();
+
   return (
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} h-screen antialiased lg:flex lg:flex-row bg-background-primary`}
       >
-        <NavigationBar />
-        <div>{children}</div>
+        <AuthProvider initialUser={user}>
+          <NavigationBar />
+          <div>{children}</div>
+        </AuthProvider>
       </body>
     </html>
   );
