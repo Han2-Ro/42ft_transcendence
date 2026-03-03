@@ -7,16 +7,18 @@ import Game from "../../componets/game/game";
 import EndScreen from "../../componets/game/endScreen";
 
 import { CToSEvents, SToCEvents } from "../../shared";
+import { BoardState, Color, Move } from "../../shared/src/gameTypes";
+import { result as GameResult } from "../../shared/src/socketEvents";
 
 // Connect to the exposed backend port
 const socket: Socket<SToCEvents, CToSEvents> = io("http://localhost:4000");
 
 export default function Page() {
-  const [gameId, setGameId] = useState(null);
-  const [color, setColor] = useState(null);
-  const [boardState, setBoardState] = useState(null);
-  const [result, setResult] = useState(null);
-  const [resultReason, setResultReason] = useState(null);
+  const [gameId, setGameId] = useState<string | null>(null);
+  const [color, setColor] = useState<Color | null>(null);
+  const [boardState, setBoardState] = useState<BoardState | null>(null);
+  const [result, setResult] = useState<GameResult | null>(null);
+  const [resultReason, setResultReason] = useState<string | null>(null);
 
   useEffect(() => {
     socket.on("game_start", (data) => {
@@ -50,10 +52,12 @@ export default function Page() {
     setResultReason(null);
   };
 
-  const emitPlayerMove = (move) => {
+  const emitPlayerMove = (move: Move) => {
+    if (!gameId) return;
     socket.emit("move", { gameId: gameId, move: move });
   };
   const emitPlayerResign = () => {
+    if (!gameId) return;
     socket.emit("resign", gameId);
   };
 
