@@ -76,6 +76,8 @@ export default function Board({ boardState, onPlayerMove }) {
               movesFromSqareInt.length > 0 &&
               movesFromSqareInt.includes(index) && (
                 <Image
+                  width="100"
+                  height="100"
                   src={`/chess/circle.svg`}
                   alt={"Position that the selected Piece can move to."}
                   style={{
