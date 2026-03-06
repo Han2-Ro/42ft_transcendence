@@ -52,7 +52,8 @@ docker compose up
 ## Tests
 
 There are end-to-end tests with playwright in `./tests/`:
- - `pnpm test` to execute them
- - `pnpm test:ui` to see what the tests are doing
- 
+
+- `pnpm test` to execute them
+- `pnpm test:ui` to see what the tests are doing
+
 It will be much apreciated if you write tests for everything you implement!

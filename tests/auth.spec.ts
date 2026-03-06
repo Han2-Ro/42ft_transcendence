@@ -13,7 +13,7 @@ test.describe.serial("auth UI flows", () => {
   test("register via modal", async ({ page }) => {
     await page.goto("/");
     await expect(page.getByText(feUser.username)).not.toBeVisible();
-    await expect(page.getByText('Guest')).toBeVisible();
+    await expect(page.getByText("Guest")).toBeVisible();
     await page.getByRole("button", { name: /log in/i }).click();
     await page.getByRole("button", { name: /register here/i }).click();
     const heading = await page.getByRole("heading", { name: /register/i });
@@ -45,7 +45,7 @@ test.describe.serial("auth UI flows", () => {
     await submitButton.click();
     await expect(submitButton).not.toBeVisible();
 
-    await expect(page.getByText('john_42')).toBeVisible();
+    await expect(page.getByText("john_42")).toBeVisible();
     // TODO: replace with line below once getSession (nextjs/src/lib/auth/session.ts) is properly implented
     // await expect(page.getByText(feUser.username)).toBeVisible();
   });
@@ -57,7 +57,7 @@ test.describe.serial("auth UI flows", () => {
     await page.fill("#email", feUser.email);
     await page.fill("#password", feUser.password);
     await page.getByRole("button", { name: /^submit$/i }).click();
-    await expect(page.getByText('john_42')).toBeVisible();
+    await expect(page.getByText("john_42")).toBeVisible();
     // TODO: replace with line below once getSession (nextjs/src/lib/auth/session.ts) is properly implented
     // await expect(page.getByText(feUser.username)).toBeVisible();
 
