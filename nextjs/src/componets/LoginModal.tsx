@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { login, register } from "@/lib/auth/actions";
 
 type Props = {
   onClose: () => void;
@@ -32,27 +33,21 @@ export const AuthModal = ({ onClose }: Props) => {
     setLoading(true);
 
     try {
-      const endpoint =
-        mode === "login" ? "/api/auth/login" : "/api/auth/register";
-      const body =
-        mode === "login" ? { email, password } : { email, username, password };
+      const result =
+        mode === "login"
+          ? await login(email as string, password as string)
+          : await register(
+              email as string,
+              username as string,
+              password as string,
+            );
 
-      const response = await fetch(endpoint, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        setError(
-          data.error || `${mode === "login" ? "Login" : "Registration"} failed`,
-        );
+      if ("error" in result) {
+        setError(result.error);
         return;
       }
 
-      if (mode === "login" && data.requiresTwoFactor) {
+      if ("requiresTwoFactor" in result) {
         setError("2FA not yet implemented");
         return;
       }
