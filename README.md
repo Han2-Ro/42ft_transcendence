@@ -39,6 +39,7 @@ docker compose up
   - **nextjs/src/app/** - file-system based App Router
   - **nextjs/public/** - static assets
 - **game-server/** - Real-time game server using Socket.IO
+- **tests/** - playwright tests
 
 ## The Stack
 

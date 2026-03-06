@@ -60,8 +60,8 @@ export const AuthModal = ({ onClose }: Props) => {
       }
 
       onClose();
-      refreshUser();
-      router.refresh();
+      await refreshUser();
+      await router.refresh();
     } catch (err) {
       console.log(err);
       setError("An error occurred. Please try again.");

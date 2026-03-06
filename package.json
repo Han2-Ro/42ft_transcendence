@@ -10,7 +10,8 @@
     "lint": "pnpm --recursive run lint",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "test": "pnpm --filter tests run test"
+    "test": "pnpm --filter tests run test",
+    "test:ui": "pnpm --filter tests run test:ui"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",

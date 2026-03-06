@@ -9,3 +9,4 @@
 
 - This project is devided into a game-server which is only responsible for realtime game backend logic and next-js which is responsible for frontend and the rest of hte backend logic
 - use pnpm as package manager
+- you can find more information about the project in the README.md
