@@ -22,7 +22,7 @@ export default function NavigationBar() {
       >
         <MainMenu />
       </div>
-    <div className=" p-4 lg:py-10">{user ? user.username : "Guest"}</div>
+      <div className=" p-4 lg:py-10">{user ? user.username : "Guest"}</div>
     </div>
   );
 }

@@ -7,7 +7,8 @@ const JWT_SECRET = new TextEncoder().encode(process.env.JWT_SECRET);
 
 export async function POST(request: NextRequest) {
   try {
-    const { email, password } = await request.json();
+    const { email, password }: { email: string; password: string } =
+      await request.json();
 
     // Validate input
     if (!email || !password) {

@@ -1,11 +1,19 @@
 import { useEffect, useState } from "react";
-import { generateMoves, Move, PieceOrNull } from "../../shared";
+import { generateMoves, Move, PieceOrNull, BoardState } from "../../shared";
 import Image from "next/image";
 
-export default function Board({ boardState, onPlayerMove }) {
-  const [selectedSquare, setSelectedSquare] = useState(null);
-  const [movesFromSqareInt, setMovesFromSqareInt] = useState(null);
-  const [movesFromSqare, setMovesFromSqare] = useState(null);
+export default function Board({
+  boardState,
+  onPlayerMove,
+}: {
+  boardState: BoardState;
+  onPlayerMove: (move: Move) => void;
+}) {
+  const [selectedSquare, setSelectedSquare] = useState<number | null>(null);
+  const [movesFromSqareInt, setMovesFromSqareInt] = useState<number[] | null>(
+    null,
+  );
+  const [movesFromSqare, setMovesFromSqare] = useState<Move[] | null>(null);
 
   const handleSquareClick = (square: number) => {
     if (selectedSquare === null) {

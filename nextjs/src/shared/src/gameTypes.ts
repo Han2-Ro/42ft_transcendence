@@ -1,3 +1,4 @@
+//TODO: better name, sth like PieceColor or ChessColor
 export type Color = "white" | "black";
 export type PieceType =
   | "pawn"

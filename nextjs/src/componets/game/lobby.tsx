@@ -1,4 +1,8 @@
-export default function Lobby({ onFindMatchPressed }) {
+export default function Lobby({
+  onFindMatchPressed,
+}: {
+  onFindMatchPressed: () => void;
+}) {
   return (
     <div
       style={{

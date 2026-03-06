@@ -64,14 +64,14 @@ export default function Page() {
   return boardState ? (
     <Game
       boardState={boardState}
-      color={color}
+      color={color!}
       onPlayerMove={emitPlayerMove}
       onPlayerResign={emitPlayerResign}
     />
   ) : result ? (
     <EndScreen
       result={result}
-      reason={resultReason}
+      reason={resultReason || ""}
       onClose={closeResultScreen}
     />
   ) : (
