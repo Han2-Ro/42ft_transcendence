@@ -8,15 +8,18 @@ import { useState } from "react";
 import { LogoutIcon } from "./icons/LogoutIcon";
 import { useAuthConetxt } from "./AuthProvider";
 import { logout } from "@/lib/auth/actions";
+import { useRouter } from "next/navigation";
 
 export default function MainMenu() {
   const [showLogin, setShowLogin] = useState(false);
   const toggleLogin = () => setShowLogin(!showLogin);
   const { user, refreshUser } = useAuthConetxt();
+  const router = useRouter();
 
   const onLogoutClicked = async () => {
     await logout();
     await refreshUser();
+    router.refresh();
   };
 
   return (

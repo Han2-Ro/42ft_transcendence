@@ -3,6 +3,9 @@
 import { cookies } from "next/headers";
 import { getSession } from "./session";
 
+/**
+ * server action to make getSession() available for client components
+ */
 export async function fetchSession() {
   return await getSession();
 }
