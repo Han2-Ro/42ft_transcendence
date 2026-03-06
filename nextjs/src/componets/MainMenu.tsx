@@ -5,11 +5,19 @@ import { LoginIcon } from "./icons/LoginIcon";
 import { AuthModal } from "./LoginModal";
 import { MenuButton } from "./MenuButton";
 import { useState } from "react";
+import { LogoutIcon } from "./icons/LogoutIcon";
+import { useAuthConetxt } from "./AuthProvider";
+import { logout } from "@/lib/auth/actions";
 
 export default function MainMenu() {
   const [showLogin, setShowLogin] = useState(false);
   const toggleLogin = () => setShowLogin(!showLogin);
-  const logged_in = false; // TODO: placeholder (don't know yet how to check for logged in state)
+  const { user, refreshUser } = useAuthConetxt();
+
+  const onLogoutClicked = async () => {
+    await logout();
+    await refreshUser();
+  };
 
   return (
     <>
@@ -20,10 +28,10 @@ export default function MainMenu() {
           icon={<PlayIcon size={50} className=" text-accent-primary" />}
           label="Play"
         />
-        {logged_in ? (
+        {user ? (
           <MenuButton
-            onClick={() => {}} // TODO: actually logout (does this need an api root?)
-            icon={<LoginIcon size={50} className=" text-accent-primary" />}
+            onClick={onLogoutClicked} // TODO: actually logout (server function)
+            icon={<LogoutIcon size={50} className=" text-accent-primary" />}
             label="Log Out"
           />
         ) : (

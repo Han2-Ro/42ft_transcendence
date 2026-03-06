@@ -8,7 +8,7 @@ import { useAuthConetxt } from "./AuthProvider";
 
 export default function NavigationBar() {
   const [showMenu, setShowMenu] = useState(false);
-  const user = useAuthConetxt();
+  const { user } = useAuthConetxt();
   return (
     <div className="bg-background-secondary flex flex-row lg:flex-col justify-between items-center">
       <button className="lg:hidden" onClick={() => setShowMenu(!showMenu)}>

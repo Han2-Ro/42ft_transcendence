@@ -1,9 +1,15 @@
 "use client";
 
+import { fetchSession } from "@/lib/auth/actions";
 import { User } from "@/lib/auth/session";
-import { createContext, useContext, useState } from "react";
+import { createContext, useCallback, useContext, useState } from "react";
 
-export const AuthContext = createContext<User | null>(null);
+type AuthContextType = {
+  user: User | null;
+  refreshUser: () => Promise<void>;
+};
+
+export const AuthContext = createContext<AuthContextType | null>(null);
 
 export default function AuthProvider({
   initialUser,
@@ -13,14 +19,22 @@ export default function AuthProvider({
   children: React.ReactNode;
 }) {
   const [user, setUser] = useState<User | null>(initialUser);
-  return <AuthContext.Provider value={user}>{children}</AuthContext.Provider>;
+
+  const refreshUser = useCallback(async () => {
+    setUser(await fetchSession());
+  }, []);
+
+  return (
+    <AuthContext.Provider value={{ user, refreshUser }}>
+      {children}
+    </AuthContext.Provider>
+  );
 }
 
-export function useAuthConetxt() {
+export function useAuthConetxt(): AuthContextType {
   const context = useContext(AuthContext);
   if (!context) {
-    // throw new Error('useAuthContext must be used within a AuthProvider');
-    console.log("null context");
+    throw new Error("useAuthContext must be used within a AuthProvider");
   }
   return context;
 }
