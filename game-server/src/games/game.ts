@@ -1,4 +1,4 @@
-import { BoardState, Color, Move, GameStatus } from "../shared/index.js";
+import { BoardState, Color, Move, GameStatus } from "shared";
 
 export type GameType = "chess" | "TimedChess";
 

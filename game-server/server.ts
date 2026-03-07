@@ -1,6 +1,6 @@
 import { Server, Socket } from "socket.io";
 import { Room } from "./src/room/room.js";
-import { CToSEvents, SToCEvents } from "./src/shared/index.js";
+import { CToSEvents, SToCEvents } from "shared";
 
 export type GameSocket = Socket<CToSEvents, SToCEvents>;
 

@@ -1,14 +1,5 @@
-import {
-  BoardState,
-  Color,
-  GameStatus,
-  Move,
-} from "../../shared/src/gameTypes.js";
-import {
-  checkMates,
-  updateBoardState,
-  validateMove,
-} from "../../shared/index.js";
+import { BoardState, Color, GameStatus, Move } from "shared";
+import { checkMates, updateBoardState, validateMove } from "shared";
 import { startingBoardState } from "./constants.js";
 import { Game } from "../game.js";
 
