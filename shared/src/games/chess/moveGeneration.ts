@@ -267,7 +267,7 @@ function generateKingMoves(
         left_rook != null &&
         left_rook.type == "rook" &&
         left_rook.hasMoved == false &&
-        !CheckIsAttacked(board, sq, piece.color) &&
+        !checkIsAttacked(board, sq, piece.color) &&
         checkSqaresEmptyAndNotAttacked(board, left_king_movements, "white")
       ) {
         moves.push({ from: sq, to: 58, special: "0-0-0" });
@@ -278,7 +278,7 @@ function generateKingMoves(
         right_rook != null &&
         right_rook.type == "rook" &&
         right_rook.hasMoved == false &&
-        !CheckIsAttacked(board, sq, piece.color) &&
+        !checkIsAttacked(board, sq, piece.color) &&
         checkSqaresEmptyAndNotAttacked(board, right_king_movements, "white")
       ) {
         moves.push({ from: sq, to: 62, special: "0-0" });
@@ -290,7 +290,7 @@ function generateKingMoves(
         left_rook != null &&
         left_rook.type == "rook" &&
         left_rook.hasMoved == false &&
-        !CheckIsAttacked(board, sq, piece.color) &&
+        !checkIsAttacked(board, sq, piece.color) &&
         checkSqaresEmptyAndNotAttacked(board, left_king_movements, "black")
       ) {
         moves.push({ from: sq, to: 2, special: "0-0-0" });
@@ -301,7 +301,7 @@ function generateKingMoves(
         right_rook != null &&
         right_rook.type == "rook" &&
         right_rook.hasMoved == false &&
-        !CheckIsAttacked(board, sq, piece.color) &&
+        !checkIsAttacked(board, sq, piece.color) &&
         checkSqaresEmptyAndNotAttacked(board, right_king_movements, "black")
       ) {
         moves.push({ from: sq, to: 6, special: "0-0" });
@@ -358,7 +358,7 @@ function checkSqaresEmptyAndNotAttacked(
 ): boolean {
   for (let i = 0; i < sqs.length; i++) {
     if (
-      CheckIsAttacked(board, sqs[i], color) ||
+      checkIsAttacked(board, sqs[i], color) ||
       !checkSqareEmpty(board, sqs[i])
     ) {
       return false;
@@ -367,7 +367,7 @@ function checkSqaresEmptyAndNotAttacked(
   return true;
 }
 
-function CheckIsAttacked(board: Board, pos: number, color: Color) {
+function checkIsAttacked(board: Board, pos: number, color: Color) {
   //check for bishops (and half of queens)
   let moves = generateBishopMoves(board, pos, color);
   for (let i = 0; i < moves.length; i++) {
@@ -442,7 +442,7 @@ function checkKingInCheckAfterMove(
     if (piece == null) continue;
     if (piece.type == "king" && piece.color == color) king_pos = sq;
   }
-  if (CheckIsAttacked(board_copy, king_pos, color)) return true;
+  if (checkIsAttacked(board_copy, king_pos, color)) return true;
   return false;
 }
 
@@ -453,7 +453,7 @@ export function checkKingInCheck(board: Board, color: Color): boolean {
     if (piece == null) continue;
     if (piece.type == "king" && piece.color == color) king_pos = sq;
   }
-  if (CheckIsAttacked(board, king_pos, color)) return true;
+  if (checkIsAttacked(board, king_pos, color)) return true;
   return false;
 }
 

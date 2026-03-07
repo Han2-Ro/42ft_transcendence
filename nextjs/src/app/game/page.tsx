@@ -6,9 +6,9 @@ import Lobby from "../../componets/game/lobby";
 import Game from "../../componets/game/game";
 import EndScreen from "../../componets/game/endScreen";
 
-import { CToSEvents, SToCEvents } from "../../shared";
-import { BoardState, Color, Move } from "../../shared/src/gameTypes";
-import { result as GameResult } from "../../shared/src/socketEvents";
+import { CToSEvents, SToCEvents } from "shared";
+import { BoardState, Color, Move } from "shared";
+import { result as GameResult } from "shared";
 
 // Connect to the exposed backend port
 const socket: Socket<SToCEvents, CToSEvents> = io("http://localhost:4000");

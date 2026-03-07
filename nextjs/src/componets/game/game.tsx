@@ -1,4 +1,4 @@
-import { BoardState, Color, Move } from "@/shared";
+import { BoardState, Color, Move } from "shared";
 import Board from "./board";
 
 interface GameProps {
