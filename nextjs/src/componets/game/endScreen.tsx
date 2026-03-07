@@ -1,4 +1,12 @@
-export default function EndScreen({ result, reason, onClose }) {
+export default function EndScreen({
+  result,
+  reason,
+  onClose,
+}: {
+  result: string;
+  reason: string;
+  onClose: () => void;
+}) {
   return (
     <div style={{ textAlign: "center" }}>
       <p>Result: {result}</p>

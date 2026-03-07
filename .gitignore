@@ -48,3 +48,5 @@ tests/test-results/
 
 # docker compose local overrides
 docker-compose.override.yml
+
+.vscode

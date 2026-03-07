@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useAuthConetxt } from "./AuthProvider";
 
 type Props = {
   onClose: () => void;
@@ -12,6 +13,7 @@ export const AuthModal = ({ onClose }: Props) => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const { refreshUser } = useAuthConetxt();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -58,7 +60,8 @@ export const AuthModal = ({ onClose }: Props) => {
       }
 
       onClose();
-      router.refresh();
+      await refreshUser();
+      await router.refresh();
     } catch (err) {
       console.log(err);
       setError("An error occurred. Please try again.");

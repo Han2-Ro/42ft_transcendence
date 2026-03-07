@@ -1,6 +1,6 @@
 # ft_transcendence
 
-A 42 school assignment
+A 42 school project
 
 ## Prerequisites
 
@@ -39,6 +39,7 @@ docker compose up
   - **nextjs/src/app/** - file-system based App Router
   - **nextjs/public/** - static assets
 - **game-server/** - Real-time game server using Socket.IO
+- **tests/** - [playwright tests](#tests)
 
 ## The Stack
 
@@ -47,3 +48,12 @@ docker compose up
 - **TypeScript** - Type-safe development
 - **[Tailwind CSS](https://tailwindcss.com/docs/installation)** - Styling
 - **Socket.IO** - Real-time bidirectional communication for game logic
+
+## Tests
+
+There are end-to-end tests with playwright in `./tests/`:
+
+- `pnpm test` to execute them
+- `pnpm test:ui` to see what the tests are doing
+
+It will be much apreciated if you write tests for everything you implement!
