@@ -1,6 +1,8 @@
 name: Playwright Tests
 
 on:
+  push:
+    branches: ["main"]
   pull_request:
     branches: ["main"]
 
@@ -56,7 +58,7 @@ jobs:
         working-directory: tests
 
       - name: Run Playwright tests
-        run: pnpm test
+        run: pnpm test || (docker compose logs && exit 1)
         working-directory: tests
 
       - name: Upload Playwright report
