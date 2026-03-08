@@ -1,6 +1,8 @@
 name: Playwright Tests
 
 on:
+  push:
+    branches: ["main"]
   pull_request:
     branches: ["main"]
 
@@ -20,7 +22,7 @@ jobs:
           POSTGRES_USER=${{ secrets.POSTGRES_USER }}
           POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
           POSTGRES_DB=${{ secrets.POSTGRES_DB }}
-          DATABASE_URL=postgresql://${{ secrets.POSTGRES_USER }}:${{ secrets.POSTGRES_PASSWORD }}@db:5432/${{ secrets.POSTGRES_DB }}}
+          DATABASE_URL=postgresql://${{ secrets.POSTGRES_USER }}:${{ secrets.POSTGRES_PASSWORD }}@db:5432/${{ secrets.POSTGRES_DB }}
           JWT_SECRET=${{ secrets.JWT_SECRET }}
           EOF
 
@@ -56,7 +58,7 @@ jobs:
         working-directory: tests
 
       - name: Run Playwright tests
-        run: pnpm test
+        run: pnpm test || (docker compose logs && exit 1)
         working-directory: tests
 
       - name: Upload Playwright report
