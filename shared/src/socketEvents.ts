@@ -1,8 +1,8 @@
-import { BoardState, Color, Move } from "./gameTypes";
+import { BoardState, PlayerColor, Move } from "./gameTypes";
 
 export type GameStartData = {
   gameId: string;
-  color: Color;
+  color: PlayerColor;
   board: BoardState;
 };
 
@@ -20,7 +20,7 @@ export interface CToSEvents {
 export interface SToCEvents {
   game_start: (data: {
     gameId: string;
-    color: Color;
+    color: PlayerColor;
     boardState: BoardState;
   }) => void;
 

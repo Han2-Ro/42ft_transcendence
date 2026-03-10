@@ -1,4 +1,4 @@
-import { Move, Color } from "shared";
+import { Move, PlayerColor } from "shared";
 
 import { Game, GameType } from "../games/game.js";
 import { Chess } from "../games/chess/chess.js";
@@ -13,7 +13,7 @@ export type Game_status =
 
 export class Room {
   Players: GameSocket[];
-  AssignedColors: Color[];
+  AssignedColors: PlayerColor[];
   gameLogic: Game;
   positionUpdated: boolean = false;
 
@@ -106,11 +106,11 @@ export class Room {
     return false;
   }
 
-  public GetColor(index: number): Color {
+  public GetColor(index: number): PlayerColor {
     return this.AssignedColors[index];
   }
 
-  private GenerateRandomColors2p(): Color[] {
+  private GenerateRandomColors2p(): PlayerColor[] {
     const rand = Math.random() < 0.5;
     if (rand) return ["white", "black"];
     else return ["black", "white"];

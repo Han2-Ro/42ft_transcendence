@@ -1,4 +1,4 @@
-import { BoardState, Color, Move, GameStatus } from "shared";
+import { BoardState, PlayerColor, Move, GameStatus } from "shared";
 
 export type GameType = "chess" | "TimedChess";
 
@@ -6,6 +6,6 @@ export abstract class Game {
   abstract boardState: BoardState;
   abstract gameStatus: GameStatus;
 
-  abstract playMove(move: Move, played_by: Color): boolean;
-  abstract playResign(played_by: Color): void;
+  abstract playMove(move: Move, played_by: PlayerColor): boolean;
+  abstract playResign(played_by: PlayerColor): void;
 }

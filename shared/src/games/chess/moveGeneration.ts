@@ -1,7 +1,7 @@
 import {
   Board,
   BoardState,
-  Color,
+  PlayerColor,
   GameStatus,
   Move,
   PieceOrNull,
@@ -12,7 +12,7 @@ import {
 export function validateMove(
   move: Move,
   boardState: BoardState,
-  played_by: Color,
+  played_by: PlayerColor,
 ): boolean {
   const piece = boardState.board[move.from];
   const moves = generateMoves(boardState.board, move.from);
@@ -75,11 +75,11 @@ export function updateBoardState(boardState: BoardState, move: Move) {
   else boardState.turn = "white";
 }
 
-export function checkMates(board: Board, turn: Color): GameStatus {
+export function checkMates(board: Board, turn: PlayerColor): GameStatus {
   const moves = generateAllMoves(board, turn);
   if (moves.length == 0) {
     if (checkKingInCheck(board, turn)) {
-      let winner: Color;
+      let winner: PlayerColor;
       if (turn == "white") winner = "black";
       else winner = "white";
       return { isOver: true, winner: winner, reason: "Checkmate" };
@@ -88,7 +88,10 @@ export function checkMates(board: Board, turn: Color): GameStatus {
   return { isOver: false, winner: null, reason: "" };
 }
 
-export function generateAllMoves(board: Board, color: Color): Array<Move> {
+export function generateAllMoves(
+  board: Board,
+  color: PlayerColor,
+): Array<Move> {
   const moves: Move[] = [];
   for (let sq = 0; sq < 64; sq++) {
     const piece = board[sq];
@@ -129,7 +132,7 @@ export function generateMoves(board: Board, sq: number): Array<Move> {
 function generatePawnMoves(
   board: Board,
   sq: number,
-  color: Color,
+  color: PlayerColor,
   hasMoved: boolean,
 ): Array<Move> {
   const moves: Move[] = [];
@@ -177,7 +180,7 @@ function generatePawnMoves(
 function generateKnightMoves(
   board: Board,
   sq: number,
-  color: Color,
+  color: PlayerColor,
 ): Array<Move> {
   const moves: Move[] = [];
   const move_offsets: Array<Pos2> = [
@@ -202,7 +205,7 @@ function generateKnightMoves(
 function generateBishopMoves(
   board: Board,
   sq: number,
-  color: Color,
+  color: PlayerColor,
 ): Array<Move> {
   const moves: Move[] = [];
   moves.push(...generateOffsetLine(board, sq, color, { x: 1, y: 1 }));
@@ -215,7 +218,7 @@ function generateBishopMoves(
 function generateRookMoves(
   board: Board,
   sq: number,
-  color: Color,
+  color: PlayerColor,
 ): Array<Move> {
   const moves: Move[] = [];
   moves.push(...generateOffsetLine(board, sq, color, { x: 1, y: 0 }));
@@ -228,7 +231,7 @@ function generateRookMoves(
 function generateQueenMoves(
   board: Board,
   sq: number,
-  color: Color,
+  color: PlayerColor,
 ): Array<Move> {
   const moves: Move[] = [];
   moves.push(...generateBishopMoves(board, sq, color));
@@ -239,7 +242,7 @@ function generateQueenMoves(
 function generateKingMoves(
   board: Board,
   sq: number,
-  color: Color,
+  color: PlayerColor,
 ): Array<Move> {
   const moves: Move[] = [];
   const move_offsets: Array<Pos2> = [
@@ -315,7 +318,7 @@ function generateKingMoves(
 function generateOffsetLine(
   board: Board,
   sq: number,
-  color: Color,
+  color: PlayerColor,
   offset: Pos2,
 ): Array<Move> {
   const moves: Move[] = [];
@@ -354,7 +357,7 @@ function generateOffsets(pos: number, offsets: Array<Pos2>): Array<number> {
 function checkSqaresEmptyAndNotAttacked(
   board: Board,
   sqs: Array<number>,
-  color: Color,
+  color: PlayerColor,
 ): boolean {
   for (let i = 0; i < sqs.length; i++) {
     if (
@@ -367,7 +370,7 @@ function checkSqaresEmptyAndNotAttacked(
   return true;
 }
 
-function checkIsAttacked(board: Board, pos: number, color: Color) {
+function checkIsAttacked(board: Board, pos: number, color: PlayerColor) {
   //check for bishops (and half of queens)
   let moves = generateBishopMoves(board, pos, color);
   for (let i = 0; i < moves.length; i++) {
@@ -430,7 +433,7 @@ function checkIsAttacked(board: Board, pos: number, color: Color) {
 function checkKingInCheckAfterMove(
   board: Board,
   move: Move,
-  color: Color,
+  color: PlayerColor,
 ): boolean {
   const board_copy = [...board];
 
@@ -446,7 +449,7 @@ function checkKingInCheckAfterMove(
   return false;
 }
 
-export function checkKingInCheck(board: Board, color: Color): boolean {
+export function checkKingInCheck(board: Board, color: PlayerColor): boolean {
   let king_pos = -1;
   for (let sq = 0; sq < 64; sq++) {
     const piece = board[sq];
@@ -462,7 +465,7 @@ function checkBounds(i: number): boolean {
   return false;
 }
 
-function checkSqare(board: Board, sq: number, color: Color): boolean {
+function checkSqare(board: Board, sq: number, color: PlayerColor): boolean {
   const new_piece = board[sq];
   if (checkBounds(sq) == false) return false;
   if (new_piece == null || (new_piece != null && new_piece.color != color)) {
@@ -474,7 +477,7 @@ function checkSqare(board: Board, sq: number, color: Color): boolean {
 function checkSqarePiece(
   board: Board,
   sq: number,
-  color: Color,
+  color: PlayerColor,
   type: PieceType,
 ): boolean {
   const new_piece = board[sq];

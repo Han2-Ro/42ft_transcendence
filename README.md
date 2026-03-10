@@ -16,6 +16,8 @@ pnpm install # run this at root of git directory to install dependecies
 pnpm run dev
 ```
 
+Note: this does not start a database
+
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 To run it in production, create a `.env` file from `.env.example` and the run
