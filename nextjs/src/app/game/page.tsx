@@ -6,16 +6,16 @@ import Lobby from "../../componets/game/lobby";
 import Game from "../../componets/game/game";
 import EndScreen from "../../componets/game/endScreen";
 
-import { CToSEvents, SToCEvents } from "../../shared";
-import { BoardState, Color, Move } from "../../shared/src/gameTypes";
-import { result as GameResult } from "../../shared/src/socketEvents";
+import { CToSEvents, SToCEvents } from "shared";
+import { BoardState, PlayerColor, Move } from "shared";
+import { result as GameResult } from "shared";
 
 // Connect to the exposed backend port
 const socket: Socket<SToCEvents, CToSEvents> = io("http://localhost:4000");
 
 export default function Page() {
   const [gameId, setGameId] = useState<string | null>(null);
-  const [color, setColor] = useState<Color | null>(null);
+  const [color, setColor] = useState<PlayerColor | null>(null);
   const [boardState, setBoardState] = useState<BoardState | null>(null);
   const [result, setResult] = useState<GameResult | null>(null);
   const [resultReason, setResultReason] = useState<string | null>(null);

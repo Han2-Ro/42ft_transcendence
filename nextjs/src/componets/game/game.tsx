@@ -1,9 +1,9 @@
-import { BoardState, Color, Move } from "@/shared";
+import { BoardState, PlayerColor, Move } from "shared";
 import Board from "./board";
 
 interface GameProps {
   boardState: BoardState;
-  color: Color;
+  color: PlayerColor;
   onPlayerMove: (move: Move) => void;
   onPlayerResign: () => void;
 }

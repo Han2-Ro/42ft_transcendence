@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { generateMoves, Move, PieceOrNull, BoardState } from "../../shared";
+import { generateMoves, Move, PieceOrNull, BoardState } from "shared";
 import Image from "next/image";
 
 export default function Board({
