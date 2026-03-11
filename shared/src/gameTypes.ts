@@ -1,4 +1,6 @@
-export type PlayerColor = "white" | "black";
+export type PlayerColor = "white" | "black" | "red" | "green" | "yellow" | "blue";
+
+export type Games = "chess" | "timedChess" | "4pChess" | "4pTimedChess";
 export type PieceType =
   | "pawn"
   | "rook"
@@ -20,15 +22,11 @@ export type Pos2 = {
 
 export type GameStatus = {
   isOver: boolean;
-  winner: PlayerColor | null;
+  winners: PlayerColor[] | null;
   reason: string;
 };
 
 export type PieceOrNull = Piece | null;
-
-type File = "a" | "b" | "c" | "d" | "e" | "f" | "g" | "h";
-type Rank = "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8";
-export type Square = `${File}${Rank}`;
 
 export type Board = PieceOrNull[];
 

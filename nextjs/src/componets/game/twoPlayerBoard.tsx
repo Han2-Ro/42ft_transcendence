@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { generateMoves, Move, PieceOrNull, BoardState } from "shared";
+import { Move, PieceOrNull, twoPlayer, BoardState } from "shared";
 import Image from "next/image";
 
-export default function Board({
+export default function TwoPlayerBoard({
   boardState,
   onPlayerMove,
 }: {
@@ -10,15 +10,13 @@ export default function Board({
   onPlayerMove: (move: Move) => void;
 }) {
   const [selectedSquare, setSelectedSquare] = useState<number | null>(null);
-  const [movesFromSqareInt, setMovesFromSqareInt] = useState<number[] | null>(
-    null,
-  );
+  const [movesFromSqareInt, setMovesFromSqareInt] = useState<number[] | null>(null);
   const [movesFromSqare, setMovesFromSqare] = useState<Move[] | null>(null);
 
   const handleSquareClick = (square: number) => {
     if (selectedSquare === null) {
       setSelectedSquare(square);
-      const moves = generateMoves(boardState.board, square);
+      const moves = twoPlayer.generateMoves(boardState.board, square);
       const moves_numbers = moves.map((move) => move.to);
       setMovesFromSqare(moves);
       setMovesFromSqareInt(moves_numbers);
@@ -73,8 +71,6 @@ export default function Board({
           >
             {sq && (
               <Image
-                width="45"
-                height="45"
                 src={`/chess/${sq.color}/${sq.type}.svg`}
                 alt={sq.color + sq.type}
                 style={{ width: "100%", height: "100%" }}
@@ -84,8 +80,6 @@ export default function Board({
               movesFromSqareInt.length > 0 &&
               movesFromSqareInt.includes(index) && (
                 <Image
-                  width="100"
-                  height="100"
                   src={`/chess/circle.svg`}
                   alt={"Position that the selected Piece can move to."}
                   style={{

@@ -1,4 +1,4 @@
-import { BoardState, PlayerColor, Move } from "./gameTypes";
+import { BoardState, PlayerColor, Move, Games } from "./gameTypes";
 
 export type GameStartData = {
   gameId: string;
@@ -10,7 +10,7 @@ export type result = "win" | "lose" | "draw";
 
 // shared/socketEvents.ts
 export interface CToSEvents {
-  find_match: () => void;
+  find_match: (type: Games) => void;
 
   move: (data: { gameId: string; move: Move }) => void;
 
@@ -21,6 +21,7 @@ export interface SToCEvents {
   game_start: (data: {
     gameId: string;
     color: PlayerColor;
+    type: Games;
     boardState: BoardState;
   }) => void;
 

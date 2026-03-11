@@ -1,5 +1,4 @@
-import { BoardState, PlayerColor, GameStatus, Move } from "shared";
-import { checkMates, updateBoardState, validateMove } from "shared";
+import { BoardState, PlayerColor, GameStatus, Move, twoPlayer } from "shared";
 import { startingBoardState } from "./constants.js";
 import { Game } from "../game.js";
 
@@ -10,21 +9,29 @@ export class Chess extends Game {
     super();
     if (state !== undefined) this.boardState = state;
     else this.boardState = startingBoardState;
-    this.gameStatus = { isOver: false, winner: null, reason: "" };
+    this.gameStatus = { isOver: false, winners: null, reason: "" };
   }
 
   playMove(move: Move, played_by: PlayerColor): boolean {
-    if (validateMove(move, this.boardState, played_by)) {
-      updateBoardState(this.boardState, move);
-      this.gameStatus = checkMates(this.boardState.board, this.boardState.turn);
+    if (twoPlayer.validateMove(move, this.boardState, played_by)) {
+      twoPlayer.updateBoardState(this.boardState, move);
+      this.gameStatus = twoPlayer.checkMates(this.boardState.board, this.boardState.turn);
       return true;
     }
     return false;
   }
   playResign(played_by: PlayerColor): void {
-    let winner: PlayerColor;
-    if (played_by == "white") winner = "black";
-    else winner = "white";
-    this.gameStatus = { isOver: true, winner: winner, reason: "Resignation" };
+    let winners: PlayerColor[];
+    if (played_by == "white") winners = ["black"];
+    else winners = ["white"];
+    this.gameStatus = { isOver: true, winners: winners, reason: "resignation" };
   }
+
+  timeout(player: PlayerColor): void {
+    let winners: PlayerColor[];
+    if (player == "white") winners = ["black"];
+    else winners = ["white"];
+    this.gameStatus = { isOver: true, winners: winners, reason: "timeout" };
+  }
+
 }
