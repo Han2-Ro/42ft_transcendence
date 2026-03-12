@@ -67,7 +67,7 @@ export default function FourPlayerBoard({
             (isBottom && isLeft) ||
             (isBottom && isRight);
           if (isInvalid) {
-            return <div key={visualIndex + 200} />; 
+            return <div key={visualIndex + 200} />;
           }
           let index = -1;
           if (row < 3) {
