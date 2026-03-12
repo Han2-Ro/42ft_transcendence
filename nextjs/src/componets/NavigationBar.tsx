@@ -11,13 +11,13 @@ export default function NavigationBar() {
   const { user } = useAuthConetxt();
   return (
     <div className="bg-background-secondary flex flex-row lg:flex-col justify-between items-center">
-      <button className="lg:hidden" onClick={() => setShowMenu(!showMenu)}>
+      <button className=" z-10 lg:hidden" onClick={() => setShowMenu(!showMenu)}>
         {showMenu ? <CloseIcon size={64} /> : <HamburgerMenuIcon size={64} />}
       </button>
       <div
         className={
           (showMenu ? "" : "hidden") +
-          " lg:block h-full w-full absolute lg:static"
+          " lg:block h-full w-full absolute top-0 bottom-0 lg:static"
         }
       >
         <MainMenu />
