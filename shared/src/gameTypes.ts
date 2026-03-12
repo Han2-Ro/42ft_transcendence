@@ -1,4 +1,10 @@
-export type PlayerColor = "white" | "black" | "red" | "green" | "yellow" | "blue";
+export type PlayerColor =
+  | "white"
+  | "black"
+  | "red"
+  | "green"
+  | "yellow"
+  | "blue";
 
 export type Games = "chess" | "timedChess" | "4pChess" | "4pTimedChess";
 export type PieceType =

@@ -24,8 +24,8 @@ export class Room {
   last_move: number = 0;
 
   constructor(players: GameSocket[], type: Games, gameId: string) {
-  this.Players = players;
-  	if (type == "chess" || type == "timedChess") {
+    this.Players = players;
+    if (type == "chess" || type == "timedChess") {
       this.gameLogic = new Chess();
       this.AssignedColors = this.GenerateRandomColors2p();
       if (type == "timedChess") {
@@ -49,7 +49,7 @@ export class Room {
     this.Players.forEach((value: GameSocket, index: number) => {
       value.emit("game_start", {
         gameId,
-		type,
+        type,
         color: this.AssignedColors[index],
         boardState: this.gameLogic.boardState,
       });
@@ -82,38 +82,34 @@ export class Room {
         value.emit("move_made", { boardState: this.gameLogic.boardState });
       });
     }
-	this.CheckTimeout(time_passed)
-    if (this.CheckGameOver() == true) return true
+    this.CheckTimeout(time_passed);
+    if (this.CheckGameOver() == true) return true;
     return false;
   }
 
-  private CheckTimeout(time_passed : number) {
+  private CheckTimeout(time_passed: number) {
     if (this.timed == true) {
       const turnIndex = this.AssignedColors.indexOf(
         this.gameLogic.boardState.turn,
       );
       this.PlayerTimes[turnIndex] = this.PlayerTimes[turnIndex] - time_passed;
       if (this.PlayerTimes[turnIndex] < 0) {
-		this.gameLogic.timeout(this.GetColor(turnIndex))
+        this.gameLogic.timeout(this.GetColor(turnIndex));
       }
     }
   }
 
   private CheckGameOver(): boolean {
-	if (this.gameLogic.gameStatus.isOver) {
+    if (this.gameLogic.gameStatus.isOver) {
       const result = this.gameLogic.gameStatus;
       const winners = result.winners;
       if (winners != null) {
-        let winnerIndexes : number[] = []
-		winners.forEach((value: PlayerColor) => {
-			const index = this.AssignedColors.indexOf(value)
-			if (index >= 0)
-				winnerIndexes.push(index);
-		}
-		)
-		console.log("winners: ", winnerIndexes)
+        const winnerIndexes: number[] = [];
+        winners.forEach((value: PlayerColor) => {
+          const index = this.AssignedColors.indexOf(value);
+          if (index >= 0) winnerIndexes.push(index);
+        });
         this.Players.forEach((value: GameSocket, index: number) => {
-			console.log(index)
           if (winnerIndexes.includes(index))
             value.emit("game_over", { result: "win", reason: result.reason });
           else
@@ -126,7 +122,7 @@ export class Room {
       }
       return true;
     }
-	return false;
+    return false;
   }
 
   public GetColor(index: number): PlayerColor {

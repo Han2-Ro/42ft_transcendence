@@ -1,4 +1,4 @@
-import { Games } from "shared"
+import { Games } from "shared";
 
 export default function Lobby({
   onFindMatchPressed,

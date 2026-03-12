@@ -11,12 +11,13 @@ export default function FourPlayerBoard({
   onPlayerMove: (move: Move) => void;
 }) {
   const [selectedSquare, setSelectedSquare] = useState<number | null>(null);
-  const [movesFromSqareInt, setMovesFromSqareInt] = useState<number[] | null>(null);
+  const [movesFromSqareInt, setMovesFromSqareInt] = useState<number[] | null>(
+    null,
+  );
   const [movesFromSqare, setMovesFromSqare] = useState<Move[] | null>(null);
 
   const handleSquareClick = (square: number) => {
     if (selectedSquare === null) {
-	  console.log(square)
       setSelectedSquare(square);
       const moves = fourPlayer.generateMoves(boardState.board, square);
       const moves_numbers = moves.map((move) => move.to);
@@ -105,8 +106,8 @@ export default function FourPlayerBoard({
             >
               {sq && (
                 <Image
-					width="45"
-                	height="45"
+                  width="45"
+                  height="45"
                   src={`/chess/${sq.color}/${sq.type}.svg`}
                   alt={sq.color + sq.type}
                   style={{ width: "100%", height: "100%" }}
@@ -116,8 +117,8 @@ export default function FourPlayerBoard({
                 movesFromSqareInt.length > 0 &&
                 movesFromSqareInt.includes(index) && (
                   <Image
-				    width="45"
-                	height="45"
+                    width="45"
+                    height="45"
                     src={`/chess/circle.svg`}
                     alt={"Position that the selected Piece can move to."}
                     style={{

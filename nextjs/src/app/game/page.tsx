@@ -24,7 +24,7 @@ export default function Page() {
   useEffect(() => {
     socket.on("game_start", (data) => {
       setGameId(data.gameId);
-	  setGameType(data.type);
+      setGameType(data.type);
       setBoardState(data.boardState);
       setColor(data.color);
     });
@@ -38,7 +38,7 @@ export default function Page() {
       setResult(data.result);
       setResultReason(data.reason);
       setGameId(null);
-	  setGameType(null);
+      setGameType(null);
       setBoardState(null);
       setColor(null);
     });
@@ -67,7 +67,7 @@ export default function Page() {
   return boardState ? (
     <Game
       boardState={boardState}
-	  gameType={gameType!}
+      gameType={gameType!}
       color={color!}
       onPlayerMove={emitPlayerMove}
       onPlayerResign={emitPlayerResign}

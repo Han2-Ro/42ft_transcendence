@@ -22,7 +22,7 @@ const io = new Server<CToSEvents, SToCEvents>(4000, {
 type Player = {
   socket: GameSocket;
   status: "lobby" | "in_game";
-  game_id: String | null;
+  game_id: string | null;
   searching: Games[];
 };
 
@@ -38,7 +38,7 @@ io.on("connection", (socket) => {
   });
   console.log("Client connected:", socket.id);
 
-/*     socket.on('disconnect', ()=> {
+  /*     socket.on('disconnect', ()=> {
       console.log('Client disconnect: ', socket.id );
   }); */
 
@@ -59,8 +59,8 @@ io.on("connection", (socket) => {
       type,
     );
     //check if Room can be created
-    let players: Player[] = [];
-    let sockets: GameSocket[] = [];
+    const players: Player[] = [];
+    const sockets: GameSocket[] = [];
     PlayerStates.forEach((value: Player) => {
       if (value.searching.includes(type)) {
         sockets.push(value.socket);
@@ -80,11 +80,10 @@ io.on("connection", (socket) => {
       });
       const new_room = new Room(sockets, type, gameId);
       rooms.set(gameId, new_room);
-	  if (running == false)
-	  {
-		running = true
-		serverLoop();
-		console.log("Real time loop started")
+      if (running == false) {
+        running = true;
+        serverLoop();
+        console.log("Real time loop started");
       }
     }
   });
@@ -144,16 +143,15 @@ async function serverLoop() {
     while (accumulator >= DT && ticks < MAX_CATCHUP_TICKS) {
       accumulator -= DT;
       ticks++;
-	  CheckRunningGames(DT);
-	  if (rooms.size == 0)
-	  {
-		running = false
-	  	console.log("Real time loop stopped, no games running")
+      CheckRunningGames(DT);
+      if (rooms.size == 0) {
+        running = false;
+        console.log("Real time loop stopped, no games running");
       }
     }
     // Prevent spiral of death
     if (ticks === MAX_CATCHUP_TICKS) {
-	  accumulator = 0;
+      accumulator = 0;
     }
 
     // Yield back to the event loop

@@ -10,7 +10,9 @@ export default function TwoPlayerBoard({
   onPlayerMove: (move: Move) => void;
 }) {
   const [selectedSquare, setSelectedSquare] = useState<number | null>(null);
-  const [movesFromSqareInt, setMovesFromSqareInt] = useState<number[] | null>(null);
+  const [movesFromSqareInt, setMovesFromSqareInt] = useState<number[] | null>(
+    null,
+  );
   const [movesFromSqare, setMovesFromSqare] = useState<Move[] | null>(null);
 
   const handleSquareClick = (square: number) => {
@@ -71,6 +73,8 @@ export default function TwoPlayerBoard({
           >
             {sq && (
               <Image
+                width="45"
+                height="45"
                 src={`/chess/${sq.color}/${sq.type}.svg`}
                 alt={sq.color + sq.type}
                 style={{ width: "100%", height: "100%" }}
@@ -80,6 +84,8 @@ export default function TwoPlayerBoard({
               movesFromSqareInt.length > 0 &&
               movesFromSqareInt.includes(index) && (
                 <Image
+                  width="100"
+                  height="100"
                   src={`/chess/circle.svg`}
                   alt={"Position that the selected Piece can move to."}
                   style={{

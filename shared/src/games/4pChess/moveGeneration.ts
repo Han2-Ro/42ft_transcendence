@@ -125,7 +125,10 @@ export function checkMates(board: Board, turn: PlayerColor): GameStatus {
   return { isOver: false, winners: null, reason: "" };
 }
 
-export function generateAllMoves(board: Board, PlayerColor: PlayerColor): Array<Move> {
+export function generateAllMoves(
+  board: Board,
+  PlayerColor: PlayerColor,
+): Array<Move> {
   const moves: Move[] = [];
   for (let sq = 0; sq < 160; sq++) {
     const piece = board[sq];
@@ -537,7 +540,10 @@ function checkSqaresEmptyAndNotAttacked(
   return true;
 }
 
-function AreOpposingPlayerColors(first: PlayerColor, second: PlayerColor): boolean {
+function AreOpposingPlayerColors(
+  first: PlayerColor,
+  second: PlayerColor,
+): boolean {
   if (first === "green" || first === "blue") {
     if (second === "red" || second === "yellow") return true;
   }
@@ -584,52 +590,63 @@ function CheckIsAttacked(board: Board, pos: number, PlayerColor: PlayerColor) {
   const king_pos = generateOffsets(pos, king_offsets);
   for (let i = 0; i < king_pos.length; i++) {
     const pos = board[king_pos[i]];
-    if (pos && AreOpposingPlayerColors(pos.color, PlayerColor) && pos.type == "king")
+    if (
+      pos &&
+      AreOpposingPlayerColors(pos.color, PlayerColor) &&
+      pos.type == "king"
+    )
       return true;
   }
   //check for knights
   moves = generateKnightMoves(board, pos, PlayerColor);
   for (let i = 0; i < moves.length; i++) {
     const pos = board[moves[i].to];
-    if (pos && AreOpposingPlayerColors(pos.color, PlayerColor) && pos.type == "knight")
+    if (
+      pos &&
+      AreOpposingPlayerColors(pos.color, PlayerColor) &&
+      pos.type == "knight"
+    )
       return true;
   }
   //check for Pawns
-  if (PlayerColor == "blue" || PlayerColor == "green")
-  {
-	const red_pawn_offsets: Pos2[] = [{x: -1, y: 1}, {x: -1, y: -1}]
-	const red_moves = generateOffsets(pos, red_pawn_offsets);
-	for (let i = 0; i < red_moves.length; i++) {
-		const pos = board[red_moves[i]];
-    	if (pos && pos.color == "red" && pos.type == "pawn")
-			return true;
-	}
-	const yellow_pawn_offsets: Pos2[] = [{x: 1, y: 1}, {x: 1, y: -1}]
-	const yellow_moves = generateOffsets(pos, yellow_pawn_offsets);
-	for (let i = 0; i < yellow_moves.length; i++) {
-    	const pos = board[yellow_moves[i]];
-    	if (pos && pos.color == "yellow" && pos.type == "pawn")
-      		return true;
-   	}
-  }
-  else
-  {
-	const blue_pawn_offsets: Pos2[] = [{x: -1, y: 1}, {x: 1, y: 1}]
-	const blue_moves = generateOffsets(pos, blue_pawn_offsets);
-	for (let i = 0; i < blue_moves.length; i++) {
-		const pos = board[blue_moves[i]];
-    	if (pos && pos.color == "blue" && pos.type == "pawn")
-			return true;
-	}
-	const green_pawn_offsets: Pos2[] = [{x: 1, y: -1}, {x: -1, y: -1}]
-	const green_moves = generateOffsets(pos, green_pawn_offsets);
-	for (let i = 0; i < green_moves.length; i++) {
-    	const pos = board[green_moves[i]];
-    	if (pos && pos.color == "green" && pos.type == "pawn")
-      		return true;
-   	}
-	
-
+  if (PlayerColor == "blue" || PlayerColor == "green") {
+    const red_pawn_offsets: Pos2[] = [
+      { x: -1, y: 1 },
+      { x: -1, y: -1 },
+    ];
+    const red_moves = generateOffsets(pos, red_pawn_offsets);
+    for (let i = 0; i < red_moves.length; i++) {
+      const pos = board[red_moves[i]];
+      if (pos && pos.color == "red" && pos.type == "pawn") return true;
+    }
+    const yellow_pawn_offsets: Pos2[] = [
+      { x: 1, y: 1 },
+      { x: 1, y: -1 },
+    ];
+    const yellow_moves = generateOffsets(pos, yellow_pawn_offsets);
+    for (let i = 0; i < yellow_moves.length; i++) {
+      const pos = board[yellow_moves[i]];
+      if (pos && pos.color == "yellow" && pos.type == "pawn") return true;
+    }
+  } else {
+    const blue_pawn_offsets: Pos2[] = [
+      { x: -1, y: 1 },
+      { x: 1, y: 1 },
+    ];
+    const blue_moves = generateOffsets(pos, blue_pawn_offsets);
+    for (let i = 0; i < blue_moves.length; i++) {
+      const pos = board[blue_moves[i]];
+      if (pos && pos.color == "blue" && pos.type == "pawn") return true;
+    }
+    const green_pawn_offsets: Pos2[] = [
+      { x: 1, y: -1 },
+      { x: -1, y: -1 },
+    ];
+    const green_moves = generateOffsets(pos, green_pawn_offsets);
+    for (let i = 0; i < green_moves.length; i++) {
+      const pos = board[green_moves[i]];
+      if (pos && pos.color == "green" && pos.type == "pawn") return true;
+    }
   }
   return false;
 }
@@ -639,13 +656,16 @@ function checkKingInCheckAfterMove(
   move: Move,
   PlayerColor: PlayerColor,
 ): boolean {
-  const board_copy = JSON.parse(JSON.stringify(board))
+  const board_copy = JSON.parse(JSON.stringify(board));
   updateBoard(board_copy, move, PlayerColor);
   if (checkKingInCheck(board_copy, PlayerColor)) return true;
   return false;
 }
 
-export function checkKingInCheck(board: Board, PlayerColor: PlayerColor): boolean {
+export function checkKingInCheck(
+  board: Board,
+  PlayerColor: PlayerColor,
+): boolean {
   let king_pos = -1;
   for (let sq = 0; sq < 160; sq++) {
     const piece = board[sq];
@@ -661,7 +681,11 @@ function checkBounds(i: number): boolean {
   return false;
 }
 
-function checkSqare(board: Board, sq: number, PlayerColor: PlayerColor): boolean {
+function checkSqare(
+  board: Board,
+  sq: number,
+  PlayerColor: PlayerColor,
+): boolean {
   const new_piece = board[sq];
   if (checkBounds(sq) == false) return false;
   if (
@@ -681,7 +705,10 @@ function checkSqarePiece(
 ): boolean {
   const new_piece = board[sq];
   if (checkBounds(sq) == false) return false;
-  if (new_piece != null && AreOpposingPlayerColors(new_piece.color, PlayerColor)) {
+  if (
+    new_piece != null &&
+    AreOpposingPlayerColors(new_piece.color, PlayerColor)
+  ) {
     return true;
   }
   return false;
