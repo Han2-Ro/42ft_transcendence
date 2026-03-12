@@ -25,7 +25,7 @@ export function validateMove(
     checkBounds(move.to) &&
     piece !== null &&
     piece.color == boardState.turn &&
-    boardState.turn == played_by &&
+    boardState.turn == played_by && //turn this off if you want to be able to play moves from every browser (for testing)
     moveExists
   ) {
     if (move.special == "promotion") {
@@ -43,49 +43,53 @@ export function validateMove(
 }
 
 export function updateBoardState(boardState: BoardState, move: Move) {
-  const piece = boardState.board[move.from];
+  updateBoard(boardState.board, move, boardState.turn);
+  if (boardState.turn == "white") boardState.turn = "black";
+  else boardState.turn = "white";
+}
+
+function updateBoard(board: Board, move: Move, turn: PlayerColor) {
+  const piece = board[move.from];
   if (piece) piece.hasMoved = true;
-  boardState.board[move.to] = boardState.board[move.from];
-  boardState.board[move.from] = null;
+  board[move.to] = board[move.from];
+  board[move.from] = null;
   if (move.special !== null) {
     if (move.special == "0-0-0") {
-      if (boardState.turn == "black") {
-        boardState.board[0] = null;
-        boardState.board[3] = { type: "rook", hasMoved: true, color: "black" };
+      if (turn == "black") {
+        board[0] = null;
+        board[3] = { type: "rook", hasMoved: true, color: "black" };
       } else {
-        boardState.board[56] = null;
-        boardState.board[59] = { type: "rook", hasMoved: true, color: "white" };
+        board[56] = null;
+        board[59] = { type: "rook", hasMoved: true, color: "white" };
       }
     }
     if (move.special == "0-0") {
-      if (boardState.turn == "black") {
-        boardState.board[7] = null;
-        boardState.board[5] = { type: "rook", hasMoved: true, color: "black" };
+      if (turn == "black") {
+        board[7] = null;
+        board[5] = { type: "rook", hasMoved: true, color: "black" };
       } else {
-        boardState.board[63] = null;
-        boardState.board[61] = { type: "rook", hasMoved: true, color: "white" };
+        board[63] = null;
+        board[61] = { type: "rook", hasMoved: true, color: "white" };
       }
     }
     if (move.special == "promotion") {
-      const piece = boardState.board[move.to];
+      const piece = board[move.to];
       if (move.promotion && piece) piece.type = move.promotion;
     }
   }
-  if (boardState.turn == "white") boardState.turn = "black";
-  else boardState.turn = "white";
 }
 
 export function checkMates(board: Board, turn: PlayerColor): GameStatus {
   const moves = generateAllMoves(board, turn);
   if (moves.length == 0) {
     if (checkKingInCheck(board, turn)) {
-      let winner: PlayerColor;
-      if (turn == "white") winner = "black";
-      else winner = "white";
-      return { isOver: true, winner: winner, reason: "Checkmate" };
-    } else return { isOver: true, winner: null, reason: "Stalemate" };
+      let winner: PlayerColor[];
+      if (turn == "white") winner = ["black"];
+      else winner = ["white"];
+      return { isOver: true, winners: winner, reason: "checkmate" };
+    } else return { isOver: true, winners: null, reason: "stalemate" };
   }
-  return { isOver: false, winner: null, reason: "" };
+  return { isOver: false, winners: null, reason: "" };
 }
 
 export function generateAllMoves(
@@ -165,15 +169,27 @@ function generatePawnMoves(
     newPos != null &&
     checkSqare(board, newPos, color) &&
     !checkSqareEmpty(board, newPos)
-  )
-    moves.push({ from: sq, to: newPos, special: null });
+  ) {
+    if (
+      (color == "white" && newPos > -1 && newPos < 8) ||
+      (color == "black" && newPos > 55 && newPos < 64)
+    )
+      moves.push({ from: sq, to: newPos, special: "promotion" });
+    else moves.push({ from: sq, to: newPos, special: null });
+  }
   newPos = generateOffset(sq, { x: -1, y: dir });
   if (
     newPos != null &&
     checkSqare(board, newPos, color) &&
     !checkSqareEmpty(board, newPos)
-  )
-    moves.push({ from: sq, to: newPos, special: null });
+  ) {
+    if (
+      (color == "white" && newPos > -1 && newPos < 8) ||
+      (color == "black" && newPos > 55 && newPos < 64)
+    )
+      moves.push({ from: sq, to: newPos, special: "promotion" });
+    else moves.push({ from: sq, to: newPos, special: null });
+  }
   return moves;
 }
 
@@ -435,17 +451,9 @@ function checkKingInCheckAfterMove(
   move: Move,
   color: PlayerColor,
 ): boolean {
-  const board_copy = [...board];
-
-  board_copy[move.to] = board_copy[move.from];
-  board_copy[move.from] = null;
-  let king_pos = -1;
-  for (let sq = 0; sq < 64; sq++) {
-    const piece = board_copy[sq];
-    if (piece == null) continue;
-    if (piece.type == "king" && piece.color == color) king_pos = sq;
-  }
-  if (checkIsAttacked(board_copy, king_pos, color)) return true;
+  const board_copy = JSON.parse(JSON.stringify(board));
+  updateBoard(board_copy, move, color);
+  if (checkKingInCheck(board_copy, color)) return true;
   return false;
 }
 

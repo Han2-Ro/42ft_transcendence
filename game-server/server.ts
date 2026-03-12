@@ -1,8 +1,9 @@
 import { Server, Socket } from "socket.io";
 import { Room } from "./src/room/room.js";
-import { CToSEvents, SToCEvents } from "shared";
+import { CToSEvents, SToCEvents, Games } from "shared";
 
 export type GameSocket = Socket<CToSEvents, SToCEvents>;
+let running = false;
 
 const io = new Server<CToSEvents, SToCEvents>(4000, {
   cors: {
@@ -18,31 +19,71 @@ const io = new Server<CToSEvents, SToCEvents>(4000, {
   },
 });
 
-const matchmakingQueue: GameSocket[] = [];
-//const rooms : Room[] = []
+type Player = {
+  socket: GameSocket;
+  status: "lobby" | "in_game";
+  game_id: string | null;
+  searching: Games[];
+};
 
-//const rooms : Record<, Room> = []
+const PlayerStates: Player[] = [];
 const rooms: Map<string, Room> = new Map();
 
 io.on("connection", (socket) => {
+  PlayerStates.push({
+    socket: socket,
+    status: "lobby",
+    game_id: null,
+    searching: [],
+  });
   console.log("Client connected:", socket.id);
 
-  socket.on("find_match", () => {
-    if (matchmakingQueue.includes(socket)) return;
-    console.log("Client searching for opponent:", socket.id);
-    matchmakingQueue.push(socket);
+  /*     socket.on('disconnect', ()=> {
+      console.log('Client disconnect: ', socket.id );
+  }); */
 
-    if (matchmakingQueue.length >= 2) {
-      const player1 = matchmakingQueue.shift();
-      const player2 = matchmakingQueue.shift();
-
-      if (player1 && player2) {
-        const gameId = crypto.randomUUID();
-        const players: GameSocket[] = [];
-        players.push(player1);
-        players.push(player2);
-        const new_room = new Room(players, "chess", gameId);
-        rooms.set(gameId, new_room);
+  socket.on("find_match", (type) => {
+    //add type to searching
+    const player = GetPlayer(socket);
+    if (
+      player === null ||
+      player.status !== "lobby" ||
+      player.searching.includes(type)
+    )
+      return;
+    player.searching.push(type);
+    console.log(
+      "Client searching for opponent:",
+      socket.id,
+      ", for type:",
+      type,
+    );
+    //check if Room can be created
+    const players: Player[] = [];
+    const sockets: GameSocket[] = [];
+    PlayerStates.forEach((value: Player) => {
+      if (value.searching.includes(type)) {
+        sockets.push(value.socket);
+        players.push(value);
+      }
+    });
+    if (
+      ((type === "4pChess" || type === "4pTimedChess") &&
+        players.length === 4) ||
+      ((type === "chess" || type === "timedChess") && players.length === 2)
+    ) {
+      const gameId = crypto.randomUUID();
+      players.forEach((value: Player) => {
+        value.game_id = gameId;
+        value.status = "in_game";
+        value.searching = [];
+      });
+      const new_room = new Room(sockets, type, gameId);
+      rooms.set(gameId, new_room);
+      if (running == false) {
+        running = true;
+        serverLoop();
+        console.log("Real time loop started");
       }
     }
   });
@@ -58,13 +99,18 @@ io.on("connection", (socket) => {
   });
 });
 
+function GetPlayer(socket: GameSocket): Player | null {
+  return (
+    PlayerStates.find((value: Player) => value.socket.id === socket.id) || null
+  );
+}
+
 const TICK_RATE = 20;
 const DT = 1 / TICK_RATE;
 const MAX_CATCHUP_TICKS = 5;
 
 let lastTime = nowSeconds();
 let accumulator = 0;
-//let running = true;
 
 function nowSeconds(): number {
   return Number(process.hrtime.bigint()) / 1e9;
@@ -72,13 +118,21 @@ function nowSeconds(): number {
 
 function CheckRunningGames(time_passed: number) {
   rooms.forEach((value: Room, key: string) => {
-    if (value.UpdateAndCheckOver(time_passed)) rooms.delete(key);
+    if (value.UpdateAndCheckOver(time_passed) === true) {
+      value.Players.forEach((value: GameSocket) => {
+        const player = GetPlayer(value);
+        if (player !== null) {
+          player.status = "lobby";
+          player.game_id = null;
+        }
+      });
+      rooms.delete(key);
+    }
   });
 }
 
 async function serverLoop() {
-  //while (running) {
-  while (1) {
+  while (running) {
     const currentTime = nowSeconds();
     const frameTime = currentTime - lastTime;
     lastTime = currentTime;
@@ -90,8 +144,11 @@ async function serverLoop() {
       accumulator -= DT;
       ticks++;
       CheckRunningGames(DT);
+      if (rooms.size == 0) {
+        running = false;
+        console.log("Real time loop stopped, no games running");
+      }
     }
-
     // Prevent spiral of death
     if (ticks === MAX_CATCHUP_TICKS) {
       accumulator = 0;
@@ -102,6 +159,10 @@ async function serverLoop() {
   }
 }
 
-serverLoop().catch(console.error);
+//serverLoop().catch(console.error);
+
+process.on("SIGINT", () => {
+  running = false;
+});
 
 console.log("Game Server running on port 4000");
