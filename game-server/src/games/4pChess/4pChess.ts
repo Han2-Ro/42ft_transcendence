@@ -38,14 +38,4 @@ export class FourPlayerChess extends Game {
     else winners = ["red", "yellow"];
     this.gameStatus = { isOver: true, winners: winners, reason: "timeout" };
   }
-
-  GetBoardState(): BoardState {
-    return this.boardState;
-  }
-  GetTurn(): PlayerColor {
-    return this.boardState.turn;
-  }
-  GetGameStatus(): GameStatus {
-    return this.gameStatus;
-  }
 }

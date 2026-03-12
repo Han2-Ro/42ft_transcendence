@@ -57,35 +57,27 @@ export default function FourPlayerBoard({
         {Array.from({ length: 196 }).map((_, visualIndex) => {
           const row = Math.floor(visualIndex / 14);
           const col = visualIndex % 14;
-
           const isTop = row < 3;
           const isBottom = row > 10;
           const isLeft = col < 3;
           const isRight = col > 10;
-
           const isInvalid =
             (isTop && isLeft) ||
             (isTop && isRight) ||
             (isBottom && isLeft) ||
             (isBottom && isRight);
-
           if (isInvalid) {
-            return <div key={visualIndex + 200} />; // empty placeholder
+            return <div key={visualIndex + 200} />; 
           }
-
           let index = -1;
           if (row < 3) {
-            // top section
             index = row * 8 + (col - 3);
           } else if (row < 11) {
-            // middle section
             index = 3 * 8 + (row - 3) * 14 + col;
           } else {
-            // bottom section
             index = 3 * 8 + 8 * 14 + (row - 11) * 8 + (col - 3);
           }
           const sq = boardState.board[index];
-
           return (
             <button
               key={index}
