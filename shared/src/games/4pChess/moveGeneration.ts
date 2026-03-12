@@ -611,8 +611,8 @@ function CheckIsAttacked(board: Board, pos: number, PlayerColor: PlayerColor) {
   //check for Pawns
   if (PlayerColor == "blue" || PlayerColor == "green") {
     const red_pawn_offsets: Pos2[] = [
-      { x: -1, y: 1 },
-      { x: -1, y: -1 },
+	  { x: 1, y: 1 },
+      { x: 1, y: -1 },
     ];
     const red_moves = generateOffsets(pos, red_pawn_offsets);
     for (let i = 0; i < red_moves.length; i++) {
@@ -620,8 +620,8 @@ function CheckIsAttacked(board: Board, pos: number, PlayerColor: PlayerColor) {
       if (pos && pos.color == "red" && pos.type == "pawn") return true;
     }
     const yellow_pawn_offsets: Pos2[] = [
-      { x: 1, y: 1 },
-      { x: 1, y: -1 },
+      { x: -1, y: 1 },
+      { x: -1, y: -1 },
     ];
     const yellow_moves = generateOffsets(pos, yellow_pawn_offsets);
     for (let i = 0; i < yellow_moves.length; i++) {
@@ -630,8 +630,8 @@ function CheckIsAttacked(board: Board, pos: number, PlayerColor: PlayerColor) {
     }
   } else {
     const blue_pawn_offsets: Pos2[] = [
-      { x: -1, y: 1 },
-      { x: 1, y: 1 },
+	  { x: 1, y: -1 },
+      { x: -1, y: -1 },
     ];
     const blue_moves = generateOffsets(pos, blue_pawn_offsets);
     for (let i = 0; i < blue_moves.length; i++) {
@@ -639,8 +639,8 @@ function CheckIsAttacked(board: Board, pos: number, PlayerColor: PlayerColor) {
       if (pos && pos.color == "blue" && pos.type == "pawn") return true;
     }
     const green_pawn_offsets: Pos2[] = [
-      { x: 1, y: -1 },
-      { x: -1, y: -1 },
+      { x: -1, y: 1 },
+      { x: 1, y: 1 },
     ];
     const green_moves = generateOffsets(pos, green_pawn_offsets);
     for (let i = 0; i < green_moves.length; i++) {
