@@ -3,6 +3,7 @@ import { Room } from "./src/room/room.js";
 import { CToSEvents, SToCEvents, Games } from "shared";
 
 export type GameSocket = Socket<CToSEvents, SToCEvents>;
+let running = false;
 
 const io = new Server<CToSEvents, SToCEvents>(4000, {
   cors: {
@@ -37,8 +38,8 @@ io.on("connection", (socket) => {
   });
   console.log("Client connected:", socket.id);
 
-  /*   socket.on('disconnect', ()=> {
-      console.log('Got disconnect!');
+/*     socket.on('disconnect', ()=> {
+      console.log('Client disconnect: ', socket.id );
   }); */
 
   socket.on("find_match", (type) => {
@@ -79,6 +80,12 @@ io.on("connection", (socket) => {
       });
       const new_room = new Room(sockets, type, gameId);
       rooms.set(gameId, new_room);
+	  if (running == false)
+	  {
+		running = true
+		serverLoop();
+		console.log("Real time loop started")
+      }
     }
   });
 
@@ -105,7 +112,6 @@ const MAX_CATCHUP_TICKS = 5;
 
 let lastTime = nowSeconds();
 let accumulator = 0;
-//let running = false;
 
 function nowSeconds(): number {
   return Number(process.hrtime.bigint()) / 1e9;
@@ -127,8 +133,7 @@ function CheckRunningGames(time_passed: number) {
 }
 
 async function serverLoop() {
-  //while (running) {
-  while (1) {
+  while (running) {
     const currentTime = nowSeconds();
     const frameTime = currentTime - lastTime;
     lastTime = currentTime;
@@ -139,12 +144,16 @@ async function serverLoop() {
     while (accumulator >= DT && ticks < MAX_CATCHUP_TICKS) {
       accumulator -= DT;
       ticks++;
-      CheckRunningGames(DT);
+	  CheckRunningGames(DT);
+	  if (rooms.size == 0)
+	  {
+		running = false
+	  	console.log("Real time loop stopped, no games running")
+      }
     }
-
     // Prevent spiral of death
     if (ticks === MAX_CATCHUP_TICKS) {
-      accumulator = 0;
+	  accumulator = 0;
     }
 
     // Yield back to the event loop
@@ -152,6 +161,10 @@ async function serverLoop() {
   }
 }
 
-serverLoop().catch(console.error);
+//serverLoop().catch(console.error);
+
+process.on("SIGINT", () => {
+  running = false;
+});
 
 console.log("Game Server running on port 4000");
