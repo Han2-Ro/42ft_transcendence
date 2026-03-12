@@ -33,7 +33,7 @@ export default function MainMenu() {
         />
         {user ? (
           <MenuButton
-            onClick={onLogoutClicked} // TODO: actually logout (server function)
+            onClick={onLogoutClicked}
             icon={<LogoutIcon size={50} className=" text-accent-primary" />}
             label="Log Out"
           />
