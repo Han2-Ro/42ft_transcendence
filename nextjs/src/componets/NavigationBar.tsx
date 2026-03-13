@@ -34,6 +34,7 @@ export default function NavigationBar() {
                 key={action.label}
                 onClick={action.onClick}
                 label={action.label}
+                icon={action.icon}
               />
             ))}
           </nav>

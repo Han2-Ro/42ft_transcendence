@@ -1,10 +1,11 @@
 "use client";
 
-import { createContext, useCallback, useContext, useMemo, useState } from "react";
+import { createContext, ReactNode, useCallback, useContext, useMemo, useState } from "react";
 
 export type SidebarAction = {
   label: string;
   onClick: () => void;
+  icon?: ReactNode;
 };
 
 type SidebarActionsContextType = {

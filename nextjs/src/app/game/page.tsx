@@ -10,6 +10,7 @@ import { CToSEvents, SToCEvents } from "shared";
 import { BoardState, PlayerColor, Move } from "shared";
 import { result as GameResult } from "shared";
 import { useSidebarActions } from "@/componets/SidebarActionsProvider";
+import { DeadKing } from "@/componets/icons/DeadKing";
 
 // Connect to the exposed backend port
 const socket: Socket<SToCEvents, CToSEvents> = io("http://localhost:4000");
@@ -71,9 +72,9 @@ export default function Page() {
     }
 
     setActions([
-      { label: "Resign", onClick: emitPlayerResign },
+      { label: "Resign", onClick: emitPlayerResign, icon: <DeadKing className=" text-red-600"/> },
       {
-        label: "Offer Draw",
+        label: "🤝 Offer Draw",
         onClick: () => console.error("TODO: Not implemented yet"),
       },
     ]);
