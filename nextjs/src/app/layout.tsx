@@ -34,7 +34,7 @@ export default async function RootLayout({
       >
         <AuthProvider initialUser={user}>
           <NavigationBar />
-          <div>{children}</div>
+          <div className="w-full">{children}</div>
         </AuthProvider>
       </body>
     </html>
