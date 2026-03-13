@@ -14,7 +14,7 @@ export default function NavigationBar() {
   const { actions } = useSidebarActions();
   const hasCustomActions = actions.length > 0;
   return (
-    <div className="bg-background-secondary flex flex-row lg:flex-col justify-between items-center">
+    <div className=" lg:w-80 bg-background-secondary flex flex-row lg:flex-col justify-between items-center">
       <button
         className=" z-10 lg:hidden"
         onClick={() => setShowMenu(!showMenu)}
