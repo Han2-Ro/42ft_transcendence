@@ -72,7 +72,11 @@ export default function Page() {
     }
 
     setActions([
-      { label: "Resign", onClick: emitPlayerResign, icon: <DeadKing className=" text-red-600"/> },
+      {
+        label: "Resign",
+        onClick: emitPlayerResign,
+        icon: <DeadKing className=" text-red-600" />,
+      },
       {
         label: "🤝 Offer Draw",
         onClick: () => console.error("TODO: Not implemented yet"),
