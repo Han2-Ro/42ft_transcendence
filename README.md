@@ -35,6 +35,22 @@ docker compose up
 - `pnpm format:check` - check the fromatting without writing
 - `pnpm format` - format all files with writing and saving
 
+## Modules
+
+| Modul                         | Points |
+| ----------------------------- | ------ |
+| Full Stack Framework          | 2      |
+| real-time feature (websocket) | 2      |
+| ORM                           | 1      |
+| additional Browsers           | 1      |
+| game statistics & history     | 1      |
+| OAth 2.0 (42 intra)           | 1      |
+| 2FA                           | 1      |
+| Complete Web based Game       | 2      |
+| Remote players                | 2      |
+| Multiplayer                   | 2      |
+| TOTAL                         | 15     |
+
 ## Project Structure
 
 - **nextjs/** - Next.js frontend and backend API
