@@ -54,7 +54,7 @@ docker compose up
 ## Tests
 
 There are end-to-end tests with playwright in `./tests/`:
-
+- `pnpm --filter tests exec playwright install` to install playwright
 - `pnpm test` to execute them
 - `pnpm test:ui` to see what the tests are doing
 
