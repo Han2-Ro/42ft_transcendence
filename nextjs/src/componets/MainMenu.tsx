@@ -11,10 +11,12 @@ import { logout } from "@/lib/auth/actions";
 import { useRouter } from "next/navigation";
 import { GearIcon } from "./icons/GearIcon";
 import { HomeIcon } from "./icons/HomeIcon";
+import { MoreModal } from "./MoreModal";
 
 export default function MainMenu() {
   const [showLogin, setShowLogin] = useState(false);
   const toggleLogin = () => setShowLogin(!showLogin);
+  const [showMore, setShowMore] = useState(false);
   const { user, refreshUser } = useAuthConetxt();
   const router = useRouter();
 
@@ -27,6 +29,7 @@ export default function MainMenu() {
   return (
     <>
       {showLogin && <AuthModal onClose={toggleLogin} />}
+      {showMore && <MoreModal onClose={() => setShowMore(false)} />}
       <nav className=" bg-black/70 lg:bg-inherit h-full w-full p-6 flex flex-col justify-center gap-4 items-center">
         <MenuButton href="/" label="Home" icon={<HomeIcon size={50} />} />
         <MenuButton
@@ -52,6 +55,7 @@ export default function MainMenu() {
           icon={<GearIcon size={50} />}
           onClick={() => console.error("TODO: not implented yet")}
         />
+        <MenuButton label="More..." onClick={() => setShowMore(true)} />
       </nav>
     </>
   );
