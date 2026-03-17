@@ -25,13 +25,13 @@ export function MenuButton({
   className,
   ...props
 }: MenuButtonProps) {
-  const baseClassName = `w-full p-4 bg-background-primary rounded-2xl flex items-center justify-center gap-4 transition-colors hover:bg-background-primary/80 ${className || ""}`;
+  const baseClassName = `w-full p-4 bg-background-primary rounded-2xl flex items-center gap-2 transition-colors hover:bg-background-primary/80 ${className || ""}`;
 
   if ("href" in props && props.href) {
     return (
       <Link href={props.href} className={baseClassName}>
         {icon}
-        <p className="text-4xl">{label}</p>
+        <p className="text-4xl flex-auto text-center">{label}</p>
       </Link>
     );
   }
@@ -39,7 +39,7 @@ export function MenuButton({
   return (
     <button onClick={props.onClick} className={baseClassName}>
       {icon}
-      <p className="text-4xl">{label}</p>
+      <p className="text-4xl flex-auto text-center">{label}</p>
     </button>
   );
 }
