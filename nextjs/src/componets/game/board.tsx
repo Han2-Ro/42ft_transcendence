@@ -54,7 +54,13 @@ export default function Board({
         alignItems: "center",
       }}
     >
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(8, 100px)", transform: isBlack ? "rotate(180deg)" : "none",}}>
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(8, 100px)",
+          transform: isBlack ? "rotate(180deg)" : "none",
+        }}
+      >
         {boardState.board.map((sq: PieceOrNull, index: number) => (
           <button
             key={index}
@@ -79,7 +85,11 @@ export default function Board({
                 height="45"
                 src={`/chess/${sq.color}/${sq.type}.svg`}
                 alt={sq.color + sq.type}
-                style={{ width: "100%", height: "100%", transform: isBlack ? "rotate(180deg)" : "none"}}
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  transform: isBlack ? "rotate(180deg)" : "none",
+                }}
               />
             )}
             {movesFromSqareInt &&
