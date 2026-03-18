@@ -1,3 +1,5 @@
+import Button from "./Button";
+
 export default function EndScreen({
   result,
   reason,
@@ -11,16 +13,11 @@ export default function EndScreen({
     <div style={{ textAlign: "center" }}>
       <p>Result: {result}</p>
       <p>Reason: {reason}</p>
-      <button
+      <Button
         onClick={onClose}
-        style={{
-          padding: "10px 20px",
-          fontSize: "20px",
-          cursor: "pointer",
-        }}
       >
-        close
-      </button>
+        Close
+      </Button>
     </div>
   );
 }

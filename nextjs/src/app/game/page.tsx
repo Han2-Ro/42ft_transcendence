@@ -21,6 +21,7 @@ export default function Page() {
   const [boardState, setBoardState] = useState<BoardState | null>(null);
   const [result, setResult] = useState<GameResult | null>(null);
   const [resultReason, setResultReason] = useState<string | null>(null);
+  const [isSearching, setIsSearching] = useState(false);
   const { setActions, clearActions } = useSidebarActions();
 
   useEffect(() => {
@@ -28,6 +29,7 @@ export default function Page() {
       setGameId(data.gameId);
       setBoardState(data.boardState);
       setColor(data.color);
+      setIsSearching(false);
     });
 
     socket.on("move_made", (data) => {
@@ -41,6 +43,7 @@ export default function Page() {
       setGameId(null);
       setBoardState(null);
       setColor(null);
+      setIsSearching(false);
     });
 
     return () => {
@@ -101,6 +104,12 @@ export default function Page() {
       onClose={closeResultScreen}
     />
   ) : (
-    <Lobby onFindMatchPressed={() => socket.emit("find_match")} />
+    <Lobby
+      onFindMatchPressed={() => {
+        setIsSearching(true);
+        socket.emit("find_match");
+      }}
+      isSearching={isSearching}
+    />
   );
 }
