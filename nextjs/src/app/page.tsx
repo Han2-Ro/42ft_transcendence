@@ -9,7 +9,7 @@ export default function Home() {
       <main className="flex-1 p-8 flex flex-col items-center">
         <h1 className="mb-8 text-6xl">Chess 42</h1>
         <p className="text-4xl">Better than chess.com!</p>
-        <section className="grid lg:grid-cols-2 py-10 gap-10">
+        <section className="grid lg:grid-cols-2 py-10 gap-10 w-full">
           <div className="bg-linear-110 from-gray-600/50 to bg-neutral-800 p-2 rounded-xl">
             <Link href="/stats">
               <h2 className="text-2xl w-full text-center pb-4 pt-2 hover:text-stone-400">

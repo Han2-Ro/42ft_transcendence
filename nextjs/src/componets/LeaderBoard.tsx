@@ -74,57 +74,70 @@ export default function LeaderBoard({
       return "";
     }
 
-    return sortDirection === "asc" ? " ↑" : " ↓";
+    return sortDirection === "asc" ? "↑" : "↓";
+  };
+
+  const renderSortLabel = (label: string, key: SortKey) => {
+    const arrow = sortArrow(key);
+
+    return (
+      <span className="inline-flex items-center gap-1">
+        <span>{label}</span>
+        <span aria-hidden="true" className="inline-block w-[1ch] text-left">
+          {arrow}
+        </span>
+      </span>
+    );
   };
 
   return (
-    <div className="overflow-x-auto rounded-lg border border-gray-300">
-      <table className="w-full border-collapse text-left">
-        <thead className="bg-accent-primary">
+    <div className="w-full min-w-0 overflow-x-auto rounded-lg border border-gray-300">
+      <table className="w-full min-w-lg table-fixed border-collapse text-left">
+        <thead className="bg-accent-primary/50">
           <tr>
-            <th className="p-3">
+            <th className="w-[35%] p-3">
               <button
-                className="font-semibold"
+                className="font-semibold hover:text-neutral-400"
                 onClick={() => handleSort("username")}
                 type="button"
               >
-                Player{sortArrow("username")}
+                {renderSortLabel("Player", "username")}
               </button>
             </th>
-            <th className="p-3">
+            <th className="w-[15%] p-3">
               <button
-                className="font-semibold"
+                className="font-semibold hover:text-neutral-400"
                 onClick={() => handleSort("wins")}
                 type="button"
               >
-                Wins{sortArrow("wins")}
+                {renderSortLabel("Wins", "wins")}
               </button>
             </th>
-            <th className="p-3">
+            <th className="w-[15%] p-3">
               <button
-                className="font-semibold"
+                className="font-semibold hover:text-neutral-400"
                 onClick={() => handleSort("losses")}
                 type="button"
               >
-                Losses{sortArrow("losses")}
+                {renderSortLabel("Losses", "losses")}
               </button>
             </th>
-            <th className="p-3">
+            <th className="w-[15%] p-3">
               <button
-                className="font-semibold"
+                className="font-semibold hover:text-neutral-400"
                 onClick={() => handleSort("draws")}
                 type="button"
               >
-                Draws{sortArrow("draws")}
+                {renderSortLabel("Draws", "draws")}
               </button>
             </th>
-            <th className="p-3">
+            <th className="w-[20%] p-3">
               <button
-                className="font-semibold"
+                className="font-semibold hover:text-neutral-400"
                 onClick={() => handleSort("winRatio")}
                 type="button"
               >
-                Win Ratio{sortArrow("winRatio")}
+                {renderSortLabel("Win Ratio", "winRatio")}
               </button>
             </th>
           </tr>
