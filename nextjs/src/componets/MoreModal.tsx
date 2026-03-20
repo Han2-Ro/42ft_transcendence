@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { PlainLink } from "./PlainLink";
 
 type Props = {
   onClose: () => void;
@@ -16,19 +16,20 @@ export const MoreModal = ({ onClose }: Props) => {
         <h1 className=" mb-8 text-3xl">More</h1>
         <ul>
           <li>
-            <Link href="/privacy-policy" onClick={onClose}>
-              Privacy Policy
-            </Link>
+            <PlainLink
+              href="/privacy-policy"
+              label="Privacy Policy"
+              onClick={onClose}
+            />
           </li>
           <li>
-            <Link href="/credits" onClick={onClose}>
-              Credits
-            </Link>
+            <PlainLink href="/credits" label="Credits" onClick={onClose} />
           </li>
           <li>
-            <Link href="https://github.com/Han2-Ro/42ft_transcendence">
-              Source Code
-            </Link>
+            <PlainLink
+              href="https://github.com/Han2-Ro/42ft_transcendence"
+              label="Source Code"
+            />
           </li>
         </ul>
       </div>
