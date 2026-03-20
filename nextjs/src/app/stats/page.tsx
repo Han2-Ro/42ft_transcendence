@@ -1,4 +1,4 @@
-import LeaderBoard, { LeaderBoardEntry } from "../../componets/LeaderBoard";
+import LeaderBoard from "../../componets/LeaderBoard";
 
 export default function Page() {
   return (
