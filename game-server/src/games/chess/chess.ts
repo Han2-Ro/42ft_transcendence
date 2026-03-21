@@ -1,6 +1,6 @@
 import { BoardState, PlayerColor, GameStatus, Move } from "shared";
 import { checkMates, updateBoardState, validateMove } from "shared";
-import { startingBoardState } from "./constants.js";
+import { startingBoardState } from "shared";
 import { Game } from "../game.js";
 
 export class Chess extends Game {

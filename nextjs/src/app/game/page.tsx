@@ -6,7 +6,7 @@ import Lobby from "../../componets/game/lobby";
 import Game from "../../componets/game/game";
 import EndScreen from "../../componets/game/endScreen";
 
-import { CToSEvents, SToCEvents } from "shared";
+import { CToSEvents, startingBoardState, SToCEvents } from "shared";
 import { BoardState, PlayerColor, Move } from "shared";
 import { result as GameResult } from "shared";
 import { useSidebarActions } from "@/componets/SidebarActionsProvider";
@@ -17,8 +17,8 @@ const socket: Socket<SToCEvents, CToSEvents> = io("http://localhost:4000");
 
 export default function Page() {
   const [gameId, setGameId] = useState<string | null>(null);
-  const [color, setColor] = useState<PlayerColor | null>(null);
-  const [boardState, setBoardState] = useState<BoardState | null>(null);
+  const [color, setColor] = useState<PlayerColor>("white");
+  const [boardState, setBoardState] = useState<BoardState>(startingBoardState);
   const [result, setResult] = useState<GameResult | null>(null);
   const [resultReason, setResultReason] = useState<string | null>(null);
   const [isSearching, setIsSearching] = useState(false);
@@ -41,8 +41,8 @@ export default function Page() {
       setResult(data.result);
       setResultReason(data.reason);
       setGameId(null);
-      setBoardState(null);
-      setColor(null);
+      // setBoardState(null);
+      // setColor(null);
       setIsSearching(false);
     });
 
@@ -91,25 +91,34 @@ export default function Page() {
     };
   }, [boardState, clearActions, emitPlayerResign, gameId, result, setActions]);
 
-  return boardState ? (
-    <Game
-      boardState={boardState}
-      color={color!}
-      onPlayerMove={emitPlayerMove}
-    />
-  ) : result ? (
-    <EndScreen
-      result={result}
-      reason={resultReason || ""}
-      onClose={closeResultScreen}
-    />
-  ) : (
-    <Lobby
-      onFindMatchPressed={() => {
-        setIsSearching(true);
-        socket.emit("find_match");
-      }}
-      isSearching={isSearching}
-    />
-  );
+ return (
+  <div className="flex min-h-screen items-center gap-12 pl-20">
+    <main className="flex-1">
+      <Game
+        boardState={boardState}
+        color={color ?? "white"} // optional fallback
+        onPlayerMove={gameId && !result ? emitPlayerMove : () => {}}
+      />
+    </main>
+    <aside className="flex-1">
+    {result && (
+      <EndScreen
+        result={result}
+        reason={resultReason || ""}
+        onClose={closeResultScreen}
+      />
+    )}
+
+    {!gameId && !result && (
+      <Lobby
+        onFindMatchPressed={() => {
+          setIsSearching(true);
+          socket.emit("find_match");
+        }}
+        isSearching={isSearching}
+      />
+    )}
+    </aside>
+  </div>
+);
 }
