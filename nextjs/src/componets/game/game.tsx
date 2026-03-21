@@ -14,7 +14,7 @@ export default function Game({ boardState, color, onPlayerMove }: GameProps) {
       <Board
         boardState={boardState}
         onPlayerMove={onPlayerMove}
-        isBlack={color === "black"}
+        playerColor={color}
       ></Board>
       <p>You are playing as {color}</p>
     </div>

@@ -1,15 +1,21 @@
 import { useEffect, useState } from "react";
-import { generateMoves, Move, PieceOrNull, BoardState } from "shared";
+import {
+  generateMoves,
+  Move,
+  PieceOrNull,
+  BoardState,
+  PlayerColor,
+} from "shared";
 import Image from "next/image";
 
 export default function Board({
   boardState,
   onPlayerMove,
-  isBlack,
+  playerColor,
 }: {
   boardState: BoardState;
   onPlayerMove: (move: Move) => void;
-  isBlack: boolean;
+  playerColor: PlayerColor;
 }) {
   const [selectedSquare, setSelectedSquare] = useState<number | null>(null);
   const [movesFromSqareInt, setMovesFromSqareInt] = useState<number[] | null>(
@@ -58,7 +64,7 @@ export default function Board({
         style={{
           display: "grid",
           gridTemplateColumns: "repeat(8, 100px)",
-          transform: isBlack ? "rotate(180deg)" : "none",
+          transform: playerColor === "black" ? "rotate(180deg)" : "none",
         }}
       >
         {boardState.board.map((sq: PieceOrNull, index: number) => (
@@ -88,7 +94,8 @@ export default function Board({
                 style={{
                   width: "100%",
                   height: "100%",
-                  transform: isBlack ? "rotate(180deg)" : "none",
+                  transform:
+                    playerColor === "black" ? "rotate(180deg)" : "none",
                 }}
               />
             )}
