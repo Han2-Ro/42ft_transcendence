@@ -10,7 +10,12 @@ interface GameProps {
 export default function Game({ boardState, color, onPlayerMove }: GameProps) {
   return (
     <div style={{ textAlign: "center" }}>
-      <Board boardState={boardState} onPlayerMove={onPlayerMove}></Board>
+      <h2>Game in progress</h2>
+      <Board
+        boardState={boardState}
+        onPlayerMove={onPlayerMove}
+        playerColor={color}
+      ></Board>
       <p>You are playing as {color}</p>
     </div>
   );
