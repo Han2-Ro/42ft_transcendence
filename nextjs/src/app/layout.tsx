@@ -5,6 +5,7 @@ import NavigationBar from "../componets/NavigationBar";
 import { getSession } from "@/lib/auth/session";
 import AuthProvider from "@/componets/AuthProvider";
 import SidebarActionsProvider from "@/componets/SidebarActionsProvider";
+import Footer from "./Footer";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,12 +32,15 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} h-screen antialiased lg:flex lg:flex-row bg-background-primary`}
+        className={`${geistSans.variable} ${geistMono.variable} min-h-screen antialiased flex flex-col lg:flex-row`}
       >
         <AuthProvider initialUser={user}>
           <SidebarActionsProvider>
             <NavigationBar />
-            <div className="w-full">{children}</div>
+            <div className="w-full min-h-full flex flex-col flex-1 bg-background-primary">
+              <div className="flex-1">{children}</div>
+              <Footer />
+            </div>
           </SidebarActionsProvider>
         </AuthProvider>
       </body>

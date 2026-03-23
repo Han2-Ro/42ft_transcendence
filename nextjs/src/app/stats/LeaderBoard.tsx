@@ -1,0 +1,160 @@
+"use client";
+
+import { useMemo, useState } from "react";
+
+const sampleEntries: LeaderBoardEntry[] = [
+  { username: "hannes", wins: 18, losses: 7, draws: 3 },
+  { username: "alice", wins: 24, losses: 4, draws: 2 },
+  { username: "bob", wins: 12, losses: 10, draws: 6 },
+  { username: "carla", wins: 15, losses: 9, draws: 4 },
+  { username: "david", wins: 9, losses: 11, draws: 8 },
+  { username: "david", wins: 1, losses: 1, draws: 1 },
+];
+
+export type LeaderBoardEntry = {
+  username: string;
+  wins: number;
+  losses: number;
+  draws: number;
+};
+
+type SortKey = "username" | "wins" | "losses" | "draws" | "winRatio";
+type SortDirection = "asc" | "desc";
+
+function getWinRatio(entry: LeaderBoardEntry): number {
+  const totalGames = entry.wins + entry.losses + entry.draws;
+
+  if (totalGames === 0) {
+    return 0;
+  }
+
+  return (0.5 * entry.draws + entry.wins) / totalGames;
+}
+
+export default function LeaderBoard({
+  maxEntries = Infinity,
+}: {
+  maxEntries?: number;
+}) {
+  const entries = sampleEntries;
+  const [sortKey, setSortKey] = useState<SortKey>("wins");
+  const [sortDirection, setSortDirection] = useState<SortDirection>("desc");
+
+  const sortedEntries = useMemo(() => {
+    const sorted = [...entries].sort((a, b) => {
+      if (sortKey === "username") {
+        return a.username.localeCompare(b.username);
+      }
+
+      if (sortKey === "winRatio") {
+        return getWinRatio(a) - getWinRatio(b);
+      }
+
+      return a[sortKey] - b[sortKey];
+    });
+
+    if (sortDirection === "desc") {
+      sorted.reverse();
+    }
+
+    return sorted;
+  }, [entries, sortDirection, sortKey]);
+
+  const handleSort = (key: SortKey) => {
+    if (sortKey === key) {
+      setSortDirection((prev) => (prev === "asc" ? "desc" : "asc"));
+      return;
+    }
+
+    setSortKey(key);
+    setSortDirection(key === "username" ? "asc" : "desc");
+  };
+
+  const sortArrow = (key: SortKey) => {
+    if (sortKey !== key) {
+      return "";
+    }
+
+    return sortDirection === "asc" ? "↑" : "↓";
+  };
+
+  const renderSortLabel = (label: string, key: SortKey) => {
+    const arrow = sortArrow(key);
+
+    return (
+      <span className="inline-flex items-center gap-1">
+        <span>{label}</span>
+        <span aria-hidden="true" className="inline-block w-[1ch] text-left">
+          {arrow}
+        </span>
+      </span>
+    );
+  };
+
+  return (
+    <div className="w-full max-w-240 min-w-0 overflow-x-auto rounded-lg border border-gray-300">
+      <table className="w-full min-w-lg table-fixed border-collapse text-left">
+        <thead className="bg-accent-primary/50">
+          <tr>
+            <th className="w-[35%] p-3">
+              <button
+                className="font-semibold hover:text-neutral-400"
+                onClick={() => handleSort("username")}
+                type="button"
+              >
+                {renderSortLabel("Player", "username")}
+              </button>
+            </th>
+            <th className="w-[15%] p-3">
+              <button
+                className="font-semibold hover:text-neutral-400"
+                onClick={() => handleSort("wins")}
+                type="button"
+              >
+                {renderSortLabel("Wins", "wins")}
+              </button>
+            </th>
+            <th className="w-[15%] p-3">
+              <button
+                className="font-semibold hover:text-neutral-400"
+                onClick={() => handleSort("losses")}
+                type="button"
+              >
+                {renderSortLabel("Losses", "losses")}
+              </button>
+            </th>
+            <th className="w-[15%] p-3">
+              <button
+                className="font-semibold hover:text-neutral-400"
+                onClick={() => handleSort("draws")}
+                type="button"
+              >
+                {renderSortLabel("Draws", "draws")}
+              </button>
+            </th>
+            <th className="w-[20%] p-3">
+              <button
+                className="font-semibold hover:text-neutral-400"
+                onClick={() => handleSort("winRatio")}
+                type="button"
+              >
+                {renderSortLabel("Win Ratio", "winRatio")}
+              </button>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {sortedEntries.slice(0, maxEntries).map((entry, index) => (
+            <tr className="border-t border-gray-200" key={index}>
+              <td className="p-3">{entry.username}</td>
+              <td className="p-3">{entry.wins}</td>
+              <td className="p-3">{entry.losses}</td>
+              <td className="p-3">{entry.draws}</td>
+              <td className="p-3">{(getWinRatio(entry) * 100).toFixed(1)}%</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}

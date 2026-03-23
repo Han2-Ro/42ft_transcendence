@@ -23,14 +23,16 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 To run it in production, create a `.env` file from `.env.example` and the run
 
 ```bash
-docker compose up
+docker compose up --build
 ```
 
 ### pnpm scripts
 
 - `pnpm dev` - run development server with hot reload
+- `pnpm dev:db` - dev server with db
 - `pnpm build` - build
 - `pnpm start` - run the project after `pnpm build`
+- `pnpm up` - start everything like in production with docker-compose
 - `pnpm lint` - check eslint
 - `pnpm format:check` - check the fromatting without writing
 - `pnpm format` - format all files with writing and saving
