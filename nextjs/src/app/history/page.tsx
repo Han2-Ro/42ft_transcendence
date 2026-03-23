@@ -2,8 +2,8 @@ import GameHistory from "./GameHistory";
 
 export default function Page() {
   return (
-    <main className="p-4">
-      <h1 className="mb-4 text-3xl font-bold">Your Game History</h1>
+    <main className="flex flex-col items-center">
+      <h1 className="p-8 text-3xl font-bold">Your Game History</h1>
       <GameHistory className="w-full max-w-200" />
     </main>
   );

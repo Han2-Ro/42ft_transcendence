@@ -92,7 +92,7 @@ export default function LeaderBoard({
   };
 
   return (
-    <div className="w-full min-w-0 overflow-x-auto rounded-lg border border-gray-300">
+    <div className="w-full max-w-240 min-w-0 overflow-x-auto rounded-lg border border-gray-300">
       <table className="w-full min-w-lg table-fixed border-collapse text-left">
         <thead className="bg-accent-primary/50">
           <tr>
