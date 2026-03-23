@@ -8,6 +8,7 @@ const sampleEntries: LeaderBoardEntry[] = [
   { username: "bob", wins: 12, losses: 10, draws: 6 },
   { username: "carla", wins: 15, losses: 9, draws: 4 },
   { username: "david", wins: 9, losses: 11, draws: 8 },
+  { username: "david", wins: 1, losses: 1, draws: 1 },
 ];
 
 export type LeaderBoardEntry = {
@@ -143,8 +144,8 @@ export default function LeaderBoard({
           </tr>
         </thead>
         <tbody>
-          {sortedEntries.slice(0, maxEntries).map((entry) => (
-            <tr className="border-t border-gray-200" key={entry.username}>
+          {sortedEntries.slice(0, maxEntries).map((entry, index) => (
+            <tr className="border-t border-gray-200" key={index}>
               <td className="p-3">{entry.username}</td>
               <td className="p-3">{entry.wins}</td>
               <td className="p-3">{entry.losses}</td>

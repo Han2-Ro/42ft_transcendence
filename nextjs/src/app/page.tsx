@@ -1,4 +1,4 @@
-import LeaderBoard from "@/componets/LeaderBoard";
+import LeaderBoard from "@/app/stats/LeaderBoard";
 import Link from "next/link";
 import GameHistory from "./history/GameHistory";
 
@@ -19,7 +19,7 @@ export default function Home() {
         <div className="bg-linear-230 from-gray-600/50 to-neutral-800 p-4 rounded-xl">
           <Link href="/history">
             <h2 className="text-2xl text-center pb-4 hover:text-stone-400">
-              Recent Games
+              Your Recent Games
             </h2>
           </Link>
           <GameHistory className="w-full" maxEntries={3} />

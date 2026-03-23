@@ -28,11 +28,11 @@ export default function GameHistory({
   );
   return (
     <table className={className}>
-      <thead className=" hidden">
+      <thead>
         <tr>
-          <th>Date</th>
-          <th>Opponent</th>
-          <th>Result</th>
+          <th className="px-6 text-start">Date</th>
+          <th className="px-6 text-start">Opponent</th>
+          <th className="px-6 text-start">Result</th>
         </tr>
       </thead>
       <tbody>
