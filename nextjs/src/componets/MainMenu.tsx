@@ -9,6 +9,8 @@ import { LogoutIcon } from "./icons/LogoutIcon";
 import { useAuthConetxt } from "./AuthProvider";
 import { logout } from "@/lib/auth/actions";
 import { useRouter } from "next/navigation";
+import { GearIcon } from "./icons/GearIcon";
+import { HomeIcon } from "./icons/HomeIcon";
 
 export default function MainMenu() {
   const [showLogin, setShowLogin] = useState(false);
@@ -26,6 +28,7 @@ export default function MainMenu() {
     <>
       {showLogin && <AuthModal onClose={toggleLogin} />}
       <nav className=" bg-black/70 lg:bg-inherit h-full w-full p-6 flex flex-col justify-center gap-4 items-center">
+        <MenuButton href="/" label="Home" icon={<HomeIcon size={50} />} />
         <MenuButton
           href="/game"
           icon={<PlayIcon size={50} className=" text-accent-primary" />}
@@ -33,18 +36,22 @@ export default function MainMenu() {
         />
         {user ? (
           <MenuButton
-            onClick={onLogoutClicked} // TODO: actually logout (server function)
-            icon={<LogoutIcon size={50} className=" text-accent-primary" />}
+            onClick={onLogoutClicked}
+            icon={<LogoutIcon size={50} />}
             label="Log Out"
           />
         ) : (
           <MenuButton
             onClick={toggleLogin}
-            icon={<LoginIcon size={50} className=" text-accent-primary" />}
+            icon={<LoginIcon size={50} />}
             label="Log In"
           />
         )}
-        <MenuButton href="/test" label="Test" />
+        <MenuButton
+          label="Settings"
+          icon={<GearIcon size={50} />}
+          onClick={() => console.error("TODO: not implented yet")}
+        />
       </nav>
     </>
   );

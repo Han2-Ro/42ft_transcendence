@@ -7,7 +7,6 @@ interface GameProps {
   gameType: Games;
   color: PlayerColor;
   onPlayerMove: (move: Move) => void;
-  onPlayerResign: () => void;
 }
 
 export default function Game({
@@ -15,7 +14,6 @@ export default function Game({
   gameType,
   color,
   onPlayerMove,
-  onPlayerResign,
 }: GameProps) {
   return (
     <div style={{ textAlign: "center" }}>
@@ -26,16 +24,6 @@ export default function Game({
         <FourPlayerBoard boardState={boardState} onPlayerMove={onPlayerMove} playerColor={color}/>
       )}
       <p>You are playing as {color}</p>
-      <button
-        onClick={onPlayerResign}
-        style={{
-          padding: "10px 20px",
-          fontSize: "20px",
-          cursor: "pointer",
-        }}
-      >
-        Resign
-      </button>
     </div>
   );
 }
