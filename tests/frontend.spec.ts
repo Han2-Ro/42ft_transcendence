@@ -33,7 +33,7 @@ test("sidebar swaps menu actions during active match", async ({ browser }) => {
 
   await Promise.all(
     [page1, page2].map((page) =>
-      page.getByRole("button", { name: /find match/i }).click(),
+      page.getByRole("button", { name: /find chess match/i }).click(),
     ),
   );
 

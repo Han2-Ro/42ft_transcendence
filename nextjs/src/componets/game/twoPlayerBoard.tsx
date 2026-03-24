@@ -1,11 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-  twoPlayer,
-  Move,
-  PieceOrNull,
-  BoardState,
-  PlayerColor,
-} from "shared";
+import { twoPlayer, Move, PieceOrNull, BoardState, PlayerColor } from "shared";
 import Image from "next/image";
 
 export default function TwoPlayerBoard({

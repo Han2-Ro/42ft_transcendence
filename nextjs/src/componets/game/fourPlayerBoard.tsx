@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { fourPlayer, Move, BoardState, PlayerColor} from "shared";
+import { fourPlayer, Move, BoardState, PlayerColor } from "shared";
 import Image from "next/image";
 
 export default function FourPlayerBoard({
