@@ -1,14 +1,16 @@
 import { useEffect, useState } from "react";
 
-import { fourPlayer, Move, BoardState } from "shared";
+import { fourPlayer, Move, BoardState, PlayerColor} from "shared";
 import Image from "next/image";
 
 export default function FourPlayerBoard({
   boardState,
   onPlayerMove,
+  playerColor,
 }: {
   boardState: BoardState;
   onPlayerMove: (move: Move) => void;
+  playerColor: PlayerColor;
 }) {
   const [selectedSquare, setSelectedSquare] = useState<number | null>(null);
   const [movesFromSqareInt, setMovesFromSqareInt] = useState<number[] | null>(

@@ -21,9 +21,9 @@ export default function Game({
     <div style={{ textAlign: "center" }}>
       <h2>Game in progress</h2>
       {gameType === "chess" || gameType === "timedChess" ? (
-        <TwoPlayerBoard boardState={boardState} onPlayerMove={onPlayerMove} />
+        <TwoPlayerBoard boardState={boardState} onPlayerMove={onPlayerMove} playerColor={color}/>
       ) : (
-        <FourPlayerBoard boardState={boardState} onPlayerMove={onPlayerMove} />
+        <FourPlayerBoard boardState={boardState} onPlayerMove={onPlayerMove} playerColor={color}/>
       )}
       <p>You are playing as {color}</p>
       <button

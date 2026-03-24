@@ -9,7 +9,7 @@ export class FourPlayerChess extends Game {
   constructor(state?: BoardState) {
     super();
     if (state !== undefined) this.boardState = state;
-    else this.boardState = JSON.parse(JSON.stringify(startingBoardState));
+    else this.boardState = structuredClone(startingBoardState);
     this.gameStatus = { isOver: false, winners: null, reason: "" };
   }
 

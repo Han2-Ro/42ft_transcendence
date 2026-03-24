@@ -656,7 +656,7 @@ function checkKingInCheckAfterMove(
   move: Move,
   PlayerColor: PlayerColor,
 ): boolean {
-  const board_copy = JSON.parse(JSON.stringify(board));
+  const board_copy = structuredClone(board);
   updateBoard(board_copy, move, PlayerColor);
   if (checkKingInCheck(board_copy, PlayerColor)) return true;
   return false;

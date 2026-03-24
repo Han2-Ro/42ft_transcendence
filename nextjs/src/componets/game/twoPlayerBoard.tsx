@@ -1,13 +1,21 @@
 import { useEffect, useState } from "react";
-import { Move, PieceOrNull, twoPlayer, BoardState } from "shared";
+import {
+  twoPlayer,
+  Move,
+  PieceOrNull,
+  BoardState,
+  PlayerColor,
+} from "shared";
 import Image from "next/image";
 
 export default function TwoPlayerBoard({
   boardState,
   onPlayerMove,
+  playerColor,
 }: {
   boardState: BoardState;
   onPlayerMove: (move: Move) => void;
+  playerColor: PlayerColor;
 }) {
   const [selectedSquare, setSelectedSquare] = useState<number | null>(null);
   const [movesFromSqareInt, setMovesFromSqareInt] = useState<number[] | null>(
@@ -52,7 +60,13 @@ export default function TwoPlayerBoard({
         alignItems: "center",
       }}
     >
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(8, 100px)" }}>
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(8, 100px)",
+          transform: playerColor === "black" ? "rotate(180deg)" : "none",
+        }}
+      >
         {boardState.board.map((sq: PieceOrNull, index: number) => (
           <button
             key={index}
@@ -77,7 +91,12 @@ export default function TwoPlayerBoard({
                 height="45"
                 src={`/chess/${sq.color}/${sq.type}.svg`}
                 alt={sq.color + sq.type}
-                style={{ width: "100%", height: "100%" }}
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  transform:
+                    playerColor === "black" ? "rotate(180deg)" : "none",
+                }}
               />
             )}
             {movesFromSqareInt &&
