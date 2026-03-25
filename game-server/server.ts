@@ -26,11 +26,11 @@ type Player = {
   searching: Games[];
 };
 
-const PlayerStates: Player[] = [];
+const playerStates: Player[] = [];
 const rooms: Map<string, Room> = new Map();
 
 io.on("connection", (socket) => {
-  PlayerStates.push({
+  playerStates.push({
     socket: socket,
     status: "lobby",
     game_id: null,
@@ -42,9 +42,9 @@ io.on("connection", (socket) => {
       console.log('Client disconnect: ', socket.id );
   }); */
 
-  socket.on("find_match", (type) => {
+  socket.on("findMatch", (type) => {
     //add type to searching
-    const player = GetPlayer(socket);
+    const player = getPlayer(socket);
     if (
       player === null ||
       player.status !== "lobby" ||
@@ -61,7 +61,7 @@ io.on("connection", (socket) => {
     //check if Room can be created
     const players: Player[] = [];
     const sockets: GameSocket[] = [];
-    PlayerStates.forEach((value: Player) => {
+    playerStates.forEach((value: Player) => {
       if (value.searching.includes(type)) {
         sockets.push(value.socket);
         players.push(value);
@@ -78,8 +78,8 @@ io.on("connection", (socket) => {
         value.status = "in_game";
         value.searching = [];
       });
-      const new_room = new Room(sockets, type, gameId);
-      rooms.set(gameId, new_room);
+      const newRoom = new Room(sockets, type, gameId);
+      rooms.set(gameId, newRoom);
       if (running == false) {
         running = true;
         serverLoop();
@@ -90,7 +90,7 @@ io.on("connection", (socket) => {
 
   socket.on("move", ({ gameId, move }) => {
     const room = rooms.get(gameId);
-    if (room) room.ClientMove(move, socket);
+    if (room) room.clientMove(move, socket);
   });
 
   socket.on("resign", (gameId) => {
@@ -99,9 +99,9 @@ io.on("connection", (socket) => {
   });
 });
 
-function GetPlayer(socket: GameSocket): Player | null {
+function getPlayer(socket: GameSocket): Player | null {
   return (
-    PlayerStates.find((value: Player) => value.socket.id === socket.id) || null
+    playerStates.find((value: Player) => value.socket.id === socket.id) || null
   );
 }
 
@@ -116,11 +116,11 @@ function nowSeconds(): number {
   return Number(process.hrtime.bigint()) / 1e9;
 }
 
-function CheckRunningGames(time_passed: number) {
+function checkRunningGames(time_passed: number) {
   rooms.forEach((value: Room, key: string) => {
-    if (value.UpdateAndCheckOver(time_passed) === true) {
+    if (value.updateAndCheckOver(time_passed) === true) {
       value.Players.forEach((value: GameSocket) => {
-        const player = GetPlayer(value);
+        const player = getPlayer(value);
         if (player !== null) {
           player.status = "lobby";
           player.game_id = null;
@@ -143,7 +143,7 @@ async function serverLoop() {
     while (accumulator >= DT && ticks < MAX_CATCHUP_TICKS) {
       accumulator -= DT;
       ticks++;
-      CheckRunningGames(DT);
+      checkRunningGames(DT);
       if (rooms.size == 0) {
         running = false;
         console.log("Real time loop stopped, no games running");

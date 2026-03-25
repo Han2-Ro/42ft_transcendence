@@ -173,16 +173,16 @@ function isPromotingSqare(sq: number, PlayerColor: PlayerColor): boolean {
     if (sq > 121 && sq < 136) return true;
   }
   if (PlayerColor == "green") {
-    const green_sqares = [
+    const greenSquares = [
       0, 8, 16, 27, 41, 55, 69, 83, 97, 111, 125, 136, 144, 152,
     ];
-    if (green_sqares.includes(sq)) return true;
+    if (greenSquares.includes(sq)) return true;
   }
   if (PlayerColor == "blue") {
-    const blue_sqares = [
+    const blueSquares = [
       7, 15, 23, 34, 48, 62, 76, 90, 104, 118, 132, 143, 151, 159,
     ];
-    if (blue_sqares.includes(sq)) return true;
+    if (blueSquares.includes(sq)) return true;
   }
   return false;
 }
@@ -253,7 +253,7 @@ function generateKnightMoves(
   PlayerColor: PlayerColor,
 ): Array<Move> {
   const moves: Move[] = [];
-  const move_offsets: Array<Pos2> = [
+  const moveOffsets: Array<Pos2> = [
     { x: 1, y: 2 },
     { x: -1, y: 2 },
     { x: 1, y: -2 },
@@ -263,9 +263,9 @@ function generateKnightMoves(
     { x: 2, y: -1 },
     { x: -2, y: -1 },
   ];
-  const move_pos = generateOffsets(sq, move_offsets);
-  for (let i = 0; i < move_pos.length; i++) {
-    const newPos = move_pos[i];
+  const movePos = generateOffsets(sq, moveOffsets);
+  for (let i = 0; i < movePos.length; i++) {
+    const newPos = movePos[i];
     if (checkSqare(board, newPos, PlayerColor))
       moves.push({ from: sq, to: newPos, special: null });
   }
@@ -315,7 +315,7 @@ function generateKingMoves(
   PlayerColor: PlayerColor,
 ): Array<Move> {
   const moves: Move[] = [];
-  const move_offsets: Array<Pos2> = [
+  const moveOffsets: Array<Pos2> = [
     { x: 1, y: 0 },
     { x: 0, y: 1 },
     { x: 1, y: 1 },
@@ -325,9 +325,9 @@ function generateKingMoves(
     { x: -1, y: 1 },
     { x: 1, y: -1 },
   ];
-  const move_pos = generateOffsets(sq, move_offsets);
-  for (let i = 0; i < move_pos.length; i++) {
-    const newPos = move_pos[i];
+  const movePos = generateOffsets(sq, moveOffsets);
+  for (let i = 0; i < movePos.length; i++) {
+    const newPos = movePos[i];
     if (checkSqare(board, newPos, PlayerColor))
       moves.push({ from: sq, to: newPos, special: null });
   }
@@ -336,26 +336,26 @@ function generateKingMoves(
     //red
     if (piece.color == "red") {
       //short
-      const short_rook = board[159];
-      const short_king_movements: Array<number> = [158, 157];
+      const shortRook = board[159];
+      const shortKingMovements: Array<number> = [158, 157];
       if (
-        short_rook != null &&
-        short_rook.type == "rook" &&
-        short_rook.hasMoved == false &&
-        !CheckIsAttacked(board, sq, piece.color) &&
-        checkSqaresEmptyAndNotAttacked(board, short_king_movements, piece.color)
+        shortRook != null &&
+        shortRook.type == "rook" &&
+        shortRook.hasMoved == false &&
+        !checkIsAttacked(board, sq, piece.color) &&
+        checkSqaresEmptyAndNotAttacked(board, shortKingMovements, piece.color)
       ) {
         moves.push({ from: sq, to: 158, special: "0-0" });
       }
       //long
-      const long_rook = board[152];
-      const long_king_movements: Array<number> = [154, 155];
+      const longRook = board[152];
+      const longKingMovements: Array<number> = [154, 155];
       if (
-        long_rook != null &&
-        long_rook.type == "rook" &&
-        long_rook.hasMoved == false &&
-        !CheckIsAttacked(board, sq, piece.color) &&
-        checkSqaresEmptyAndNotAttacked(board, long_king_movements, piece.color)
+        longRook != null &&
+        longRook.type == "rook" &&
+        longRook.hasMoved == false &&
+        !checkIsAttacked(board, sq, piece.color) &&
+        checkSqaresEmptyAndNotAttacked(board, longKingMovements, piece.color)
       ) {
         moves.push({ from: sq, to: 154, special: "0-0-0" });
       }
@@ -363,26 +363,26 @@ function generateKingMoves(
     //yellow
     if (piece.color == "yellow") {
       //short
-      const short_rook = board[0];
-      const short_king_movements: Array<number> = [1, 2];
+      const shortRook = board[0];
+      const shortKingMovements: Array<number> = [1, 2];
       if (
-        short_rook != null &&
-        short_rook.type == "rook" &&
-        short_rook.hasMoved == false &&
-        !CheckIsAttacked(board, sq, piece.color) &&
-        checkSqaresEmptyAndNotAttacked(board, short_king_movements, piece.color)
+        shortRook != null &&
+        shortRook.type == "rook" &&
+        shortRook.hasMoved == false &&
+        !checkIsAttacked(board, sq, piece.color) &&
+        checkSqaresEmptyAndNotAttacked(board, shortKingMovements, piece.color)
       ) {
         moves.push({ from: sq, to: 1, special: "0-0" });
       }
       //long
-      const long_rook = board[7];
-      const long_king_movements: Array<number> = [5, 4];
+      const longRook = board[7];
+      const longKingMovements: Array<number> = [5, 4];
       if (
-        long_rook != null &&
-        long_rook.type == "rook" &&
-        long_rook.hasMoved == false &&
-        !CheckIsAttacked(board, sq, piece.color) &&
-        checkSqaresEmptyAndNotAttacked(board, long_king_movements, piece.color)
+        longRook != null &&
+        longRook.type == "rook" &&
+        longRook.hasMoved == false &&
+        !checkIsAttacked(board, sq, piece.color) &&
+        checkSqaresEmptyAndNotAttacked(board, longKingMovements, piece.color)
       ) {
         moves.push({ from: sq, to: 5, special: "0-0-0" });
       }
@@ -390,26 +390,26 @@ function generateKingMoves(
     //blue
     if (piece.color == "blue") {
       //short
-      const short_rook = board[24];
-      const short_king_movements: Array<number> = [38, 52];
+      const shortRook = board[24];
+      const shortKingMovements: Array<number> = [38, 52];
       if (
-        short_rook != null &&
-        short_rook.type == "rook" &&
-        short_rook.hasMoved == false &&
-        !CheckIsAttacked(board, sq, piece.color) &&
-        checkSqaresEmptyAndNotAttacked(board, short_king_movements, piece.color)
+        shortRook != null &&
+        shortRook.type == "rook" &&
+        shortRook.hasMoved == false &&
+        !checkIsAttacked(board, sq, piece.color) &&
+        checkSqaresEmptyAndNotAttacked(board, shortKingMovements, piece.color)
       ) {
         moves.push({ from: sq, to: 38, special: "0-0" });
       }
       //long
-      const long_rook = board[122];
-      const long_king_movements: Array<number> = [94, 80];
+      const longRook = board[122];
+      const longKingMovements: Array<number> = [94, 80];
       if (
-        long_rook != null &&
-        long_rook.type == "rook" &&
-        long_rook.hasMoved == false &&
-        !CheckIsAttacked(board, sq, piece.color) &&
-        checkSqaresEmptyAndNotAttacked(board, long_king_movements, piece.color)
+        longRook != null &&
+        longRook.type == "rook" &&
+        longRook.hasMoved == false &&
+        !checkIsAttacked(board, sq, piece.color) &&
+        checkSqaresEmptyAndNotAttacked(board, longKingMovements, piece.color)
       ) {
         moves.push({ from: sq, to: 94, special: "0-0-0" });
       }
@@ -417,26 +417,26 @@ function generateKingMoves(
     //green
     if (piece.color == "green") {
       //short
-      const short_rook = board[135];
-      const short_king_movements: Array<number> = [121, 107];
+      const shortRook = board[135];
+      const shortKingMovements: Array<number> = [121, 107];
       if (
-        short_rook != null &&
-        short_rook.type == "rook" &&
-        short_rook.hasMoved == false &&
-        !CheckIsAttacked(board, sq, piece.color) &&
-        checkSqaresEmptyAndNotAttacked(board, short_king_movements, piece.color)
+        shortRook != null &&
+        shortRook.type == "rook" &&
+        shortRook.hasMoved == false &&
+        !checkIsAttacked(board, sq, piece.color) &&
+        checkSqaresEmptyAndNotAttacked(board, shortKingMovements, piece.color)
       ) {
         moves.push({ from: sq, to: 121, special: "0-0" });
       }
       //long
-      const long_rook = board[37];
-      const long_king_movements: Array<number> = [65, 79];
+      const longRook = board[37];
+      const longKingMovements: Array<number> = [65, 79];
       if (
-        long_rook != null &&
-        long_rook.type == "rook" &&
-        long_rook.hasMoved == false &&
-        !CheckIsAttacked(board, sq, piece.color) &&
-        checkSqaresEmptyAndNotAttacked(board, long_king_movements, piece.color)
+        longRook != null &&
+        longRook.type == "rook" &&
+        longRook.hasMoved == false &&
+        !checkIsAttacked(board, sq, piece.color) &&
+        checkSqaresEmptyAndNotAttacked(board, longKingMovements, piece.color)
       ) {
         moves.push({ from: sq, to: 65, special: "0-0-0" });
       }
@@ -485,7 +485,7 @@ function indexToRowCol(index: number): Pos2 | null {
   return null;
 }
 
-function RowColToIndex(row: number, col: number): number | null {
+function rowColToIndex(row: number, col: number): number | null {
   if (row < 0 || row > 13 || col < 0 || col > 13) {
     return null;
   }
@@ -507,20 +507,20 @@ function RowColToIndex(row: number, col: number): number | null {
 function generateOffset(pos: number, offset: Pos2): number | null {
   const pos2 = indexToRowCol(pos);
   if (pos2 !== null) {
-    const new_pos2: Pos2 = { x: pos2.x + offset.x, y: pos2.y + offset.y };
-    const new_pos = RowColToIndex(new_pos2.x, new_pos2.y);
-    if (new_pos !== null) return new_pos;
+    const newPos2: Pos2 = { x: pos2.x + offset.x, y: pos2.y + offset.y };
+    const newPos = rowColToIndex(newPos2.x, newPos2.y);
+    if (newPos !== null) return newPos;
   }
   return null;
 }
 
 function generateOffsets(pos: number, offsets: Array<Pos2>): Array<number> {
-  const num_offsets: number[] = [];
+  const numOffsets: number[] = [];
   for (let i = 0; i < offsets.length; i++) {
     const num = generateOffset(pos, offsets[i]);
-    if (num !== null) num_offsets.push(num);
+    if (num !== null) numOffsets.push(num);
   }
-  return num_offsets;
+  return numOffsets;
 }
 
 //Checkers
@@ -531,7 +531,7 @@ function checkSqaresEmptyAndNotAttacked(
 ): boolean {
   for (let i = 0; i < sqs.length; i++) {
     if (
-      CheckIsAttacked(board, sqs[i], PlayerColor) ||
+      checkIsAttacked(board, sqs[i], PlayerColor) ||
       !checkSqareEmpty(board, sqs[i])
     ) {
       return false;
@@ -540,7 +540,7 @@ function checkSqaresEmptyAndNotAttacked(
   return true;
 }
 
-function AreOpposingPlayerColors(
+function areOpposingPlayerColors(
   first: PlayerColor,
   second: PlayerColor,
 ): boolean {
@@ -553,14 +553,14 @@ function AreOpposingPlayerColors(
   return false;
 }
 
-function CheckIsAttacked(board: Board, pos: number, PlayerColor: PlayerColor) {
+function checkIsAttacked(board: Board, pos: number, PlayerColor: PlayerColor) {
   //check for bishops (and half of queens)
   let moves = generateBishopMoves(board, pos, PlayerColor);
   for (let i = 0; i < moves.length; i++) {
     const pos = board[moves[i].to];
     if (
       pos &&
-      AreOpposingPlayerColors(pos.color, PlayerColor) &&
+      areOpposingPlayerColors(pos.color, PlayerColor) &&
       (pos.type == "bishop" || pos.type == "queen")
     )
       return true;
@@ -571,13 +571,13 @@ function CheckIsAttacked(board: Board, pos: number, PlayerColor: PlayerColor) {
     const pos = board[moves[i].to];
     if (
       pos &&
-      AreOpposingPlayerColors(pos.color, PlayerColor) &&
+      areOpposingPlayerColors(pos.color, PlayerColor) &&
       (pos.type == "rook" || pos.type == "queen")
     )
       return true;
   }
   //check for kings
-  const king_offsets: Array<Pos2> = [
+  const kingOffsets: Array<Pos2> = [
     { x: 1, y: 0 },
     { x: 0, y: 1 },
     { x: 1, y: 1 },
@@ -587,12 +587,12 @@ function CheckIsAttacked(board: Board, pos: number, PlayerColor: PlayerColor) {
     { x: -1, y: 1 },
     { x: 1, y: -1 },
   ];
-  const king_pos = generateOffsets(pos, king_offsets);
-  for (let i = 0; i < king_pos.length; i++) {
-    const pos = board[king_pos[i]];
+  const kingPos = generateOffsets(pos, kingOffsets);
+  for (let i = 0; i < kingPos.length; i++) {
+    const pos = board[kingPos[i]];
     if (
       pos &&
-      AreOpposingPlayerColors(pos.color, PlayerColor) &&
+      areOpposingPlayerColors(pos.color, PlayerColor) &&
       pos.type == "king"
     )
       return true;
@@ -603,48 +603,48 @@ function CheckIsAttacked(board: Board, pos: number, PlayerColor: PlayerColor) {
     const pos = board[moves[i].to];
     if (
       pos &&
-      AreOpposingPlayerColors(pos.color, PlayerColor) &&
+      areOpposingPlayerColors(pos.color, PlayerColor) &&
       pos.type == "knight"
     )
       return true;
   }
   //check for Pawns
   if (PlayerColor == "blue" || PlayerColor == "green") {
-    const red_pawn_offsets: Pos2[] = [
+    const redPawnOffsets: Pos2[] = [
       { x: 1, y: 1 },
       { x: 1, y: -1 },
     ];
-    const red_moves = generateOffsets(pos, red_pawn_offsets);
-    for (let i = 0; i < red_moves.length; i++) {
-      const pos = board[red_moves[i]];
+    const redMoves = generateOffsets(pos, redPawnOffsets);
+    for (let i = 0; i < redMoves.length; i++) {
+      const pos = board[redMoves[i]];
       if (pos && pos.color == "red" && pos.type == "pawn") return true;
     }
-    const yellow_pawn_offsets: Pos2[] = [
+    const yellowPawnOffsets: Pos2[] = [
       { x: -1, y: 1 },
       { x: -1, y: -1 },
     ];
-    const yellow_moves = generateOffsets(pos, yellow_pawn_offsets);
-    for (let i = 0; i < yellow_moves.length; i++) {
-      const pos = board[yellow_moves[i]];
+    const yellowMoves = generateOffsets(pos, yellowPawnOffsets);
+    for (let i = 0; i < yellowMoves.length; i++) {
+      const pos = board[yellowMoves[i]];
       if (pos && pos.color == "yellow" && pos.type == "pawn") return true;
     }
   } else {
-    const blue_pawn_offsets: Pos2[] = [
+    const bluePawnOffsets: Pos2[] = [
       { x: 1, y: -1 },
       { x: -1, y: -1 },
     ];
-    const blue_moves = generateOffsets(pos, blue_pawn_offsets);
-    for (let i = 0; i < blue_moves.length; i++) {
-      const pos = board[blue_moves[i]];
+    const blueMoves = generateOffsets(pos, bluePawnOffsets);
+    for (let i = 0; i < blueMoves.length; i++) {
+      const pos = board[blueMoves[i]];
       if (pos && pos.color == "blue" && pos.type == "pawn") return true;
     }
-    const green_pawn_offsets: Pos2[] = [
+    const greenPawnOffsets: Pos2[] = [
       { x: -1, y: 1 },
       { x: 1, y: 1 },
     ];
-    const green_moves = generateOffsets(pos, green_pawn_offsets);
-    for (let i = 0; i < green_moves.length; i++) {
-      const pos = board[green_moves[i]];
+    const greenMoves = generateOffsets(pos, greenPawnOffsets);
+    for (let i = 0; i < greenMoves.length; i++) {
+      const pos = board[greenMoves[i]];
       if (pos && pos.color == "green" && pos.type == "pawn") return true;
     }
   }
@@ -656,9 +656,9 @@ function checkKingInCheckAfterMove(
   move: Move,
   PlayerColor: PlayerColor,
 ): boolean {
-  const board_copy = structuredClone(board);
-  updateBoard(board_copy, move, PlayerColor);
-  if (checkKingInCheck(board_copy, PlayerColor)) return true;
+  const boardCopy = structuredClone(board);
+  updateBoard(boardCopy, move, PlayerColor);
+  if (checkKingInCheck(boardCopy, PlayerColor)) return true;
   return false;
 }
 
@@ -666,13 +666,13 @@ export function checkKingInCheck(
   board: Board,
   PlayerColor: PlayerColor,
 ): boolean {
-  let king_pos = -1;
+  let kingPos = -1;
   for (let sq = 0; sq < 160; sq++) {
     const piece = board[sq];
     if (piece == null) continue;
-    if (piece.type == "king" && piece.color == PlayerColor) king_pos = sq;
+    if (piece.type == "king" && piece.color == PlayerColor) kingPos = sq;
   }
-  if (CheckIsAttacked(board, king_pos, PlayerColor)) return true;
+  if (checkIsAttacked(board, kingPos, PlayerColor)) return true;
   return false;
 }
 
@@ -686,11 +686,11 @@ function checkSqare(
   sq: number,
   PlayerColor: PlayerColor,
 ): boolean {
-  const new_piece = board[sq];
+  const newPiece = board[sq];
   if (checkBounds(sq) == false) return false;
   if (
-    new_piece == null ||
-    (new_piece != null && AreOpposingPlayerColors(new_piece.color, PlayerColor))
+    newPiece == null ||
+    (newPiece != null && areOpposingPlayerColors(newPiece.color, PlayerColor))
   ) {
     return true;
   }
@@ -703,11 +703,11 @@ function checkSqarePiece(
   PlayerColor: PlayerColor,
   type: PieceType,
 ): boolean {
-  const new_piece = board[sq];
+  const newPiece = board[sq];
   if (checkBounds(sq) == false) return false;
   if (
-    new_piece != null &&
-    AreOpposingPlayerColors(new_piece.color, PlayerColor)
+    newPiece != null &&
+    areOpposingPlayerColors(newPiece.color, PlayerColor)
   ) {
     return true;
   }
@@ -716,9 +716,9 @@ function checkSqarePiece(
 
 function checkSqareEmpty(board: Board, sq: number): boolean {
   const newPos = sq;
-  const new_piece = board[newPos];
+  const newPiece = board[newPos];
   if (checkBounds(newPos) == false) return false;
-  if (new_piece == null) {
+  if (newPiece == null) {
     return true;
   }
   return false;

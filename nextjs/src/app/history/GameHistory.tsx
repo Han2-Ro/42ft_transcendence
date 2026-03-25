@@ -1,4 +1,4 @@
-import { result as GameResult } from "shared";
+import { Result as GameResult } from "shared";
 
 const sampleEntries: GameHistoryEntry[] = [
   { date: new Date("2026-03-19T18:30:00Z"), opponent: "alice", result: "win" },

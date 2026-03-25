@@ -5,7 +5,7 @@ import { Chess } from "../games/chess/chess.js";
 import { FourPlayerChess } from "../games/4pChess/4pChess.js";
 import { GameSocket } from "../../server.js";
 
-export type Game_status =
+export type GameStatus =
   | "checkmate"
   | "timeout"
   | "Stalemate"
@@ -27,7 +27,7 @@ export class Room {
     this.Players = players;
     if (type == "chess" || type == "timedChess") {
       this.gameLogic = new Chess();
-      this.AssignedColors = this.GenerateRandomColors2p();
+      this.AssignedColors = this.generateRandomColors2p();
       if (type == "timedChess") {
         this.timed = true;
         this.PlayerTimes = [10, 10];
@@ -37,7 +37,7 @@ export class Room {
       }
     } else {
       this.gameLogic = new FourPlayerChess();
-      this.AssignedColors = this.GenerateRandomColors4p();
+      this.AssignedColors = this.generateRandomColors4p();
       if (type == "4pTimedChess") {
         this.timed = true;
         this.PlayerTimes = [10, 10, 10, 10];
@@ -47,7 +47,7 @@ export class Room {
       }
     }
     this.Players.forEach((value: GameSocket, index: number) => {
-      value.emit("game_start", {
+      value.emit("gameStart", {
         gameId,
         type,
         color: this.AssignedColors[index],
@@ -55,7 +55,7 @@ export class Room {
       });
     });
   }
-  public ClientMove(move: Move, client: GameSocket) {
+  public clientMove(move: Move, client: GameSocket) {
     let colorPos = -1;
     for (let i = 0; i < this.Players.length; i++) {
       if (client.id == this.Players[i].id) colorPos = i;
@@ -75,31 +75,31 @@ export class Room {
     this.gameLogic.playResign(this.AssignedColors[colorPos]);
   }
 
-  public UpdateAndCheckOver(time_passed: number): boolean {
+  public updateAndCheckOver(time_passed: number): boolean {
     if (this.positionUpdated == true) {
       this.positionUpdated = false;
       this.Players.forEach((value: GameSocket) => {
-        value.emit("move_made", { boardState: this.gameLogic.boardState });
+        value.emit("moveMade", { boardState: this.gameLogic.boardState });
       });
     }
-    this.CheckTimeout(time_passed);
-    if (this.CheckGameOver() == true) return true;
+    this.checkTimeout(time_passed);
+    if (this.checkGameOver() == true) return true;
     return false;
   }
 
-  private CheckTimeout(time_passed: number) {
+  private checkTimeout(time_passed: number) {
     if (this.timed == true) {
       const turnIndex = this.AssignedColors.indexOf(
         this.gameLogic.boardState.turn,
       );
       this.PlayerTimes[turnIndex] = this.PlayerTimes[turnIndex] - time_passed;
       if (this.PlayerTimes[turnIndex] < 0) {
-        this.gameLogic.timeout(this.GetColor(turnIndex));
+        this.gameLogic.timeout(this.getColor(turnIndex));
       }
     }
   }
 
-  private CheckGameOver(): boolean {
+  private checkGameOver(): boolean {
     if (this.gameLogic.gameStatus.isOver) {
       const result = this.gameLogic.gameStatus;
       const winners = result.winners;
@@ -111,13 +111,13 @@ export class Room {
         });
         this.Players.forEach((value: GameSocket, index: number) => {
           if (winnerIndexes.includes(index))
-            value.emit("game_over", { result: "win", reason: result.reason });
+            value.emit("gameOver", { result: "win", reason: result.reason });
           else
-            value.emit("game_over", { result: "lose", reason: result.reason });
+            value.emit("gameOver", { result: "lose", reason: result.reason });
         });
       } else {
         this.Players.forEach((value: GameSocket) => {
-          value.emit("game_over", { result: "draw", reason: result.reason });
+          value.emit("gameOver", { result: "draw", reason: result.reason });
         });
       }
       return true;
@@ -125,7 +125,7 @@ export class Room {
     return false;
   }
 
-  public GetColor(index: number): PlayerColor {
+  public getColor(index: number): PlayerColor {
     return this.AssignedColors[index];
   }
 
@@ -137,12 +137,12 @@ export class Room {
     }
     return array;
   }
-  private GenerateRandomColors2p(): PlayerColor[] {
+  private generateRandomColors2p(): PlayerColor[] {
     const colors: PlayerColor[] = ["white", "black"];
     return this.shuffleArray(colors);
   }
 
-  private GenerateRandomColors4p(): PlayerColor[] {
+  private generateRandomColors4p(): PlayerColor[] {
     const colors: PlayerColor[] = ["green", "blue", "red", "yellow"];
     return this.shuffleArray(colors);
   }

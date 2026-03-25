@@ -22,9 +22,9 @@ export default function FourPlayerBoard({
     if (selectedSquare === null) {
       setSelectedSquare(square);
       const moves = fourPlayer.generateMoves(boardState.board, square);
-      const moves_numbers = moves.map((move) => move.to);
+      const movesNumbers = moves.map((move) => move.to);
       setMovesFromSqare(moves);
-      setMovesFromSqareInt(moves_numbers);
+      setMovesFromSqareInt(movesNumbers);
       return;
     }
 

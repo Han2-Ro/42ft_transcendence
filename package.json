@@ -16,13 +16,13 @@
     "test:ui": "pnpm --filter tests run test:ui"
   },
   "devDependencies": {
-    "@eslint/js": "^9.39.1",
+    "@eslint/js": "^9.39.4",
     "dotenv-cli": "^11.0.0",
-    "eslint": "^9.39.1",
+    "eslint": "^9.39.4",
     "eslint-config-next": "16.1.1",
     "globals": "^16.5.0",
     "jiti": "^2.6.1",
     "prettier": "3.7.4",
-    "typescript-eslint": "^8.48.1"
+    "typescript-eslint": "^8.57.2"
   }
 }

@@ -8,7 +8,7 @@ import EndScreen from "../../componets/game/endScreen";
 
 import { CToSEvents, SToCEvents } from "shared";
 import { BoardState, PlayerColor, Move, Games } from "shared";
-import { result as GameResult } from "shared";
+import { Result as GameResult } from "shared";
 import { useSidebarActions } from "@/componets/SidebarActionsProvider";
 import { DeadKing } from "@/componets/icons/DeadKing";
 
@@ -25,19 +25,19 @@ export default function Page() {
   const { setActions, clearActions } = useSidebarActions();
 
   useEffect(() => {
-    socket.on("game_start", (data) => {
+    socket.on("gameStart", (data) => {
       setGameId(data.gameId);
       setGameType(data.type);
       setBoardState(data.boardState);
       setColor(data.color);
     });
 
-    socket.on("move_made", (data) => {
+    socket.on("moveMade", (data) => {
       console.log("move_recieved", boardState);
       setBoardState(data.boardState);
     });
 
-    socket.on("game_over", (data) => {
+    socket.on("gameOver", (data) => {
       setResult(data.result);
       setResultReason(data.reason);
       setGameId(null);
@@ -47,9 +47,9 @@ export default function Page() {
     });
 
     return () => {
-      socket.off("game_start");
-      socket.off("move_made");
-      socket.off("game_over");
+      socket.off("gameStart");
+      socket.off("moveMade");
+      socket.off("gameOver");
     };
   });
 
@@ -105,6 +105,6 @@ export default function Page() {
       onClose={closeResultScreen}
     />
   ) : (
-    <Lobby onFindMatchPressed={(type) => socket.emit("find_match", type)} />
+    <Lobby onFindMatchPressed={(type) => socket.emit("findMatch", type)} />
   );
 }
