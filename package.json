@@ -9,7 +9,7 @@
     "start": "pnpm --parallel --stream run start",
     "build": "pnpm --recursive run build",
     "up": "sudo docker compose up --build",
-    "lint": "pnpm --recursive run lint",
+    "lint": "pnpm eslint",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "test": "pnpm --filter tests run test",
