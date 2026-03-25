@@ -1,14 +1,8 @@
 import { useEffect, useState } from "react";
-import {
-  generateMoves,
-  Move,
-  PieceOrNull,
-  BoardState,
-  PlayerColor,
-} from "shared";
+import { twoPlayer, Move, PieceOrNull, BoardState, PlayerColor } from "shared";
 import Image from "next/image";
 
-export default function Board({
+export default function TwoPlayerBoard({
   boardState,
   onPlayerMove,
   playerColor,
@@ -26,10 +20,10 @@ export default function Board({
   const handleSquareClick = (square: number) => {
     if (selectedSquare === null) {
       setSelectedSquare(square);
-      const moves = generateMoves(boardState.board, square);
-      const moves_numbers = moves.map((move) => move.to);
+      const moves = twoPlayer.generateMoves(boardState.board, square);
+      const movesNumbers = moves.map((move) => move.to);
       setMovesFromSqare(moves);
-      setMovesFromSqareInt(moves_numbers);
+      setMovesFromSqareInt(movesNumbers);
       return;
     }
 

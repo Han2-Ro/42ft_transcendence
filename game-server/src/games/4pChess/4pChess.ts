@@ -1,8 +1,9 @@
-import { BoardState, PlayerColor, GameStatus, Move, twoPlayer } from "shared";
+import { BoardState, PlayerColor, GameStatus, Move, fourPlayer } from "shared";
+
 import { startingBoardState } from "./constants.js";
 import { Game } from "../game.js";
 
-export class Chess extends Game {
+export class FourPlayerChess extends Game {
   boardState: BoardState;
   gameStatus: GameStatus;
   constructor(state?: BoardState) {
@@ -13,9 +14,9 @@ export class Chess extends Game {
   }
 
   playMove(move: Move, played_by: PlayerColor): boolean {
-    if (twoPlayer.validateMove(move, this.boardState, played_by)) {
-      twoPlayer.updateBoardState(this.boardState, move);
-      this.gameStatus = twoPlayer.checkMates(
+    if (fourPlayer.validateMove(move, this.boardState, played_by) == true) {
+      fourPlayer.updateBoardState(this.boardState, move);
+      this.gameStatus = fourPlayer.checkMates(
         this.boardState.board,
         this.boardState.turn,
       );
@@ -25,15 +26,16 @@ export class Chess extends Game {
   }
   playResign(played_by: PlayerColor): void {
     let winners: PlayerColor[];
-    if (played_by == "white") winners = ["black"];
-    else winners = ["white"];
+    if (played_by == "red" || played_by == "yellow")
+      winners = ["blue", "green"];
+    else winners = ["red", "yellow"];
     this.gameStatus = { isOver: true, winners: winners, reason: "resignation" };
   }
 
   timeout(player: PlayerColor): void {
     let winners: PlayerColor[];
-    if (player == "white") winners = ["black"];
-    else winners = ["white"];
+    if (player == "red" || player == "yellow") winners = ["blue", "green"];
+    else winners = ["red", "yellow"];
     this.gameStatus = { isOver: true, winners: winners, reason: "timeout" };
   }
 }

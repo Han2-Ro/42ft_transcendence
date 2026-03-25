@@ -1,10 +1,11 @@
-import { Move, PlayerColor } from "shared";
+import { Move, PlayerColor, Games } from "shared";
 
-import { Game, GameType } from "../games/game.js";
+import { Game } from "../games/game.js";
 import { Chess } from "../games/chess/chess.js";
+import { FourPlayerChess } from "../games/4pChess/4pChess.js";
 import { GameSocket } from "../../server.js";
 
-export type Game_status =
+export type GameStatus =
   | "checkmate"
   | "timeout"
   | "Stalemate"
@@ -22,23 +23,39 @@ export class Room {
   PlayerTimes: number[];
   last_move: number = 0;
 
-  constructor(players: GameSocket[], type: GameType, gameId: string) {
+  constructor(players: GameSocket[], type: Games, gameId: string) {
     this.Players = players;
-    //change when more gamemodes
-    //if (GameType == Chess)
-    this.gameLogic = new Chess();
-    this.AssignedColors = this.GenerateRandomColors2p();
-    this.timed = false;
-    this.PlayerTimes = [-1, -1];
+    if (type == "chess" || type == "timedChess") {
+      this.gameLogic = new Chess();
+      this.AssignedColors = this.generateRandomColors2p();
+      if (type == "timedChess") {
+        this.timed = true;
+        this.PlayerTimes = [10, 10];
+      } else {
+        this.timed = false;
+        this.PlayerTimes = [-1, -1];
+      }
+    } else {
+      this.gameLogic = new FourPlayerChess();
+      this.AssignedColors = this.generateRandomColors4p();
+      if (type == "4pTimedChess") {
+        this.timed = true;
+        this.PlayerTimes = [10, 10, 10, 10];
+      } else {
+        this.timed = false;
+        this.PlayerTimes = [-1, -1, -1, -1];
+      }
+    }
     this.Players.forEach((value: GameSocket, index: number) => {
-      value.emit("game_start", {
+      value.emit("gameStart", {
         gameId,
+        type,
         color: this.AssignedColors[index],
         boardState: this.gameLogic.boardState,
       });
     });
   }
-  public ClientMove(move: Move, client: GameSocket) {
+  public clientMove(move: Move, client: GameSocket) {
     let colorPos = -1;
     for (let i = 0; i < this.Players.length; i++) {
       if (client.id == this.Players[i].id) colorPos = i;
@@ -58,61 +75,75 @@ export class Room {
     this.gameLogic.playResign(this.AssignedColors[colorPos]);
   }
 
-  public UpdateAndCheckOver(time_passed: number): boolean {
-    //check for timeout
+  public updateAndCheckOver(time_passed: number): boolean {
+    if (this.positionUpdated == true) {
+      this.positionUpdated = false;
+      this.Players.forEach((value: GameSocket) => {
+        value.emit("moveMade", { boardState: this.gameLogic.boardState });
+      });
+    }
+    this.checkTimeout(time_passed);
+    if (this.checkGameOver() == true) return true;
+    return false;
+  }
+
+  private checkTimeout(time_passed: number) {
     if (this.timed == true) {
-      const TurnIndex = this.AssignedColors.indexOf(
+      const turnIndex = this.AssignedColors.indexOf(
         this.gameLogic.boardState.turn,
       );
-      this.PlayerTimes[TurnIndex] = this.PlayerTimes[TurnIndex] - time_passed;
-      if (this.PlayerTimes[TurnIndex] < 0) {
-        this.Players[TurnIndex].emit("game_over", {
-          result: "lose",
-          reason: "timeout",
-        });
-        this.Players.forEach((value: GameSocket, index: number) => {
-          if (index !== TurnIndex)
-            value.emit("game_over", { result: "win", reason: "timeout" });
-        });
-        return true;
+      this.PlayerTimes[turnIndex] = this.PlayerTimes[turnIndex] - time_passed;
+      if (this.PlayerTimes[turnIndex] < 0) {
+        this.gameLogic.timeout(this.getColor(turnIndex));
       }
     }
-    //Check if game is Over
+  }
+
+  private checkGameOver(): boolean {
     if (this.gameLogic.gameStatus.isOver) {
       const result = this.gameLogic.gameStatus;
-      const winner = result.winner;
-      if (winner != null) {
-        const WinnerIndex = this.AssignedColors.indexOf(winner);
+      const winners = result.winners;
+      if (winners != null) {
+        const winnerIndexes: number[] = [];
+        winners.forEach((value: PlayerColor) => {
+          const index = this.AssignedColors.indexOf(value);
+          if (index >= 0) winnerIndexes.push(index);
+        });
         this.Players.forEach((value: GameSocket, index: number) => {
-          if (index == WinnerIndex)
-            value.emit("game_over", { result: "win", reason: result.reason });
+          if (winnerIndexes.includes(index))
+            value.emit("gameOver", { result: "win", reason: result.reason });
           else
-            value.emit("game_over", { result: "lose", reason: result.reason });
+            value.emit("gameOver", { result: "lose", reason: result.reason });
         });
       } else {
         this.Players.forEach((value: GameSocket) => {
-          value.emit("game_over", { result: "draw", reason: result.reason });
+          value.emit("gameOver", { result: "draw", reason: result.reason });
         });
       }
       return true;
     }
-    //Check if move was made
-    if (this.positionUpdated == true) {
-      this.positionUpdated = false;
-      this.Players.forEach((value: GameSocket) => {
-        value.emit("move_made", { boardState: this.gameLogic.boardState });
-      });
-    }
     return false;
   }
 
-  public GetColor(index: number): PlayerColor {
+  public getColor(index: number): PlayerColor {
     return this.AssignedColors[index];
   }
 
-  private GenerateRandomColors2p(): PlayerColor[] {
-    const rand = Math.random() < 0.5;
-    if (rand) return ["white", "black"];
-    else return ["black", "white"];
+  private shuffleArray<T>(array: T[]): T[] {
+    const length = array.length;
+    for (let i = length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+  }
+  private generateRandomColors2p(): PlayerColor[] {
+    const colors: PlayerColor[] = ["white", "black"];
+    return this.shuffleArray(colors);
+  }
+
+  private generateRandomColors4p(): PlayerColor[] {
+    const colors: PlayerColor[] = ["green", "blue", "red", "yellow"];
+    return this.shuffleArray(colors);
   }
 }

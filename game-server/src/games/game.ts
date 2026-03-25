@@ -8,4 +8,5 @@ export abstract class Game {
 
   abstract playMove(move: Move, played_by: PlayerColor): boolean;
   abstract playResign(played_by: PlayerColor): void;
+  abstract timeout(player: PlayerColor): void;
 }
