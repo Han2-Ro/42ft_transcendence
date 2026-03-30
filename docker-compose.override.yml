@@ -1,5 +1,5 @@
 services:
-  next-js:
+  nextjs:
     ports:
       - "${PORT}:${PORT}"
   gamesserver:

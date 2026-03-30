@@ -7,9 +7,13 @@ let running = false;
 
 const io = new Server<CToSEvents, SToCEvents>(4000, {
   cors: {
-    // Allow connections from any localhost port for development
+    // Allow connections from any localhost port for development and from next_js url in deployment
     origin: (origin, callback) => {
-      if (!origin || origin.startsWith("http://localhost:")) {
+      if (
+        !origin ||
+        origin.startsWith("http://localhost:") ||
+        origin == process.env.SERVICE_URL_NEXT_JS
+      ) {
         callback(null, true);
       } else {
         callback(new Error("Not allowed by CORS"));
