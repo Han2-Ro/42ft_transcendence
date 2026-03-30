@@ -46,7 +46,4 @@ next-env.d.ts
 tests/playwright-report/
 tests/test-results/
 
-# docker compose local overrides
-docker-compose.override.yml
-
 .vscode

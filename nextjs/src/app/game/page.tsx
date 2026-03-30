@@ -13,7 +13,9 @@ import { useSidebarActions } from "@/componets/SidebarActionsProvider";
 import { DeadKing } from "@/componets/icons/DeadKing";
 
 // Connect to the exposed backend port
-const socket: Socket<SToCEvents, CToSEvents> = io("http://localhost:4000");
+const socket: Socket<SToCEvents, CToSEvents> = io(
+  process.env.NEXT_PUBLIC_GAMESERVER_URL || "http://localhost:4000",
+);
 
 export default function Page() {
   const [gameId, setGameId] = useState<string | null>(null);
