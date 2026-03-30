@@ -3,7 +3,7 @@ import { Move, PlayerColor, Games } from "shared";
 import { Game } from "../games/game.js";
 import { Chess } from "../games/chess/chess.js";
 import { FourPlayerChess } from "../games/4pChess/4pChess.js";
-import { GameSocket } from "../../server.js";
+import { GameSocket, Player } from "../../server.js";
 
 export type GameStatus =
   | "checkmate"
@@ -13,7 +13,8 @@ export type GameStatus =
   | null;
 
 export class Room {
-  Players: GameSocket[];
+  Players: Player[];
+  uids: string[];
   AssignedColors: PlayerColor[];
   gameLogic: Game;
   positionUpdated: boolean = false;
@@ -23,8 +24,9 @@ export class Room {
   PlayerTimes: number[];
   last_move: number = 0;
 
-  constructor(players: GameSocket[], type: Games, gameId: string) {
+  constructor(players: Player[], uids: string[], type: Games, gameId: string) {
     this.Players = players;
+	this.uids = uids
     if (type == "chess" || type == "timedChess") {
       this.gameLogic = new Chess();
       this.AssignedColors = this.generateRandomColors2p();
@@ -46,19 +48,21 @@ export class Room {
         this.PlayerTimes = [-1, -1, -1, -1];
       }
     }
-    this.Players.forEach((value: GameSocket, index: number) => {
-      value.emit("gameStart", {
+    this.Players.forEach((value: Player, index: number) => {
+      value.sockets.forEach((value: GameSocket) => {
+		value.emit("gameStart", {
         gameId,
         type,
         color: this.AssignedColors[index],
         boardState: this.gameLogic.boardState,
+		});
       });
     });
   }
-  public clientMove(move: Move, client: GameSocket) {
+  public clientMove(move: Move, uid: string) {
     let colorPos = -1;
     for (let i = 0; i < this.Players.length; i++) {
-      if (client.id == this.Players[i].id) colorPos = i;
+      if (uid == this.uids[i]) colorPos = i;
     }
     if (colorPos == -1) return;
     if (this.gameLogic.playMove(move, this.AssignedColors[colorPos])) {
@@ -66,20 +70,20 @@ export class Room {
     }
   }
 
-  public clientResign(client: GameSocket) {
+  public clientResign(uid: string) {
     let colorPos = -1;
     for (let i = 0; i < this.Players.length; i++) {
-      if (client.id == this.Players[i].id) colorPos = i;
+      if (uid == this.uids[i]) colorPos = i;
     }
     if (colorPos == -1) return;
     this.gameLogic.playResign(this.AssignedColors[colorPos]);
   }
 
 
-  public clientDisconnect(client: GameSocket) {
+  public clientDisconnect(uid: string) {
     let colorPos = -1;
     for (let i = 0; i < this.Players.length; i++) {
-      if (client.id == this.Players[i].id) colorPos = i;
+      if (uid == this.uids[i]) colorPos = i;
     }
     if (colorPos == -1) return;
     this.gameLogic.disconnect(this.AssignedColors[colorPos]);
@@ -88,8 +92,10 @@ export class Room {
   public updateAndCheckOver(time_passed: number): boolean {
     if (this.positionUpdated == true) {
       this.positionUpdated = false;
-      this.Players.forEach((value: GameSocket) => {
-        value.emit("moveMade", { boardState: this.gameLogic.boardState });
+      this.Players.forEach((value: Player, index: number) => {
+      	value.sockets.forEach((value: GameSocket, index: number) => {
+          value.emit("moveMade", { boardState: this.gameLogic.boardState });
+		});
       });
     }
     this.checkTimeout(time_passed);
@@ -119,15 +125,19 @@ export class Room {
           const index = this.AssignedColors.indexOf(value);
           if (index >= 0) winnerIndexes.push(index);
         });
-        this.Players.forEach((value: GameSocket, index: number) => {
-          if (winnerIndexes.includes(index))
-            value.emit("gameOver", { result: "win", reason: result.reason });
-          else
-            value.emit("gameOver", { result: "lose", reason: result.reason });
+        this.Players.forEach((value: Player, index: number) => {
+      	  value.sockets.forEach((value: GameSocket, index: number) => {
+            if (winnerIndexes.includes(index))
+              value.emit("gameOver", { result: "win", reason: result.reason });
+            else
+              value.emit("gameOver", { result: "lose", reason: result.reason });
+		  });
         });
       } else {
-        this.Players.forEach((value: GameSocket) => {
-          value.emit("gameOver", { result: "draw", reason: result.reason });
+        this.Players.forEach((value: Player, index: number) => {
+      	  value.sockets.forEach((value: GameSocket, index: number) => {
+            value.emit("gameOver", { result: "draw", reason: result.reason });
+		  });
         });
       }
       return true;
