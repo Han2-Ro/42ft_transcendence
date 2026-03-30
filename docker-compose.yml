@@ -2,8 +2,6 @@ services:
   next-js:
     expose:
       - "3000"
-    ports:
-      - "${PORT}:${PORT}"
     build:
       context: .
       dockerfile: nextjs/Dockerfile
@@ -19,8 +17,6 @@ services:
       dockerfile: game-server/Dockerfile
     expose:
       - "4000"
-    ports:
-      - "4000:4000"
 
   db:
     image: postgres:16-alpine
