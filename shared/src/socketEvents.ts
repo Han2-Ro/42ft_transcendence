@@ -12,9 +12,14 @@ export type Result = "win" | "lose" | "draw";
 export interface CToSEvents {
   findMatch: (type: Games) => void;
 
+  
   move: (data: { gameId: string; move: Move }) => void;
+  
 
+  uid: (uid: string) => void; //Todo: This should send whatever key is necessary to validate this user exists in our database
   resign: (gameId: string) => void;
+
+  dropCheck: () => void;
 }
 
 export interface SToCEvents {
@@ -28,4 +33,8 @@ export interface SToCEvents {
   moveMade: (data: { boardState: BoardState }) => void;
 
   gameOver: (data: { result: Result; reason: string }) => void;
+
+ connection: () => void;
+
+  dropCheck: () => void;
 }

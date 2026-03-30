@@ -75,6 +75,16 @@ export class Room {
     this.gameLogic.playResign(this.AssignedColors[colorPos]);
   }
 
+
+  public clientDisconnect(client: GameSocket) {
+    let colorPos = -1;
+    for (let i = 0; i < this.Players.length; i++) {
+      if (client.id == this.Players[i].id) colorPos = i;
+    }
+    if (colorPos == -1) return;
+    this.gameLogic.disconnect(this.AssignedColors[colorPos]);
+  }
+
   public updateAndCheckOver(time_passed: number): boolean {
     if (this.positionUpdated == true) {
       this.positionUpdated = false;

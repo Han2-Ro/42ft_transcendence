@@ -27,22 +27,61 @@ type Player = {
 };
 
 const playerStates: Player[] = [];
+
 const rooms: Map<string, Room> = new Map();
 
+const disconnect=(socket: GameSocket)=>{
+	console.log("disconnect called on player: ", socket)
+	const player = getPlayer(socket);
+	if (player === null)
+      return;
+	const game_id = player.game_id
+	if (player.status === "in_game" && game_id !== null)
+	{
+		const room = rooms.get(game_id);
+		if (room) room.clientDisconnect(socket)
+	}
+	const index = playerStates.indexOf(player, 0);
+	if (index > -1) {
+		playerStates.splice(index, 1);
+	}
+}
+
 io.on("connection", (socket) => {
-  playerStates.push({
+  socket.emit('connection')
+  console.log("Client connected:", socket.id);
+
+  //Check for Disconnect
+  let drop : NodeJS.Timeout
+  const dropCheck=()=>{
+    if(!socket) return;
+    socket.emit('dropCheck')
+    drop = setTimeout(()=>disconnect(socket),5000)
+  }
+
+  const setDrop=()=>setTimeout(()=>dropCheck(),10000) // 10 secs to restart the process
+
+  socket.on('dropCheck',()=>{
+    clearTimeout(drop)
+    setDrop()
+  })
+
+   socket.on('uid',uid=>{
+	console.log("Client sent login verification:", socket.id);
+	//Todo: validate login (with uid that was sent)
+	console.log("Client verified.")
+	playerStates.push({
     socket: socket,
     status: "lobby",
     game_id: null,
     searching: [],
-  });
-  console.log("Client connected:", socket.id);
-
-  /*     socket.on('disconnect', ()=> {
-      console.log('Client disconnect: ', socket.id );
-  }); */
+  	});
+    setDrop()
+  })
 
   socket.on("findMatch", (type) => {
+	if (checkPlayerLoggedIn(socket) == false)
+		return;
     //add type to searching
     const player = getPlayer(socket);
     if (
@@ -89,11 +128,15 @@ io.on("connection", (socket) => {
   });
 
   socket.on("move", ({ gameId, move }) => {
+	if (checkPlayerLoggedIn(socket) == false)
+		return;
     const room = rooms.get(gameId);
     if (room) room.clientMove(move, socket);
   });
 
   socket.on("resign", (gameId) => {
+	if (checkPlayerLoggedIn(socket) == false)
+		return;
     const room = rooms.get(gameId);
     if (room) room.clientResign(socket);
   });
@@ -104,6 +147,14 @@ function getPlayer(socket: GameSocket): Player | null {
     playerStates.find((value: Player) => value.socket.id === socket.id) || null
   );
 }
+
+function checkPlayerLoggedIn(socket: GameSocket): boolean {
+	const player = getPlayer(socket);
+    if (player === null)
+      return false;
+	return true;
+}
+
 
 const TICK_RATE = 20;
 const DT = 1 / TICK_RATE;

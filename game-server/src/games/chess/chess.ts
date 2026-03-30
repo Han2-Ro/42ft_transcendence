@@ -30,6 +30,13 @@ export class Chess extends Game {
     this.gameStatus = { isOver: true, winners: winners, reason: "resignation" };
   }
 
+  disconnect(player: PlayerColor): void {
+    let winners: PlayerColor[];
+    if (player == "white") winners = ["black"];
+    else winners = ["white"];
+    this.gameStatus = { isOver: true, winners: winners, reason: "disconnect" };
+  }
+
   timeout(player: PlayerColor): void {
     let winners: PlayerColor[];
     if (player == "white") winners = ["black"];
