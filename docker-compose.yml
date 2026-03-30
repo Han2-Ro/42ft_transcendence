@@ -1,5 +1,5 @@
 services:
-  next-js:
+  nextjs:
     expose:
       - "3000"
     build:
@@ -19,7 +19,6 @@ services:
     expose:
       - "4000"
     restart: unless-stopped
-
 
   db:
     image: postgres:16-alpine
