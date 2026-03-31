@@ -37,7 +37,7 @@ export default function Page() {
     socket.on("gameStart", (data) => {
       setGameId(data.gameId);
       setGameType(data.type);
-      if (boardState === null) setBoardState(data.boardState);
+      setBoardState(data.boardState);
       setColor(data.color);
     });
 
@@ -100,7 +100,7 @@ export default function Page() {
     };
   }, [boardState, clearActions, emitPlayerResign, gameId, result, setActions]);
 
-  return boardState && gameType ? (
+  return boardState ? (
     <Game
       boardState={boardState}
       gameType={gameType!}
