@@ -12,7 +12,7 @@ const io = new Server<CToSEvents, SToCEvents>(4000, {
       if (
         !origin ||
         origin.startsWith("http://localhost:") ||
-        origin == process.env.SERVICE_URL_NEXT_JS
+        origin == process.env.SERVICE_URL_NEXTJS
       ) {
         callback(null, true);
       } else {
