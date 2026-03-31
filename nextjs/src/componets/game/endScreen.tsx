@@ -13,11 +13,7 @@ export default function EndScreen({
     <div style={{ textAlign: "center" }}>
       <p>Result: {result}</p>
       <p>Reason: {reason}</p>
-      <Button
-        onClick={onClose}
-      >
-        Close
-      </Button>
+      <Button onClick={onClose}>Close</Button>
     </div>
   );
 }

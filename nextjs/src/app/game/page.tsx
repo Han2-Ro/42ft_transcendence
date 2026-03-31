@@ -96,35 +96,35 @@ export default function Page() {
     };
   }, [boardState, clearActions, emitPlayerResign, gameId, result, setActions]);
 
- return (
-  <div className="flex min-h-screen items-center gap-12 pl-20">
-    <main className="flex-1">
-      <Game
-        boardState={boardState}
-        gameType={gameType ?? "chess"}
-        color={color ?? "white"}
-        onPlayerMove={gameId && !result ? emitPlayerMove : () => {}}
-      />
-    </main>
-    <aside className="flex-1">
-    {result && (
-      <EndScreen
-        result={result}
-        reason={resultReason || ""}
-        onClose={closeResultScreen}
-      />
-    )}
+  return (
+    <div className="flex min-h-screen items-center gap-12 pl-20">
+      <main className="flex-1">
+        <Game
+          boardState={boardState}
+          gameType={gameType ?? "chess"}
+          color={color ?? "white"}
+          onPlayerMove={gameId && !result ? emitPlayerMove : () => {}}
+        />
+      </main>
+      <aside className="flex-1">
+        {result && (
+          <EndScreen
+            result={result}
+            reason={resultReason || ""}
+            onClose={closeResultScreen}
+          />
+        )}
 
-    {!gameId && !result && (
-      <Lobby
-        onFindMatchPressed={(type) => {
-          setIsSearching(true);
-          socket.emit("findMatch", type);
-        }}
-        isSearching={isSearching}
-      />
-    )}
-    </aside>
-  </div>
-);
+        {!gameId && !result && (
+          <Lobby
+            onFindMatchPressed={(type) => {
+              setIsSearching(true);
+              socket.emit("findMatch", type);
+            }}
+            isSearching={isSearching}
+          />
+        )}
+      </aside>
+    </div>
+  );
 }
