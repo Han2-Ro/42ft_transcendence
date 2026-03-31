@@ -27,29 +27,29 @@ export default function MainMenu() {
   return (
     <>
       {showLogin && <AuthModal onClose={toggleLogin} />}
-      <nav className=" bg-black/70 lg:bg-inherit h-full w-full p-6 flex flex-col justify-center gap-4 items-center">
-        <MenuButton href="/" label="Home" icon={<HomeIcon size={50} />} />
+      <nav className=" bg-black/70 lg:bg-inherit h-full w-full py-6 flex flex-col justify-center gap-4 items-start">
+        <MenuButton href="/" label="Home" icon={<HomeIcon size={20} />} />
         <MenuButton
           href="/game"
-          icon={<PlayIcon size={50} className=" text-accent-primary" />}
+          icon={<PlayIcon size={20} className=" text-accent-primary" />}
           label="Play"
         />
         {user ? (
           <MenuButton
             onClick={onLogoutClicked}
-            icon={<LogoutIcon size={50} />}
+            icon={<LogoutIcon size={20} />}
             label="Log Out"
           />
         ) : (
           <MenuButton
             onClick={toggleLogin}
-            icon={<LoginIcon size={50} />}
+            icon={<LoginIcon size={20} />}
             label="Log In"
           />
         )}
         <MenuButton
           label="Settings"
-          icon={<GearIcon size={50} />}
+          icon={<GearIcon size={20} />}
           onClick={() => console.error("TODO: not implented yet")}
         />
       </nav>
