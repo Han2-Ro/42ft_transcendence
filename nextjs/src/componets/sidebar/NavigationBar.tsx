@@ -1,12 +1,12 @@
 "use client";
 
-import MainMenu from "../componets/MainMenu";
-import { HamburgerMenuIcon } from "../componets/icons/HamburgerMenuIcon";
-import { CloseIcon } from "../componets/icons/CloseIcon";
+import MainMenu from "./MainMenu";
+import { HamburgerMenuIcon } from "../icons/HamburgerMenuIcon";
+import { CloseIcon } from "../icons/CloseIcon";
 import { useState } from "react";
-import { useAuthConetxt } from "./AuthProvider";
+import { useAuthConetxt } from "../AuthProvider";
 import { useSidebarActions } from "./SidebarActionsProvider";
-import { MenuButton } from "./MenuButton";
+import { MenuButton } from "../MenuButton";
 
 export default function NavigationBar() {
   const [showMenu, setShowMenu] = useState(false);

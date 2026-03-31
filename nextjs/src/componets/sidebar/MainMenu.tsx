@@ -1,16 +1,16 @@
 "use client";
 
-import { PlayIcon } from "./icons/PlayIcon";
-import { LoginIcon } from "./icons/LoginIcon";
-import { AuthModal } from "./LoginModal";
-import { MenuButton } from "./MenuButton";
+import { PlayIcon } from "../icons/PlayIcon";
+import { LoginIcon } from "../icons/LoginIcon";
+import { AuthModal } from "../LoginModal";
+import { MenuButton } from "../MenuButton";
 import { useState } from "react";
-import { LogoutIcon } from "./icons/LogoutIcon";
-import { useAuthConetxt } from "./AuthProvider";
+import { LogoutIcon } from "../icons/LogoutIcon";
+import { useAuthConetxt } from "../AuthProvider";
 import { logout } from "@/lib/auth/actions";
 import { useRouter } from "next/navigation";
-import { GearIcon } from "./icons/GearIcon";
-import { HomeIcon } from "./icons/HomeIcon";
+import { GearIcon } from "../icons/GearIcon";
+import { HomeIcon } from "../icons/HomeIcon";
 
 export default function MainMenu() {
   const [showLogin, setShowLogin] = useState(false);

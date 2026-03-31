@@ -1,6 +1,6 @@
 import { BoardState, PlayerColor, Move, Games } from "shared";
-import TwoPlayerBoard from "./twoPlayerBoard";
-import FourPlayerBoard from "./fourPlayerBoard";
+import TwoPlayerBoard from "./TwoPlayerBoard";
+import FourPlayerBoard from "./FourPlayerBoard";
 
 interface GameProps {
   boardState: BoardState;

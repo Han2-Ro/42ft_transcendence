@@ -1,6 +1,6 @@
 import { Games } from "shared";
 
-import Button from "./Button";
+import Button from "../../componets/Button";
 
 export default function Lobby({
   onFindMatchPressed,

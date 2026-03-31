@@ -2,14 +2,14 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { io, Socket } from "socket.io-client";
-import Lobby from "../../componets/game/lobby";
-import Game from "../../componets/game/game";
-import EndScreen from "../../componets/game/endScreen";
+import Lobby from "./Lobby";
+import Game from "./Game";
+import EndScreen from "./EndScreen";
 
 import { CToSEvents, startingBoardState, SToCEvents } from "shared";
 import { BoardState, PlayerColor, Move, Games } from "shared";
 import { Result as GameResult } from "shared";
-import { useSidebarActions } from "@/componets/SidebarActionsProvider";
+import { useSidebarActions } from "@/componets/sidebar/SidebarActionsProvider";
 import { DeadKing } from "@/componets/icons/DeadKing";
 
 // Connect to the exposed backend port
