@@ -47,27 +47,16 @@ export default function TwoPlayerBoard({
   useEffect(() => {}, [movesFromSqareInt]);
 
   return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
+    <div className="flex justify-center items-center h-full">
       <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(8, 100px)",
-          transform: playerColor === "black" ? "rotate(180deg)" : "none",
-        }}
+        className={`w-[min(100vw,50vh)] h-[min(100vw,50vh)] md:w-[min(50vw,70vh)] md:h-[min(50vw,70vh)] grid grid-rows-8 grid-cols-8 ${playerColor === 'black' ? "rotate-180" : ""}`}
       >
         {boardState.board.map((sq: PieceOrNull, index: number) => (
           <button
             key={index}
             onClick={() => handleSquareClick(index)}
+            className="relative"
             style={{
-              width: 100,
-              height: 100,
               background:
                 (index + Math.floor(index / 8)) % 2 === 1
                   ? selectedSquare === index
@@ -76,7 +65,6 @@ export default function TwoPlayerBoard({
                   : selectedSquare === index
                     ? "#aaaaaaff"
                     : "#eee",
-              position: "relative",
             }}
           >
             {sq && (
@@ -85,12 +73,7 @@ export default function TwoPlayerBoard({
                 height="45"
                 src={`/chess/${sq.color}/${sq.type}.svg`}
                 alt={sq.color + sq.type}
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  transform:
-                    playerColor === "black" ? "rotate(180deg)" : "none",
-                }}
+                className={`w-full h-full ${playerColor === "black" ? "rotate-180" : ""}`}
               />
             )}
             {movesFromSqareInt &&
@@ -101,13 +84,7 @@ export default function TwoPlayerBoard({
                   height="100"
                   src={`/chess/circle.svg`}
                   alt={"Position that the selected Piece can move to."}
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    position: "absolute",
-                    top: 0,
-                    left: 0,
-                  }}
+                  className="w-full h-full absolute top-0 left-0"
                 />
               )}
           </button>

@@ -97,8 +97,8 @@ export default function Page() {
   }, [boardState, clearActions, emitPlayerResign, gameId, result, setActions]);
 
   return (
-    <div className="flex min-h-screen items-center gap-12 pl-20">
-      <main className="flex-1">
+    <div className="flex flex-col md:flex-row items-center md:justify-around lg:px-10 min-h-full">
+      <main className="h-full flex items-center justify-center">
         <Game
           boardState={boardState}
           gameType={gameType ?? "chess"}
@@ -106,7 +106,7 @@ export default function Page() {
           onPlayerMove={gameId && !result ? emitPlayerMove : () => {}}
         />
       </main>
-      <aside className="flex-1">
+      <aside className="">
         {result && (
           <EndScreen
             result={result}

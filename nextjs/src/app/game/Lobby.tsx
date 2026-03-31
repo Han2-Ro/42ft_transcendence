@@ -10,7 +10,7 @@ export default function Lobby({
   isSearching: boolean;
 }) {
   return (
-    <div className="mt-12 flex flex-col items-center gap-5">
+    <div className="flex flex-col items-center gap-5">
       <h1 className="text-4xl font-bold text-slate-800">Chess Lobby</h1>
 
       <Button

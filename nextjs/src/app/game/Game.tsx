@@ -16,7 +16,7 @@ export default function Game({
   onPlayerMove,
 }: GameProps) {
   return (
-    <div style={{ textAlign: "center" }}>
+    <div className="text-center flex flex-col justify-center">
       <h2>Game in progress</h2>
       {gameType === "chess" || gameType === "timedChess" ? (
         <TwoPlayerBoard
