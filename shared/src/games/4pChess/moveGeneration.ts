@@ -5,7 +5,6 @@ import {
   GameStatus,
   Move,
   PieceOrNull,
-  PieceType,
   Pos2,
 } from "../../gameTypes.js";
 
@@ -691,23 +690,6 @@ function checkSqare(
   if (
     newPiece == null ||
     (newPiece != null && areOpposingPlayerColors(newPiece.color, PlayerColor))
-  ) {
-    return true;
-  }
-  return false;
-}
-
-function checkSqarePiece(
-  board: Board,
-  sq: number,
-  PlayerColor: PlayerColor,
-  type: PieceType,
-): boolean {
-  const newPiece = board[sq];
-  if (checkBounds(sq) == false) return false;
-  if (
-    newPiece != null &&
-    areOpposingPlayerColors(newPiece.color, PlayerColor)
   ) {
     return true;
   }

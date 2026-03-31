@@ -17,6 +17,7 @@ export class Room {
   uids: string[];
   AssignedColors: PlayerColor[];
   gameLogic: Game;
+  gameType: Games;
   positionUpdated: boolean = false;
 
   //time vars
@@ -26,7 +27,8 @@ export class Room {
 
   constructor(players: Player[], uids: string[], type: Games, gameId: string) {
     this.Players = players;
-	this.uids = uids
+    this.uids = uids;
+    this.gameType = type;
     if (type == "chess" || type == "timedChess") {
       this.gameLogic = new Chess();
       this.AssignedColors = this.generateRandomColors2p();
@@ -50,12 +52,12 @@ export class Room {
     }
     this.Players.forEach((value: Player, index: number) => {
       value.sockets.forEach((value: GameSocket) => {
-		value.emit("gameStart", {
-        gameId,
-        type,
-        color: this.AssignedColors[index],
-        boardState: this.gameLogic.boardState,
-		});
+        value.emit("gameStart", {
+          gameId,
+          type,
+          color: this.AssignedColors[index],
+          boardState: this.gameLogic.boardState,
+        });
       });
     });
   }
@@ -70,6 +72,17 @@ export class Room {
     }
   }
 
+  public syncState(socket: GameSocket, uid: string, gameId: string) {
+    const playerIndex = this.uids.findIndex((u) => u === uid);
+    if (playerIndex === -1) return;
+    socket.emit("gameStart", {
+      gameId,
+      type: this.gameType,
+      color: this.AssignedColors[playerIndex],
+      boardState: this.gameLogic.boardState,
+    });
+  }
+
   public clientResign(uid: string) {
     let colorPos = -1;
     for (let i = 0; i < this.Players.length; i++) {
@@ -78,7 +91,6 @@ export class Room {
     if (colorPos == -1) return;
     this.gameLogic.playResign(this.AssignedColors[colorPos]);
   }
-
 
   public clientDisconnect(uid: string) {
     let colorPos = -1;
@@ -92,10 +104,10 @@ export class Room {
   public updateAndCheckOver(time_passed: number): boolean {
     if (this.positionUpdated == true) {
       this.positionUpdated = false;
-      this.Players.forEach((value: Player, index: number) => {
-      	value.sockets.forEach((value: GameSocket, index: number) => {
+      this.Players.forEach((value: Player) => {
+        value.sockets.forEach((value: GameSocket) => {
           value.emit("moveMade", { boardState: this.gameLogic.boardState });
-		});
+        });
       });
     }
     this.checkTimeout(time_passed);
@@ -126,18 +138,18 @@ export class Room {
           if (index >= 0) winnerIndexes.push(index);
         });
         this.Players.forEach((value: Player, index: number) => {
-      	  value.sockets.forEach((value: GameSocket, index: number) => {
+          value.sockets.forEach((value: GameSocket) => {
             if (winnerIndexes.includes(index))
               value.emit("gameOver", { result: "win", reason: result.reason });
             else
               value.emit("gameOver", { result: "lose", reason: result.reason });
-		  });
+          });
         });
       } else {
-        this.Players.forEach((value: Player, index: number) => {
-      	  value.sockets.forEach((value: GameSocket, index: number) => {
+        this.Players.forEach((value: Player) => {
+          value.sockets.forEach((value: GameSocket) => {
             value.emit("gameOver", { result: "draw", reason: result.reason });
-		  });
+          });
         });
       }
       return true;

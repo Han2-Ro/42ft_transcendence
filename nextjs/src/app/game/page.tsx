@@ -14,14 +14,15 @@ import { DeadKing } from "@/componets/icons/DeadKing";
 
 // Connect to the exposed backend port
 const socket: Socket<SToCEvents, CToSEvents> = io("http://localhost:4000");
-socket.on('connection',()=>{
-  const uid = crypto.randomUUID()
-  socket.emit('uid', uid) // Todo: send whatever data is requiered for server to verify user in database
+socket.on("connection", () => {
+  const uid = crypto.randomUUID();
+  socket.emit("uid", uid); // Todo: send whatever data is requiered for server to verify user in database
 
-  socket.on('dropCheck',()=>{ // responds to the checker
-    socket.emit('dropCheck')
-  })
-})
+  socket.on("dropCheck", () => {
+    // responds to the checker
+    socket.emit("dropCheck");
+  });
+});
 
 export default function Page() {
   const [gameId, setGameId] = useState<string | null>(null);
@@ -36,7 +37,7 @@ export default function Page() {
     socket.on("gameStart", (data) => {
       setGameId(data.gameId);
       setGameType(data.type);
-      setBoardState(data.boardState);
+      if (boardState === null) setBoardState(data.boardState);
       setColor(data.color);
     });
 
@@ -99,7 +100,7 @@ export default function Page() {
     };
   }, [boardState, clearActions, emitPlayerResign, gameId, result, setActions]);
 
-  return boardState ? (
+  return boardState && gameType ? (
     <Game
       boardState={boardState}
       gameType={gameType!}
