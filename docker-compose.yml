@@ -10,7 +10,7 @@ services:
       db:
         condition: service_healthy
     environment:
-      - DATABASE_URL=postgresql://${POSTGRES_USER:?}:${POSTGRES_PASSWORD:?}@${DATABASE_ADDRESS:-db}:5432/${POSTGRES_DB:?}
+      - DATABASE_URL=postgresql://${POSTGRES_USER:?}:${POSTGRES_PASSWORD:?}@${POSTGRES_ADDRESS:-db}:5432/${POSTGRES_DB:?}
       - PORT=${PORT:-3000}
       - JWT_SECRET=${JWT_SECRET:?}
     networks:
