@@ -1,10 +1,12 @@
+import { Games } from "shared";
+
 import Button from "./Button";
 
 export default function Lobby({
   onFindMatchPressed,
   isSearching,
 }: {
-  onFindMatchPressed: () => void;
+  onFindMatchPressed: (type: Games) => void;
   isSearching: boolean;
 }) {
   return (
@@ -12,12 +14,22 @@ export default function Lobby({
       <h1 className="text-4xl font-bold text-slate-800">Chess Lobby</h1>
 
       <Button
-        onClick={onFindMatchPressed}
+        onClick={() => onFindMatchPressed("chess")}
         loading={isSearching}
+        disabled={isSearching}
         className="text-lg px-7 py-3 rounded-xl shadow-lg"
         loadingText="Finding game…"
       >
-        Find Match
+        Find chess Match
+      </Button>
+      <Button
+        onClick={() => onFindMatchPressed("4pChess")}
+        loading={isSearching}
+        disabled={isSearching}
+        className="text-lg px-7 py-3 rounded-xl shadow-lg"
+        loadingText="Finding game…"
+      >
+        Find 4 player Chess Match
       </Button>
 
       <div className="text-sm text-slate-600">

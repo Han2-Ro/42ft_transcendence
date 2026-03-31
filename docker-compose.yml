@@ -1,14 +1,13 @@
 services:
-  next-js:
+  nextjs:
     expose:
       - "3000"
-    ports:
-      - "${PORT}:${PORT}"
     build:
       context: .
       dockerfile: nextjs/Dockerfile
     env_file:
       - .env
+    restart: unless-stopped
     depends_on:
       db:
         condition: service_healthy
@@ -19,8 +18,7 @@ services:
       dockerfile: game-server/Dockerfile
     expose:
       - "4000"
-    ports:
-      - "4000:4000"
+    restart: unless-stopped
 
   db:
     image: postgres:16-alpine

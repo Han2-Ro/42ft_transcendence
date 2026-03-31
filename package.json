@@ -5,22 +5,24 @@
   "description": "ft_transcendence monorepo",
   "scripts": {
     "dev": "pnpm --parallel --stream run dev",
+    "dev:db": "sudo docker compose up -d db && POSTGRES_ADDRESS=localhost pnpm --parallel --stream run dev",
     "start": "pnpm --parallel --stream run start",
     "build": "pnpm --recursive run build",
-    "lint": "pnpm --recursive run lint",
+    "up": "sudo docker compose up --build",
+    "lint": "pnpm eslint",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "test": "pnpm --filter tests run test",
     "test:ui": "pnpm --filter tests run test:ui"
   },
   "devDependencies": {
-    "@eslint/js": "^9.39.1",
+    "@eslint/js": "^9.39.4",
     "dotenv-cli": "^11.0.0",
-    "eslint": "^9.39.1",
+    "eslint": "^9.39.4",
     "eslint-config-next": "16.1.1",
     "globals": "^16.5.0",
     "jiti": "^2.6.1",
     "prettier": "3.7.4",
-    "typescript-eslint": "^8.48.1"
+    "typescript-eslint": "^8.57.2"
   }
 }

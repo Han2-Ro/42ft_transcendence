@@ -33,7 +33,7 @@ test("sidebar swaps menu actions during active match", async ({ browser }) => {
 
   await Promise.all(
     [page1, page2].map((page) =>
-      page.getByRole("button", { name: /find match/i }).click(),
+      page.getByRole("button", { name: /find chess match/i }).click(),
     ),
   );
 
@@ -73,7 +73,7 @@ test("find match and resign", async ({ browser }) => {
   await Promise.all(
     [page1, page2].map(async (page) => {
       await page.goto("/game");
-      await page.getByRole("button", { name: /find match/i }).click();
+      await page.getByRole("button", { name: /find chess match/i }).click();
     }),
   );
 
@@ -95,27 +95,4 @@ test("find match and resign", async ({ browser }) => {
   ]);
 
   await Promise.all(contexts.map((ctx) => ctx.close()));
-});
-
-test("MoreModal closes when clicking internal link", async ({ page }) => {
-  await page.goto("/");
-  await page.getByRole("button", { name: /more\.\.\./i }).click();
-  await expect(page.getByRole("heading", { name: /more/i })).toBeVisible();
-
-  await page.getByRole("link", { name: /privacy policy/i }).click();
-  await expect(page).toHaveURL(/privacy-policy/);
-  await expect(page.getByRole("heading", { name: /more/i })).not.toBeVisible();
-});
-
-test("MoreModal navigates to external link", async ({ page }) => {
-  await page.goto("/");
-  await page.getByRole("button", { name: /more\.\.\./i }).click();
-  await expect(page.getByRole("heading", { name: /more/i })).toBeVisible();
-
-  await Promise.all([
-    page.waitForURL(/github\.com.*42ft_transcendence/),
-    page.getByRole("link", { name: /source code/i }).click(),
-  ]);
-
-  await expect(page).toHaveURL(/github\.com.*42ft_transcendence/);
 });

@@ -7,16 +7,19 @@ import Game from "../../componets/game/game";
 import EndScreen from "../../componets/game/endScreen";
 
 import { CToSEvents, startingBoardState, SToCEvents } from "shared";
-import { BoardState, PlayerColor, Move } from "shared";
-import { result as GameResult } from "shared";
+import { BoardState, PlayerColor, Move, Games } from "shared";
+import { Result as GameResult } from "shared";
 import { useSidebarActions } from "@/componets/SidebarActionsProvider";
 import { DeadKing } from "@/componets/icons/DeadKing";
 
 // Connect to the exposed backend port
-const socket: Socket<SToCEvents, CToSEvents> = io("http://localhost:4000");
+const socket: Socket<SToCEvents, CToSEvents> = io(
+  process.env.NEXT_PUBLIC_GAMESERVER_URL || "http://localhost:4000",
+);
 
 export default function Page() {
   const [gameId, setGameId] = useState<string | null>(null);
+  const [gameType, setGameType] = useState<Games | null>(null);
   const [color, setColor] = useState<PlayerColor>("white");
   const [boardState, setBoardState] = useState<BoardState>(startingBoardState);
   const [result, setResult] = useState<GameResult | null>(null);
@@ -25,37 +28,39 @@ export default function Page() {
   const { setActions, clearActions } = useSidebarActions();
 
   useEffect(() => {
-    socket.on("game_start", (data) => {
+    socket.on("gameStart", (data) => {
       setGameId(data.gameId);
+      setGameType(data.type);
       setBoardState(data.boardState);
       setColor(data.color);
       setIsSearching(false);
     });
 
-    socket.on("move_made", (data) => {
+    socket.on("moveMade", (data) => {
       console.log("move_recieved", boardState);
       setBoardState(data.boardState);
     });
 
-    socket.on("game_over", (data) => {
+    socket.on("gameOver", (data) => {
       setResult(data.result);
       setResultReason(data.reason);
       setGameId(null);
-      // setBoardState(null);
-      // setColor(null);
       setIsSearching(false);
     });
 
     return () => {
-      socket.off("game_start");
-      socket.off("move_made");
-      socket.off("game_over");
+      socket.off("gameStart");
+      socket.off("moveMade");
+      socket.off("gameOver");
     };
   });
 
   const closeResultScreen = () => {
     setResult(null);
     setResultReason(null);
+    setGameType(null);
+    setBoardState(startingBoardState);
+    setColor("white");
   };
 
   const emitPlayerMove = (move: Move) => {
@@ -96,7 +101,8 @@ export default function Page() {
     <main className="flex-1">
       <Game
         boardState={boardState}
-        color={color ?? "white"} // optional fallback
+        gameType={gameType ?? "chess"}
+        color={color ?? "white"}
         onPlayerMove={gameId && !result ? emitPlayerMove : () => {}}
       />
     </main>
@@ -111,9 +117,9 @@ export default function Page() {
 
     {!gameId && !result && (
       <Lobby
-        onFindMatchPressed={() => {
+        onFindMatchPressed={(type) => {
           setIsSearching(true);
-          socket.emit("find_match");
+          socket.emit("findMatch", type);
         }}
         isSearching={isSearching}
       />
