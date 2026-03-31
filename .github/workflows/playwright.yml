@@ -21,13 +21,13 @@ jobs:
           PORT=8080
           POSTGRES_USER=${{ secrets.POSTGRES_USER }}
           POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
-          POSTGRES_DB=${{ secrets.POSTGRES_DB }}
-          DATABASE_URL=postgresql://${{ secrets.POSTGRES_USER }}:${{ secrets.POSTGRES_PASSWORD }}@db:5432/${{ secrets.POSTGRES_DB }}
+          POSTGRES_DB=transcendence_db
+          DATABASE_URL=postgresql://${{ secrets.POSTGRES_USER }}:${{ secrets.POSTGRES_PASSWORD }}@db:5432/transcendence_db
           JWT_SECRET=${{ secrets.JWT_SECRET }}
           EOF
 
       - name: Start services
-        run: docker compose up --build -d
+        run: docker compose up --build -d || (docker compose logs && exit 1)
 
       - name: Wait for Next.js to be ready
         run: |
