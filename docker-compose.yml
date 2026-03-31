@@ -26,7 +26,7 @@ services:
       - "4000"
     restart: unless-stopped
     environment:
-      - SERVICE_URL_NEXT_JS=${SERVICE_URL_NEXT_JS}
+      - SERVICE_URL_NEXTJS=${SERVICE_URL_NEXTJS}
 
   db:
     image: postgres:16-alpine
