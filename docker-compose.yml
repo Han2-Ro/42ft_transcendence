@@ -13,10 +13,6 @@ services:
       - DATABASE_URL=postgresql://${POSTGRES_USER:?}:${POSTGRES_PASSWORD:?}@${POSTGRES_ADDRESS:-db}:5432/${POSTGRES_DB:?}
       - PORT=${PORT:-3000}
       - JWT_SECRET=${JWT_SECRET:?}
-    networks:
-      internal:
-        aliases:
-          - nextjs
 
   gamesserver:
     build:
@@ -42,10 +38,6 @@ services:
       timeout: 5s
       retries: 5
       start_period: 10s
-    networks:
-      internal:
-        aliases:
-          - db
     environment:
       - POSTGRES_USER=${POSTGRES_USER:?}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:?}
@@ -53,6 +45,3 @@ services:
 
 volumes:
   postgres_data:
-
-networks:
-  internal: {}
