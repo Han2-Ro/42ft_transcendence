@@ -30,7 +30,7 @@ export function MenuButton({
 }: MenuButtonProps) {
   const pathname = usePathname();
   const isActive = "href" in props && props.href === pathname;
-  const baseClassName = `w-full px-4 p-4 flex items-center transition-colors hover:bg-background-primary/80 ${isActive ? "bg-background-primary/80" : ""} ${className || ""}`;
+  const baseClassName = `w-full px-7 p-4 flex items-center transition-colors hover:bg-background-primary/80 ${isActive ? "bg-background-primary/80" : ""} ${className || ""}`;
 
   if ("href" in props && props.href) {
     return (

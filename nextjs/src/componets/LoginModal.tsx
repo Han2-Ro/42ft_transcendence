@@ -67,7 +67,7 @@ export const AuthModal = ({ onClose }: Props) => {
   };
 
   return (
-    <Popup onClose={onClose}>
+    <Popup className="p-8" onClose={onClose}>
       <h1 className="mb-8 text-3xl">
           {mode === "login" ? "Login" : "Register"}
         </h1>
