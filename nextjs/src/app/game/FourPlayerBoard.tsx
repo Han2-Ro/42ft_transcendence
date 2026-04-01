@@ -63,7 +63,9 @@ export default function FourPlayerBoard({
 
   return (
     <div className="flex justify-center items-center h-full">
-      <div className={`w-[min(100vw,50vh)] h-[min(100vw,50vh)] md:w-[min(50vw,70vh)] md:h-[min(50vw,70vh)] grid grid-rows-14 grid-cols-14 ${boardRotation[playerColor]}`}>
+      <div
+        className={`w-[min(100vw,50vh)] h-[min(100vw,50vh)] md:w-[min(50vw,70vh)] md:h-[min(50vw,70vh)] grid grid-rows-14 grid-cols-14 ${boardRotation[playerColor]}`}
+      >
         {Array.from({ length: 196 }).map((_, visualIndex) => {
           const row = Math.floor(visualIndex / 14);
           const col = visualIndex % 14;

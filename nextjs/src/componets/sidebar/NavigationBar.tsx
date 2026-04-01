@@ -13,10 +13,7 @@ export default function NavigationBar() {
 
   return (
     <div className="lg:w-40 bg-background-secondary flex flex-row lg:flex-col justify-between items-center">
-      <button
-        className="lg:hidden"
-        onClick={() => setShowMenu(!showMenu)}
-      >
+      <button className="lg:hidden" onClick={() => setShowMenu(!showMenu)}>
         {showMenu ? <CloseIcon size={64} /> : <HamburgerMenuIcon size={64} />}
       </button>
       {showMenu && (

@@ -9,6 +9,7 @@ const sampleEntries: LeaderBoardEntry[] = [
   { username: "carla", wins: 15, losses: 9, draws: 4 },
   { username: "david", wins: 9, losses: 11, draws: 8 },
   { username: "david", wins: 1, losses: 1, draws: 1 },
+  { username: "Really_Long_Username1234567", wins: 20, losses: 1, draws: 1 },
 ];
 
 export type LeaderBoardEntry = {
@@ -96,7 +97,7 @@ export default function LeaderBoard({
       <table className="w-full min-w-lg table-fixed border-collapse text-left">
         <thead className="bg-accent-primary/50">
           <tr>
-            <th className="w-[35%] p-3">
+            <th className="w-[25%] p-1 lg:p-3">
               <button
                 className="font-semibold hover:text-neutral-400"
                 onClick={() => handleSort("username")}
@@ -105,7 +106,7 @@ export default function LeaderBoard({
                 {renderSortLabel("Player", "username")}
               </button>
             </th>
-            <th className="w-[15%] p-3">
+            <th className="w-[18%] p-1 lg:p-3">
               <button
                 className="font-semibold hover:text-neutral-400"
                 onClick={() => handleSort("wins")}
@@ -114,7 +115,7 @@ export default function LeaderBoard({
                 {renderSortLabel("Wins", "wins")}
               </button>
             </th>
-            <th className="w-[15%] p-3">
+            <th className="w-[18%] p-1 lg:p-3">
               <button
                 className="font-semibold hover:text-neutral-400"
                 onClick={() => handleSort("losses")}
@@ -123,7 +124,7 @@ export default function LeaderBoard({
                 {renderSortLabel("Losses", "losses")}
               </button>
             </th>
-            <th className="w-[15%] p-3">
+            <th className="w-[18%] p-1 lg:p-3">
               <button
                 className="font-semibold hover:text-neutral-400"
                 onClick={() => handleSort("draws")}
@@ -132,7 +133,7 @@ export default function LeaderBoard({
                 {renderSortLabel("Draws", "draws")}
               </button>
             </th>
-            <th className="w-[20%] p-3">
+            <th className="w-[21%] p-1 lg:p-3">
               <button
                 className="font-semibold hover:text-neutral-400"
                 onClick={() => handleSort("winRatio")}
@@ -146,11 +147,15 @@ export default function LeaderBoard({
         <tbody>
           {sortedEntries.slice(0, maxEntries).map((entry, index) => (
             <tr className="border-t border-gray-200" key={index}>
-              <td className="p-3">{entry.username}</td>
-              <td className="p-3">{entry.wins}</td>
-              <td className="p-3">{entry.losses}</td>
-              <td className="p-3">{entry.draws}</td>
-              <td className="p-3">{(getWinRatio(entry) * 100).toFixed(1)}%</td>
+              <td className="p-1 lg:p-3 overflow-hidden text-ellipsis">
+                {entry.username}
+              </td>
+              <td className="p-1 lg:p-3">{entry.wins}</td>
+              <td className="p-1 lg:p-3">{entry.losses}</td>
+              <td className="p-1 lg:p-3">{entry.draws}</td>
+              <td className="p-1 lg:p-3">
+                {(getWinRatio(entry) * 100).toFixed(1)}%
+              </td>
             </tr>
           ))}
         </tbody>

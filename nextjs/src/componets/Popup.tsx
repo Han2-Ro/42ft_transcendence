@@ -8,7 +8,7 @@ type Props = {
   children: React.ReactNode;
 };
 
-export const Popup = ({ onClose, className='', children }: Props) => {
+export const Popup = ({ onClose, className = "", children }: Props) => {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {

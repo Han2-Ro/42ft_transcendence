@@ -49,7 +49,7 @@ export default function TwoPlayerBoard({
   return (
     <div className="flex justify-center items-center h-full">
       <div
-        className={`w-[min(100vw,50vh)] h-[min(100vw,50vh)] md:w-[min(50vw,70vh)] md:h-[min(50vw,70vh)] grid grid-rows-8 grid-cols-8 ${playerColor === 'black' ? "rotate-180" : ""}`}
+        className={`w-[min(100vw,50vh)] h-[min(100vw,50vh)] md:w-[min(50vw,70vh)] md:h-[min(50vw,70vh)] grid grid-rows-8 grid-cols-8 ${playerColor === "black" ? "rotate-180" : ""}`}
       >
         {boardState.board.map((sq: PieceOrNull, index: number) => (
           <button

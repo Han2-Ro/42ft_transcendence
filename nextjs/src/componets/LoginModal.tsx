@@ -69,91 +69,91 @@ export const AuthModal = ({ onClose }: Props) => {
   return (
     <Popup className="p-8" onClose={onClose}>
       <h1 className="mb-8 text-3xl">
-          {mode === "login" ? "Login" : "Register"}
-        </h1>
-        <form onSubmit={handleSubmit} className="flex flex-col">
-          {error && (
-            <div className="mb-4 p-2 bg-red-500/20 text-red-500 rounded">
-              {error}
-            </div>
-          )}
-          <label htmlFor="email" className=" font-bold">
-            Email
-          </label>
-          <input
-            id="email"
-            name="email"
-            type="email"
-            className="px-2 py-1 border-2 rounded-sm border-gray-500"
-            required
-            disabled={loading}
-          />
-          {mode === "register" && (
-            <>
-              <label htmlFor="username" className=" mt-4 font-bold">
-                Username
-              </label>
-              <input
-                id="username"
-                name="username"
-                type="text"
-                className="px-2 py-1 border-2 rounded-sm border-gray-500"
-                required
-                disabled={loading}
-              />
-            </>
-          )}
-          <label htmlFor="password" className=" mt-4 font-bold">
-            Password
-          </label>
-          <input
-            id="password"
-            name="password"
-            type="password"
-            className="px-2 py-1 border border-gray-500 rounded-sm"
-            required
-            disabled={loading}
-          />
-          {mode === "register" && (
-            <>
-              <label htmlFor="confirmPassword" className=" mt-4 font-bold">
-                Confirm Password
-              </label>
-              <input
-                id="confirmPassword"
-                name="confirmPassword"
-                type="password"
-                className="px-2 py-1 border border-gray-500 rounded-sm"
-                required
-                disabled={loading}
-              />
-            </>
-          )}
-          <button
-            type="submit"
-            disabled={loading}
-            className="mt-8 p-1 bg-accent-primary rounded-lg"
-          >
-            {loading
-              ? mode === "login"
-                ? "Logging in..."
-                : "Registering..."
-              : "Submit"}
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              setMode(mode === "login" ? "register" : "login");
-              setError("");
-            }}
-            disabled={loading}
-            className="mt-4 text-sm text-gray-400 hover:text-gray-200"
-          >
-            {mode === "login"
-              ? "Don't have an account yet? Register here!"
-              : "Already have an account? Login here!"}
-          </button>
-        </form>
+        {mode === "login" ? "Login" : "Register"}
+      </h1>
+      <form onSubmit={handleSubmit} className="flex flex-col">
+        {error && (
+          <div className="mb-4 p-2 bg-red-500/20 text-red-500 rounded">
+            {error}
+          </div>
+        )}
+        <label htmlFor="email" className=" font-bold">
+          Email
+        </label>
+        <input
+          id="email"
+          name="email"
+          type="email"
+          className="px-2 py-1 border-2 rounded-sm border-gray-500"
+          required
+          disabled={loading}
+        />
+        {mode === "register" && (
+          <>
+            <label htmlFor="username" className=" mt-4 font-bold">
+              Username
+            </label>
+            <input
+              id="username"
+              name="username"
+              type="text"
+              className="px-2 py-1 border-2 rounded-sm border-gray-500"
+              required
+              disabled={loading}
+            />
+          </>
+        )}
+        <label htmlFor="password" className=" mt-4 font-bold">
+          Password
+        </label>
+        <input
+          id="password"
+          name="password"
+          type="password"
+          className="px-2 py-1 border border-gray-500 rounded-sm"
+          required
+          disabled={loading}
+        />
+        {mode === "register" && (
+          <>
+            <label htmlFor="confirmPassword" className=" mt-4 font-bold">
+              Confirm Password
+            </label>
+            <input
+              id="confirmPassword"
+              name="confirmPassword"
+              type="password"
+              className="px-2 py-1 border border-gray-500 rounded-sm"
+              required
+              disabled={loading}
+            />
+          </>
+        )}
+        <button
+          type="submit"
+          disabled={loading}
+          className="mt-8 p-1 bg-accent-primary rounded-lg"
+        >
+          {loading
+            ? mode === "login"
+              ? "Logging in..."
+              : "Registering..."
+            : "Submit"}
+        </button>
+        <button
+          type="button"
+          onClick={() => {
+            setMode(mode === "login" ? "register" : "login");
+            setError("");
+          }}
+          disabled={loading}
+          className="mt-4 text-sm text-gray-400 hover:text-gray-200"
+        >
+          {mode === "login"
+            ? "Don't have an account yet? Register here!"
+            : "Already have an account? Login here!"}
+        </button>
+      </form>
     </Popup>
   );
 };

@@ -36,7 +36,10 @@ export default function MainMenu({ onClose }: Props) {
         {actions.map((action) => (
           <MenuButton
             key={action.label}
-            onClick={() => { action.onClick(); onClose?.(); }}
+            onClick={() => {
+              action.onClick();
+              onClose?.();
+            }}
             label={action.label}
             icon={action.icon}
           />
@@ -49,7 +52,12 @@ export default function MainMenu({ onClose }: Props) {
     <>
       {showLogin && <AuthModal onClose={toggleLogin} />}
       <nav className="h-full w-full py-6 flex flex-col justify-center gap-4 items-start">
-        <MenuButton href="/" label="Home" icon={<HomeIcon size={20} />} onClick={onClose} />
+        <MenuButton
+          href="/"
+          label="Home"
+          icon={<HomeIcon size={20} />}
+          onClick={onClose}
+        />
         <MenuButton
           href="/game"
           icon={<PlayIcon size={20} className=" text-accent-primary" />}
@@ -58,13 +66,19 @@ export default function MainMenu({ onClose }: Props) {
         />
         {user ? (
           <MenuButton
-            onClick={() => { onLogoutClicked(); onClose?.(); }}
+            onClick={() => {
+              onLogoutClicked();
+              onClose?.();
+            }}
             icon={<LogoutIcon size={20} />}
             label="Log Out"
           />
         ) : (
           <MenuButton
-            onClick={() => { toggleLogin(); onClose?.(); }}
+            onClick={() => {
+              toggleLogin();
+              onClose?.();
+            }}
             icon={<LoginIcon size={20} />}
             label="Log In"
           />
@@ -72,7 +86,10 @@ export default function MainMenu({ onClose }: Props) {
         <MenuButton
           label="Settings"
           icon={<GearIcon size={20} />}
-          onClick={() => { console.error("TODO: not implented yet"); onClose?.(); }}
+          onClick={() => {
+            console.error("TODO: not implented yet");
+            onClose?.();
+          }}
         />
       </nav>
     </>
