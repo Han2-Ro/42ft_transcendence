@@ -8,15 +8,14 @@ type BaseProps = {
   icon?: ReactNode;
   label: string;
   className?: string;
+  onClick?: () => void;
 };
 
 type LinkProps = BaseProps & {
   href: string;
-  onClick?: never;
 };
 
 type ButtonProps = BaseProps & {
-  onClick: () => void;
   href?: never;
 };
 
@@ -34,7 +33,7 @@ export function MenuButton({
 
   if ("href" in props && props.href) {
     return (
-      <Link href={props.href} className={baseClassName}>
+      <Link href={props.href} className={baseClassName} onClick={props.onClick}>
         {icon}
         <p className="pl-2 text-xl flex-auto text-start">{label}</p>
       </Link>

@@ -21,7 +21,7 @@ export default function NavigationBar() {
       </button>
       {showMenu && (
         <Popup onClose={() => setShowMenu(false)}>
-          <MainMenu />
+          <MainMenu onClose={() => setShowMenu(false)} />
         </Popup>
       )}
       <div className="hidden lg:block h-full w-full">
