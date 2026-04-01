@@ -48,8 +48,8 @@ export default function FourPlayerBoard({
   useEffect(() => {}, [movesFromSqareInt]);
 
   return (
-    <div className="flex justify-center items-center">
-      <div className="grid grid-cols-[repeat(14,50px)]">
+    <div className="flex justify-center items-center h-full">
+      <div className="w-[min(100vw,50vh)] h-[min(100vw,50vh)] md:w-[min(50vw,70vh)] md:h-[min(50vw,70vh)] grid grid-rows-14 grid-cols-14">
         {Array.from({ length: 196 }).map((_, visualIndex) => {
           const row = Math.floor(visualIndex / 14);
           const col = visualIndex % 14;
@@ -78,7 +78,7 @@ export default function FourPlayerBoard({
             <button
               key={index}
               onClick={() => handleSquareClick(index)}
-              className="w-[50px] h-[50px] relative"
+              className="relative"
               style={{
                 background:
                   (row + col) % 2 === 1
