@@ -19,7 +19,7 @@ export default function Game({
     <div className="text-center flex flex-col justify-center">
       <h2>Game in progress</h2>
       {gameType === "chess" || gameType === "timedChess" ? (
-        <TwoPlayerBoard
+        <FourPlayerBoard
           boardState={boardState}
           onPlayerMove={onPlayerMove}
           playerColor={color}

@@ -48,14 +48,8 @@ export default function FourPlayerBoard({
   useEffect(() => {}, [movesFromSqareInt]);
 
   return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(14, 50px)" }}>
+    <div className="flex justify-center items-center">
+      <div className="grid grid-cols-[repeat(14,50px)]">
         {Array.from({ length: 196 }).map((_, visualIndex) => {
           const row = Math.floor(visualIndex / 14);
           const col = visualIndex % 14;
@@ -84,9 +78,8 @@ export default function FourPlayerBoard({
             <button
               key={index}
               onClick={() => handleSquareClick(index)}
+              className="w-[50px] h-[50px] relative"
               style={{
-                width: 50,
-                height: 50,
                 background:
                   (row + col) % 2 === 1
                     ? selectedSquare === index
@@ -95,7 +88,6 @@ export default function FourPlayerBoard({
                     : selectedSquare === index
                       ? "#aaaaaaff"
                       : "#eee",
-                position: "relative",
               }}
             >
               {sq && (
@@ -104,7 +96,7 @@ export default function FourPlayerBoard({
                   height="45"
                   src={`/chess/${sq.color}/${sq.type}.svg`}
                   alt={sq.color + sq.type}
-                  style={{ width: "100%", height: "100%" }}
+                  className="w-full h-full"
                 />
               )}
               {movesFromSqareInt &&
@@ -115,13 +107,7 @@ export default function FourPlayerBoard({
                     height="45"
                     src={`/chess/circle.svg`}
                     alt={"Position that the selected Piece can move to."}
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                      position: "absolute",
-                      top: 0,
-                      left: 0,
-                    }}
+                    className="w-full h-full absolute top-0 left-0"
                   />
                 )}
             </button>
