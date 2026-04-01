@@ -3,6 +3,20 @@ import { useEffect, useState } from "react";
 import { fourPlayer, Move, BoardState, PlayerColor } from "shared";
 import Image from "next/image";
 
+const boardRotation: Record<string, string> = {
+  red: "",
+  yellow: "rotate-180",
+  blue: "rotate-90",
+  green: "-rotate-90",
+};
+
+const pieceRotation: Record<string, string> = {
+  red: "",
+  yellow: "rotate-180",
+  blue: "-rotate-90",
+  green: "rotate-90",
+};
+
 export default function FourPlayerBoard({
   boardState,
   onPlayerMove,
@@ -49,7 +63,7 @@ export default function FourPlayerBoard({
 
   return (
     <div className="flex justify-center items-center h-full">
-      <div className="w-[min(100vw,50vh)] h-[min(100vw,50vh)] md:w-[min(50vw,70vh)] md:h-[min(50vw,70vh)] grid grid-rows-14 grid-cols-14">
+      <div className={`w-[min(100vw,50vh)] h-[min(100vw,50vh)] md:w-[min(50vw,70vh)] md:h-[min(50vw,70vh)] grid grid-rows-14 grid-cols-14 ${boardRotation[playerColor]}`}>
         {Array.from({ length: 196 }).map((_, visualIndex) => {
           const row = Math.floor(visualIndex / 14);
           const col = visualIndex % 14;
@@ -96,7 +110,7 @@ export default function FourPlayerBoard({
                   height="45"
                   src={`/chess/${sq.color}/${sq.type}.svg`}
                   alt={sq.color + sq.type}
-                  className="w-full h-full"
+                  className={`w-full h-full ${pieceRotation[playerColor]}`}
                 />
               )}
               {movesFromSqareInt &&

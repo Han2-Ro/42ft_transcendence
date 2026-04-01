@@ -83,7 +83,7 @@ export default function Page() {
       {
         label: "Resign",
         onClick: emitPlayerResign,
-        icon: <DeadKing className=" text-red-600" />,
+        icon: <DeadKing size={20} className=" text-red-600" />,
       },
       {
         label: "🤝 Offer Draw",

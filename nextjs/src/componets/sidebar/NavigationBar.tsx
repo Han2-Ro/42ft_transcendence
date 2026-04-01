@@ -28,7 +28,7 @@ export default function NavigationBar() {
         }
       >
         {hasCustomActions ? (
-          <nav className=" bg-black/70 lg:bg-inherit h-full w-full p-6 flex flex-col justify-center gap-4 items-center">
+          <nav className=" bg-black/70 lg:bg-inherit h-full w-full py-6 flex flex-col justify-center gap-4 items-center">
             {actions.map((action) => (
               <MenuButton
                 key={action.label}
