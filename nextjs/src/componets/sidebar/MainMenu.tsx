@@ -27,7 +27,7 @@ export default function MainMenu() {
   return (
     <>
       {showLogin && <AuthModal onClose={toggleLogin} />}
-      <nav className=" bg-black/70 lg:bg-inherit h-full w-full py-6 flex flex-col justify-center gap-4 items-start">
+      <nav className="h-full w-full py-6 flex flex-col justify-center gap-4 items-start">
         <MenuButton href="/" label="Home" icon={<HomeIcon size={20} />} />
         <MenuButton
           href="/game"

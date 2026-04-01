@@ -7,6 +7,7 @@ import { useState } from "react";
 import { useAuthConetxt } from "../AuthProvider";
 import { useSidebarActions } from "./SidebarActionsProvider";
 import { MenuButton } from "../MenuButton";
+import { Popup } from "../Popup";
 
 export default function NavigationBar() {
   const [showMenu, setShowMenu] = useState(false);
@@ -16,19 +17,32 @@ export default function NavigationBar() {
   return (
     <div className=" lg:w-40 bg-background-secondary flex flex-row lg:flex-col justify-between items-center">
       <button
-        className=" z-10 lg:hidden"
+        className="lg:hidden"
         onClick={() => setShowMenu(!showMenu)}
       >
         {showMenu ? <CloseIcon size={64} /> : <HamburgerMenuIcon size={64} />}
       </button>
-      <div
-        className={
-          (showMenu ? "" : "hidden") +
-          " lg:block h-full w-full absolute top-0 bottom-0 lg:static"
-        }
-      >
+      {showMenu && (
+        <Popup onClose={() => setShowMenu(false)}>
+          <nav className="flex flex-col gap-4 items-start">
+            {hasCustomActions ? (
+              actions.map((action) => (
+                <MenuButton
+                  key={action.label}
+                  onClick={action.onClick}
+                  label={action.label}
+                  icon={action.icon}
+                />
+              ))
+            ) : (
+              <MainMenu />
+            )}
+          </nav>
+        </Popup>
+      )}
+      <div className="hidden lg:block h-full w-full">
         {hasCustomActions ? (
-          <nav className=" bg-black/70 lg:bg-inherit h-full w-full py-6 flex flex-col justify-center gap-4 items-center">
+          <nav className="h-full w-full py-6 flex flex-col justify-center gap-4 items-center">
             {actions.map((action) => (
               <MenuButton
                 key={action.label}

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuthConetxt } from "./AuthProvider";
 import { login, register } from "@/lib/auth/actions";
+import { Popup } from "./Popup";
 
 type Props = {
   onClose: () => void;
@@ -66,12 +67,8 @@ export const AuthModal = ({ onClose }: Props) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50" onClick={onClose}>
-      <div
-        className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-8 bg-background-secondary rounded-2xl"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <h1 className=" mb-8 text-3xl">
+    <Popup onClose={onClose}>
+      <h1 className="mb-8 text-3xl">
           {mode === "login" ? "Login" : "Register"}
         </h1>
         <form onSubmit={handleSubmit} className="flex flex-col">
@@ -157,7 +154,6 @@ export const AuthModal = ({ onClose }: Props) => {
               : "Already have an account? Login here!"}
           </button>
         </form>
-      </div>
-    </div>
+    </Popup>
   );
 };
