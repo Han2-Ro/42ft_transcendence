@@ -6,15 +6,15 @@ import Image from "next/image";
 const boardRotation: Record<string, string> = {
   red: "",
   yellow: "rotate-180",
-  blue: "rotate-90",
-  green: "-rotate-90",
+  blue: "-rotate-90",
+  green: "rotate-90",
 };
 
 const pieceRotation: Record<string, string> = {
   red: "",
   yellow: "rotate-180",
-  blue: "-rotate-90",
-  green: "rotate-90",
+  blue: "rotate-90",
+  green: "-rotate-90",
 };
 
 export default function FourPlayerBoard({
