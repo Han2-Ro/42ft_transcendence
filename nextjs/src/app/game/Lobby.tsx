@@ -1,6 +1,6 @@
 import { Games } from "shared";
 
-import Button from "./Button";
+import Button from "../../componets/Button";
 
 export default function Lobby({
   onFindMatchPressed,
@@ -10,7 +10,7 @@ export default function Lobby({
   isSearching: boolean;
 }) {
   return (
-    <div className="mt-12 flex flex-col items-center gap-5">
+    <div className="flex flex-col items-center gap-5">
       <h1 className="text-4xl font-bold text-slate-800">Chess Lobby</h1>
 
       <Button

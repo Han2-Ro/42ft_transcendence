@@ -1,4 +1,4 @@
-import Button from "./Button";
+import Button from "../../componets/Button";
 
 export default function EndScreen({
   result,

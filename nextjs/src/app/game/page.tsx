@@ -2,14 +2,14 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { io, Socket } from "socket.io-client";
-import Lobby from "../../componets/game/lobby";
-import Game from "../../componets/game/game";
-import EndScreen from "../../componets/game/endScreen";
+import Lobby from "./Lobby";
+import Game from "./Game";
+import EndScreen from "./EndScreen";
 
 import { CToSEvents, startingBoardState, SToCEvents } from "shared";
 import { BoardState, PlayerColor, Move, Games } from "shared";
 import { Result as GameResult } from "shared";
-import { useSidebarActions } from "@/componets/SidebarActionsProvider";
+import { useSidebarActions } from "@/componets/sidebar/SidebarActionsProvider";
 import { DeadKing } from "@/componets/icons/DeadKing";
 
 // Connect to the exposed backend port
@@ -83,7 +83,7 @@ export default function Page() {
       {
         label: "Resign",
         onClick: emitPlayerResign,
-        icon: <DeadKing className=" text-red-600" />,
+        icon: <DeadKing size={20} className=" text-red-600" />,
       },
       {
         label: "🤝 Offer Draw",
@@ -97,8 +97,8 @@ export default function Page() {
   }, [boardState, clearActions, emitPlayerResign, gameId, result, setActions]);
 
   return (
-    <div className="flex min-h-screen items-center gap-12 pl-20">
-      <main className="flex-1">
+    <div className="flex flex-col md:flex-row items-center md:justify-around lg:px-10 min-h-full">
+      <main className="h-full flex items-center justify-center">
         <Game
           boardState={boardState}
           gameType={gameType ?? "chess"}
@@ -106,7 +106,7 @@ export default function Page() {
           onPlayerMove={gameId && !result ? emitPlayerMove : () => {}}
         />
       </main>
-      <aside className="flex-1">
+      <aside className="">
         {result && (
           <EndScreen
             result={result}
