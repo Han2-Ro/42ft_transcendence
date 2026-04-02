@@ -2,6 +2,12 @@ import "server-only";
 
 import { cookies } from "next/headers";
 import { cache } from "react";
+import { jwtVerify } from "jose";
+
+if (!process.env.JWT_SECRET) {
+  throw new Error("JWT_SECRET environment variable is not set");
+}
+const JWT_SECRET = new TextEncoder().encode(process.env.JWT_SECRET);
 
 export type User = {
   userId: number;
@@ -15,11 +21,18 @@ export type User = {
  * @returns `userId` and `username` or `undefined` if there's no valid and active session token
  */
 export const getSession = cache(async (): Promise<User | null> => {
-  const cookie = (await cookies()).get("token")?.value;
-  console.log("token:", cookie);
-  if (cookie) {
-    return { userId: 42, username: "john_42" };
-  } else {
+  const token = (await cookies()).get("token")?.value;
+  if (!token) {
+    return null;
+  }
+
+  try {
+    const { payload } = await jwtVerify(token, JWT_SECRET);
+    return {
+      userId: payload.userId as number,
+      username: payload.username as string,
+    };
+  } catch {
     return null;
   }
 });
