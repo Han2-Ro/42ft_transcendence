@@ -8,7 +8,7 @@ import { verifyInternalSecret } from "@/lib/internal-secret-check";
 
 export async function PATCH(
   req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   const unauthorized = verifyInternalSecret(req);
   if (unauthorized) return unauthorized;
@@ -26,8 +26,11 @@ export async function PATCH(
 
   if (status === "FINISHED" && !winner) {
     return NextResponse.json(
-      { error: "winner is required when status is FINISHED ('white', 'black', or 'draw')" },
-      { status: 400 }
+      {
+        error:
+          "winner is required when status is FINISHED ('white', 'black', or 'draw')",
+      },
+      { status: 400 },
     );
   }
 
@@ -40,7 +43,10 @@ export async function PATCH(
   }
 
   if (game.status === "FINISHED") {
-    return NextResponse.json({ error: "Game is already finished" }, { status: 409 });
+    return NextResponse.json(
+      { error: "Game is already finished" },
+      { status: 409 },
+    );
   }
 
   const updatedGame = await prisma.game.update({

@@ -12,11 +12,17 @@ export async function POST(req: NextRequest) {
   const { whitePlayerId, blackPlayerId } = await req.json();
 
   if (!whitePlayerId) {
-    return NextResponse.json({ error: "whitePlayerId is required" }, { status: 400 });
+    return NextResponse.json(
+      { error: "whitePlayerId is required" },
+      { status: 400 },
+    );
   }
 
   if (blackPlayerId && whitePlayerId === blackPlayerId) {
-    return NextResponse.json({ error: "whitePlayerId and blackPlayerId must be different" }, { status: 400 });
+    return NextResponse.json(
+      { error: "whitePlayerId and blackPlayerId must be different" },
+      { status: 400 },
+    );
   }
 
   try {
@@ -34,7 +40,10 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(game, { status: 201 });
   } catch (e) {
     if ((e as any)?.code === "P2003") {
-      return NextResponse.json({ error: "One or more player IDs do not exist" }, { status: 404 });
+      return NextResponse.json(
+        { error: "One or more player IDs do not exist" },
+        { status: 404 },
+      );
     }
     throw e;
   }
