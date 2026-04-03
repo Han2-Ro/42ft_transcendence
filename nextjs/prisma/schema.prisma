@@ -31,7 +31,6 @@ model User {
   // Relations to Games
   gamesAsWhite     Game[]   @relation("GamesAsWhite")
   gamesAsBlack     Game[]   @relation("GamesAsBlack")
-  moves            Move[]
 }
 
 model Game {
@@ -50,23 +49,6 @@ model Game {
   // Relations to the Users
   whitePlayer   User       @relation("GamesAsWhite", fields: [whitePlayerId], references: [id])
   blackPlayer   User?      @relation("GamesAsBlack", fields: [blackPlayerId], references: [id])
-  moves         Move[]
-}
-
-model Move {
-  id           Int      @id @default(autoincrement())
-  
-  gameId       Int
-  playerId     Int
-  
-  moveNotation String   // example "e2e4"
-  moveNumber   Int      // move number 1, 2, 3...
-  
-  createdAt    DateTime @default(now())
-  
-  // Relations to the Game and User
-  game         Game     @relation(fields: [gameId], references: [id], onDelete: Cascade)
-  player       User     @relation(fields: [playerId], references: [id])
 }
 
 enum GameStatus {
