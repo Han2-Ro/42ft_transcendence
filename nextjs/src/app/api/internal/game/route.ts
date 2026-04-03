@@ -38,8 +38,9 @@ export async function POST(req: NextRequest) {
       },
     });
     return NextResponse.json(game, { status: 201 });
-  } catch (e) {
-    if ((e as any)?.code === "P2003") {
+  } catch (e: unknown) {
+    const error = e as { code?: string };
+    if (error?.code === "P2003") {
       return NextResponse.json(
         { error: "One or more player IDs do not exist" },
         { status: 404 },
