@@ -18,7 +18,6 @@ const socket: Socket<SToCEvents, CToSEvents> = io(
 );
 socket.on("connection", () => {
   const uid = crypto.randomUUID();
-  console.log("hi")
   socket.emit("uid", uid); // Todo: send whatever data is requiered for server to verify user in database
 
   socket.on("dropCheck", () => {
