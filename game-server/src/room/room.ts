@@ -111,7 +111,11 @@ export class Room {
       });
     }
     this.checkTimeout(time_passed);
-    if (this.checkGameOver() == true) return true;
+    if (this.checkGameOver() == true) 
+	{
+		//Insert call to the database here
+		return true;
+	}
     return false;
   }
 

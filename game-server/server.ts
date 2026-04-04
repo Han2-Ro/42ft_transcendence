@@ -90,7 +90,7 @@ io.on("connection", (socket) => {
   socket.on("uid", (uid) => {
     if (clientUid !== null) return;
     console.log("Client sent login verification:", socket.id);
-    //Todo: validate login (with uid that was sent)
+    //Todo: validate login (with uid that was sent) #Insert validation here
     console.log("Client verified.");
     setDrop();
     clientUid = uid;
