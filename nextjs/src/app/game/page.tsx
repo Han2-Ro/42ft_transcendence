@@ -14,15 +14,6 @@ import { DeadKing } from "@/componets/icons/DeadKing";
 
 // Connect to the exposed backend port
 const socket: Socket<SToCEvents, CToSEvents> = io("http://localhost:4000");
-socket.on("connection", () => {
-  const uid = crypto.randomUUID();
-  socket.emit("uid", uid); // Todo: send whatever data is requiered for server to verify user in database
-
-  socket.on("dropCheck", () => {
-    // responds to the checker
-    socket.emit("dropCheck");
-  });
-});
 
 export default function Page() {
   const [gameId, setGameId] = useState<string | null>(null);
