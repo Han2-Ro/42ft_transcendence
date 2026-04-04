@@ -2,26 +2,29 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { io, Socket } from "socket.io-client";
-import Lobby from "../../componets/game/lobby";
-import Game from "../../componets/game/game";
-import EndScreen from "../../componets/game/endScreen";
+import Lobby from "./Lobby";
+import Game from "./Game";
+import EndScreen from "./EndScreen";
 
-import { CToSEvents, SToCEvents } from "shared";
+import { CToSEvents, startingBoardState, SToCEvents } from "shared";
 import { BoardState, PlayerColor, Move, Games } from "shared";
 import { Result as GameResult } from "shared";
-import { useSidebarActions } from "@/componets/SidebarActionsProvider";
+import { useSidebarActions } from "@/componets/sidebar/SidebarActionsProvider";
 import { DeadKing } from "@/componets/icons/DeadKing";
 
 // Connect to the exposed backend port
-const socket: Socket<SToCEvents, CToSEvents> = io("http://localhost:4000");
+const socket: Socket<SToCEvents, CToSEvents> = io(
+  process.env.NEXT_PUBLIC_GAMESERVER_URL || "http://localhost:4000",
+);
 
 export default function Page() {
   const [gameId, setGameId] = useState<string | null>(null);
   const [gameType, setGameType] = useState<Games | null>(null);
-  const [color, setColor] = useState<PlayerColor | null>(null);
-  const [boardState, setBoardState] = useState<BoardState | null>(null);
+  const [color, setColor] = useState<PlayerColor>("white");
+  const [boardState, setBoardState] = useState<BoardState>(startingBoardState);
   const [result, setResult] = useState<GameResult | null>(null);
   const [resultReason, setResultReason] = useState<string | null>(null);
+  const [isSearching, setIsSearching] = useState(false);
   const { setActions, clearActions } = useSidebarActions();
 
   useEffect(() => {
@@ -30,6 +33,7 @@ export default function Page() {
       setGameType(data.type);
       setBoardState(data.boardState);
       setColor(data.color);
+      setIsSearching(false);
     });
 
     socket.on("moveMade", (data) => {
@@ -41,9 +45,7 @@ export default function Page() {
       setResult(data.result);
       setResultReason(data.reason);
       setGameId(null);
-      setGameType(null);
-      setBoardState(null);
-      setColor(null);
+      setIsSearching(false);
     });
 
     return () => {
@@ -56,6 +58,9 @@ export default function Page() {
   const closeResultScreen = () => {
     setResult(null);
     setResultReason(null);
+    setGameType(null);
+    setBoardState(startingBoardState);
+    setColor("white");
   };
 
   const emitPlayerMove = (move: Move) => {
@@ -78,7 +83,7 @@ export default function Page() {
       {
         label: "Resign",
         onClick: emitPlayerResign,
-        icon: <DeadKing className=" text-red-600" />,
+        icon: <DeadKing size={20} className=" text-red-600" />,
       },
       {
         label: "🤝 Offer Draw",
@@ -91,20 +96,35 @@ export default function Page() {
     };
   }, [boardState, clearActions, emitPlayerResign, gameId, result, setActions]);
 
-  return boardState ? (
-    <Game
-      boardState={boardState}
-      gameType={gameType!}
-      color={color!}
-      onPlayerMove={emitPlayerMove}
-    />
-  ) : result ? (
-    <EndScreen
-      result={result}
-      reason={resultReason || ""}
-      onClose={closeResultScreen}
-    />
-  ) : (
-    <Lobby onFindMatchPressed={(type) => socket.emit("findMatch", type)} />
+  return (
+    <div className="flex flex-col md:flex-row items-center md:justify-around lg:px-10 min-h-full">
+      <main className="h-full flex items-center justify-center">
+        <Game
+          boardState={boardState}
+          gameType={gameType ?? "chess"}
+          color={color ?? "white"}
+          onPlayerMove={gameId && !result ? emitPlayerMove : () => {}}
+        />
+      </main>
+      <aside className="">
+        {result && (
+          <EndScreen
+            result={result}
+            reason={resultReason || ""}
+            onClose={closeResultScreen}
+          />
+        )}
+
+        {!gameId && !result && (
+          <Lobby
+            onFindMatchPressed={(type) => {
+              setIsSearching(true);
+              socket.emit("findMatch", type);
+            }}
+            isSearching={isSearching}
+          />
+        )}
+      </aside>
+    </div>
   );
 }

@@ -1,19 +1,21 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { ReactNode } from "react";
 
 type BaseProps = {
   icon?: ReactNode;
   label: string;
   className?: string;
+  onClick?: () => void;
 };
 
 type LinkProps = BaseProps & {
   href: string;
-  onClick?: never;
 };
 
 type ButtonProps = BaseProps & {
-  onClick: () => void;
   href?: never;
 };
 
@@ -25,13 +27,15 @@ export function MenuButton({
   className,
   ...props
 }: MenuButtonProps) {
-  const baseClassName = `w-full p-4 bg-background-primary rounded-2xl flex items-center gap-2 transition-colors hover:bg-background-primary/80 ${className || ""}`;
+  const pathname = usePathname();
+  const isActive = "href" in props && props.href === pathname;
+  const baseClassName = `w-full px-7 p-4 flex items-center transition-colors hover:bg-background-primary/80 ${isActive ? "bg-background-primary/80" : ""} ${className || ""}`;
 
   if ("href" in props && props.href) {
     return (
-      <Link href={props.href} className={baseClassName}>
+      <Link href={props.href} className={baseClassName} onClick={props.onClick}>
         {icon}
-        <p className="text-4xl flex-auto text-center">{label}</p>
+        <p className="pl-2 text-xl flex-auto text-start">{label}</p>
       </Link>
     );
   }
@@ -39,7 +43,7 @@ export function MenuButton({
   return (
     <button onClick={props.onClick} className={baseClassName}>
       {icon}
-      <p className="text-4xl flex-auto text-center">{label}</p>
+      <p className="pl-2 text-xl flex-auto text-start">{label}</p>
     </button>
   );
 }

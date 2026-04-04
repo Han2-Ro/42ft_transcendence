@@ -5,7 +5,7 @@
   "description": "ft_transcendence monorepo",
   "scripts": {
     "dev": "pnpm --parallel --stream run dev",
-    "dev:db": "sudo docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d db && POSTGRES_ADDRESS=localhost pnpm --parallel --stream run dev",
+    "dev:db": "sudo docker compose up -d db && POSTGRES_ADDRESS=localhost pnpm --parallel --stream run dev",
     "start": "pnpm --parallel --stream run start",
     "build": "pnpm --recursive run build",
     "up": "sudo docker compose up --build",

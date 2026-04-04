@@ -1,4 +1,4 @@
-import { Board, BoardState } from "shared";
+import { Board, BoardState } from "../../gameTypes";
 
 /**
  * The standard chess starting board configuration.
