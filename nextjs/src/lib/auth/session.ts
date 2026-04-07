@@ -17,7 +17,6 @@ export type User = {
 /**
  * Gets user data from current session (from token cookie)
  *
- * TODO: implement actual logic (currently just placeholder return value)
  * @returns `userId` and `username` or `undefined` if there's no valid and active session token
  */
 export const getSession = cache(async (): Promise<User | null> => {
