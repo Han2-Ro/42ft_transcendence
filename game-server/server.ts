@@ -51,7 +51,7 @@ io.use((socket, next) => {
   } */
   const uid = crypto.randomUUID();
   socket.data.user = uid;
-  next(); 
+  next();
 });
 
 export type Player = {
@@ -81,7 +81,7 @@ const disconnectPlayer = (uid: string) => {
 };
 
 const disconnect = (socket: GameSocket) => {
-	console.log("disconnect called on socket: ", socket.id);
+  console.log("disconnect called on socket: ", socket.id);
   const player = players.get(socket.data.user);
   if (player === undefined) return;
   const index = player.sockets.indexOf(socket, 0);
