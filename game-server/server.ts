@@ -191,7 +191,7 @@ function nowSeconds(): number {
 function checkRunningGames(time_passed: number) {
   rooms.forEach((value: Room, key: string) => {
     if (value.updateAndCheckOver(time_passed) === true) {
-      value.Players.forEach((value: Player) => {
+      value.players.forEach((value: Player) => {
         if (value !== null) {
           value.status = "lobby";
           value.game_id = null;
