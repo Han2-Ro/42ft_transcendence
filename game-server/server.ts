@@ -1,6 +1,7 @@
 import { Server, Socket } from "socket.io";
 import { Room } from "./src/room/room.js";
 import { CToSEvents, SToCEvents, Games } from "shared";
+//import jwt from "jsonwebtoken";
 
 export type GameSocket = Socket<CToSEvents, SToCEvents>;
 let running = false;
@@ -21,6 +22,36 @@ const io = new Server<CToSEvents, SToCEvents>(4000, {
     },
     credentials: true,
   },
+});
+
+io.use((socket, next) => {
+  const token = socket.handshake.auth?.token;
+
+  if (!token) {
+    console.log("Authentication error: Token required");
+    return next(new Error("Authentication error: Token required"));
+  }
+  const JWT_SECRET = process.env.JWT_SECRET;
+  if (JWT_SECRET === undefined) {
+    console.log(
+      "Authentication error: JWT_SECRET Not provided to SocketServer",
+    );
+    return next(
+      new Error(
+        "Authentication error: JWT_SECRET Not provided to SocketServer",
+      ),
+    );
+  }
+  /*   try {	// once jwt gets send by client: Uncomment this and remove everything below it
+    const decoded = jwt.verify(token, JWT_SECRET);
+    socket.data.user = decoded; // Attach user info to the socket object
+    next();
+  } catch (error) {
+    return next(new Error('Authentication error: Invalid token'));
+  } */
+  const uid = crypto.randomUUID();
+  socket.data.user = uid;
+  next(); 
 });
 
 export type Player = {
@@ -50,16 +81,8 @@ const disconnectPlayer = (uid: string) => {
 };
 
 const disconnect = (socket: GameSocket) => {
-  console.log("disconnect called on socket: ", socket.id);
-  let uid: string = "";
-  players.forEach((value: Player, key: string) => {
-    value.sockets.forEach((value: GameSocket) => {
-      if (socket === value) {
-        uid = key;
-      }
-    });
-  });
-  const player = players.get(uid);
+	console.log("disconnect called on socket: ", socket.id);
+  const player = players.get(socket.data.user);
   if (player === undefined) return;
   const index = player.sockets.indexOf(socket, 0);
   if (index > -1) player.sockets.splice(index, 1);
@@ -67,13 +90,30 @@ const disconnect = (socket: GameSocket) => {
     player.sockets.length == 0
   ) //If there are no sockets connected to the player
   {
-    setTimeout(() => disconnectPlayer(uid), 10000);
+    setTimeout(() => disconnectPlayer(socket.data.user), 10000);
   }
 };
 
 io.on("connection", (socket) => {
   socket.emit("connection");
   console.log("Client connected:", socket.id);
+  const player = players.get(socket.data.user);
+  if (player === undefined) {
+    players.set(socket.data.user, {
+      sockets: [socket],
+      status: "lobby",
+      game_id: null,
+      searching: [],
+    });
+  } else {
+    player.sockets.push(socket);
+    if (player.status === "in_game") {
+      const gameId = player.game_id;
+      if (gameId !== null) {
+        rooms.get(gameId)?.syncState(socket, socket.data.user, gameId);
+      }
+    }
+  }
   //Check for Disconnect
   let drop: NodeJS.Timeout;
   const dropCheck = () => {
@@ -83,43 +123,16 @@ io.on("connection", (socket) => {
   };
 
   const setDrop = () => setTimeout(() => dropCheck(), 10000); // 10 secs to restart (so clients need to do handshake every 10 secs)
+  setDrop();
 
   socket.on("dropCheck", () => {
+    //console.log("dropCheck called on: ", socket.id);
     clearTimeout(drop);
     setDrop();
   });
 
-  let clientUid: string | null = null;
-
-  socket.on("uid", (uid) => {
-    if (clientUid !== null) return;
-    console.log("Client sent login verification:", socket.id);
-    //Todo: validate login (with uid that was sent) #Insert validation here
-    console.log("Client verified.");
-    setDrop();
-    clientUid = uid;
-    const player = players.get(uid);
-    if (player === undefined) {
-      players.set(uid, {
-        sockets: [socket],
-        status: "lobby",
-        game_id: null,
-        searching: [],
-      });
-    } else {
-      player.sockets.push(socket);
-      if (player.status === "in_game") {
-        const gameId = player.game_id;
-        if (gameId !== null) {
-          rooms.get(gameId)?.syncState(socket, uid, gameId);
-        }
-      }
-    }
-  });
-
   socket.on("findMatch", (type) => {
-    if (clientUid === null) return;
-    const player = players.get(clientUid);
+    const player = players.get(socket.data.user);
     if (
       player === undefined ||
       player.status !== "lobby" ||
@@ -165,15 +178,13 @@ io.on("connection", (socket) => {
   });
 
   socket.on("move", ({ gameId, move }) => {
-    if (clientUid === null) return;
     const room = rooms.get(gameId);
-    if (room) room.clientMove(move, clientUid);
+    if (room) room.clientMove(move, socket.data.user);
   });
 
   socket.on("resign", (gameId) => {
-    if (clientUid === null) return;
     const room = rooms.get(gameId);
-    if (room) room.clientResign(clientUid);
+    if (room) room.clientResign(socket.data.user);
   });
 });
 

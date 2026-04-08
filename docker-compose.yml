@@ -29,6 +29,7 @@ services:
     restart: unless-stopped
     environment:
       - SERVICE_URL_NEXTJS=${SERVICE_URL_NEXTJS}
+      - JWT_SECRET=${JWT_SECRET:?}
 
   db:
     image: postgres:16-alpine
