@@ -19,6 +19,7 @@ export class Room {
   gameLogic: Game;
   gameType: Games;
   positionUpdated: boolean = false;
+  order: PlayerColor[];
 
   //time vars
   timed: boolean;
@@ -32,9 +33,10 @@ export class Room {
     if (type == "chess" || type == "timedChess") {
       this.gameLogic = new Chess();
       this.assignedColors = this.generateRandomColors2p();
+      this.order = ["white", "black"];
       if (type == "timedChess") {
         this.timed = true;
-        this.PlayerTimes = [10, 10];
+        this.PlayerTimes = [600, 600];
       } else {
         this.timed = false;
         this.PlayerTimes = [-1, -1];
@@ -42,9 +44,10 @@ export class Room {
     } else {
       this.gameLogic = new FourPlayerChess();
       this.assignedColors = this.generateRandomColors4p();
+      this.order = ["red", "blue", "yellow", "green"];
       if (type == "4pTimedChess") {
         this.timed = true;
-        this.PlayerTimes = [10, 10, 10, 10];
+        this.PlayerTimes = [600, 600, 600, 600];
       } else {
         this.timed = false;
         this.PlayerTimes = [-1, -1, -1, -1];
@@ -57,6 +60,7 @@ export class Room {
           type,
           color: this.assignedColors[index],
           boardState: this.gameLogic.boardState,
+          times: this.getTimes(),
         });
       });
     });
@@ -80,6 +84,7 @@ export class Room {
       type: this.gameType,
       color: this.assignedColors[playerIndex],
       boardState: this.gameLogic.boardState,
+      times: this.getTimes(),
     });
   }
 
@@ -106,7 +111,10 @@ export class Room {
       this.positionUpdated = false;
       this.players.forEach((value: Player) => {
         value.sockets.forEach((value: GameSocket) => {
-          value.emit("moveMade", { boardState: this.gameLogic.boardState });
+          value.emit("moveMade", {
+            boardState: this.gameLogic.boardState,
+            times: this.getTimes(),
+          });
         });
       });
     }
@@ -116,6 +124,17 @@ export class Room {
       return true;
     }
     return false;
+  }
+
+  private getTimes(): number[] {
+    const times: number[] = [];
+    this.order.forEach((value: PlayerColor) => {
+      const colorIndex = this.assignedColors.indexOf(value);
+      if (colorIndex >= 0) {
+        times.push(this.PlayerTimes[colorIndex]);
+      }
+    });
+    return times;
   }
 
   private checkTimeout(time_passed: number) {

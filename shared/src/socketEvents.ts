@@ -26,9 +26,10 @@ export interface SToCEvents {
     color: PlayerColor;
     type: Games;
     boardState: BoardState;
+    times: number[];
   }) => void;
 
-  moveMade: (data: { boardState: BoardState }) => void;
+  moveMade: (data: { boardState: BoardState; times: number[] }) => void;
 
   gameOver: (data: { result: Result; reason: string }) => void;
 

@@ -21,10 +21,12 @@ export default function FourPlayerBoard({
   boardState,
   onPlayerMove,
   playerColor,
+  times,
 }: {
   boardState: BoardState;
   onPlayerMove: (move: Move) => void;
   playerColor: PlayerColor;
+  times: number[];
 }) {
   const [selectedSquare, setSelectedSquare] = useState<number | null>(null);
   const [movesFromSqareInt, setMovesFromSqareInt] = useState<number[] | null>(
@@ -61,8 +63,22 @@ export default function FourPlayerBoard({
 
   useEffect(() => {}, [movesFromSqareInt]);
 
+  const formatTime = (time: number): string => {
+    const minutes = Math.floor(time / 60);
+    const seconds = Math.round(time % 60);
+    return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+  };
+
   return (
-    <div className="flex justify-center items-center h-full">
+    <div className="flex flex-col justify-center items-center h-full gap-4">
+      {times[0] !== -1 && (
+        <div className="text-lg font-semibold">
+          <div>
+            Times: red: {formatTime(times[0])}, blue: {formatTime(times[1])},
+            yellow: {formatTime(times[2])}, green: {formatTime(times[3])}
+          </div>
+        </div>
+      )}
       <div
         className={`w-[min(100vw,50vh)] h-[min(100vw,50vh)] md:w-[min(50vw,70vh)] md:h-[min(50vw,70vh)] grid grid-rows-14 grid-cols-14 ${boardRotation[playerColor]}`}
       >
