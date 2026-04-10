@@ -33,7 +33,9 @@ test("sidebar swaps menu actions during active match", async ({ browser }) => {
 
   await Promise.all(
     [page1, page2].map((page) =>
-      page.getByRole("button", { name: /find chess match (no time limit)/i }).click(),
+      page
+        .getByRole("button", { name: /find chess match (no time limit)/i })
+        .click(),
     ),
   );
 
@@ -73,7 +75,9 @@ test("find match and resign", async ({ browser }) => {
   await Promise.all(
     [page1, page2].map(async (page) => {
       await page.goto("/game");
-      await page.getByRole("button", { name: /find chess match/i }).click();
+      await page
+        .getByRole("button", { name: /find chess match (no time limit)/i })
+        .click();
     }),
   );
 
