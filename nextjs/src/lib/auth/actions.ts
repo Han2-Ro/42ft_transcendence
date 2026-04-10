@@ -49,12 +49,17 @@ export async function login(
     .setExpirationTime("24h")
     .sign(getJwtSecret());
 
-  (await cookies()).set("token", token, {
+  const cookieOptions = {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
+    sameSite: "strict" as const,
     maxAge: 60 * 60 * 24, // 24h
-  });
+    domain: undefined as string | undefined,
+  };
+  if (process.env.COOKIE_DOMAIN) {
+    cookieOptions.domain = process.env.COOKIE_DOMAIN;
+  }
+  (await cookies()).set("token", token, cookieOptions);
 
   return {
     success: true,

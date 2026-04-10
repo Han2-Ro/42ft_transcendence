@@ -19,6 +19,7 @@ services:
       - DATABASE_URL=postgresql://${POSTGRES_USER:?}:${POSTGRES_PASSWORD:?}@${POSTGRES_ADDRESS:-db}:5432/${POSTGRES_DB:?}
       - PORT=${PORT:-3000}
       - JWT_SECRET=${JWT_SECRET:?}
+      - COOKIE_DOMAIN=${COOKIE_DOMAIN}
 
   gamesserver:
     build:
