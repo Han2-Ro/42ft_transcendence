@@ -34,6 +34,7 @@ const turnDotStyles: Record<PlayerColor, string> = {
 const socket: Socket<SToCEvents, CToSEvents> = io(
   process.env.NEXT_PUBLIC_GAMESERVER_URL || "http://localhost:4000",
   {
+    withCredentials: true,
     auth: { token: "your_jwt_token_here" },
   },
 );
