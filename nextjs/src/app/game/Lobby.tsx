@@ -20,7 +20,7 @@ export default function Lobby({
         className="text-lg px-7 py-3 rounded-xl shadow-lg"
         loadingText="Finding game…"
       >
-        Find chess Match (No Time limit)
+        find chess match (no time limit)
       </Button>
       <Button
         onClick={() => onFindMatchPressed("4pChess")}
@@ -29,7 +29,7 @@ export default function Lobby({
         className="text-lg px-7 py-3 rounded-xl shadow-lg"
         loadingText="Finding game…"
       >
-        Find 4 player Chess Match (No Time limit)
+        find 4 player chess match (no time limit)
       </Button>
 
       <Button
@@ -39,7 +39,7 @@ export default function Lobby({
         className="text-lg px-7 py-3 rounded-xl shadow-lg"
         loadingText="Finding game…"
       >
-        Find chess Match (10 minutes)
+        find chess match (10 minutes)
       </Button>
       <Button
         onClick={() => onFindMatchPressed("4pTimedChess")}
@@ -48,7 +48,7 @@ export default function Lobby({
         className="text-lg px-7 py-3 rounded-xl shadow-lg"
         loadingText="Finding game…"
       >
-        Find 4 player Chess Match (10 minutes)
+        find 4 player chess match (10 minutes)
       </Button>
 
       <div className="text-sm text-slate-600">
