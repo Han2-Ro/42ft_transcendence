@@ -23,7 +23,7 @@ export class Room {
 
   //time vars
   timed: boolean;
-  PlayerTimes: number[];
+  playerTimes: number[];
   last_move: number = 0;
 
   constructor(players: Player[], uids: string[], type: Games, gameId: string) {
@@ -36,10 +36,10 @@ export class Room {
       this.order = ["white", "black"];
       if (type == "timedChess") {
         this.timed = true;
-        this.PlayerTimes = [600, 600];
+        this.playerTimes = [600, 600];
       } else {
         this.timed = false;
-        this.PlayerTimes = [-1, -1];
+        this.playerTimes = [-1, -1];
       }
     } else {
       this.gameLogic = new FourPlayerChess();
@@ -47,10 +47,10 @@ export class Room {
       this.order = ["red", "blue", "yellow", "green"];
       if (type == "4pTimedChess") {
         this.timed = true;
-        this.PlayerTimes = [600, 600, 600, 600];
+        this.playerTimes = [600, 600, 600, 600];
       } else {
         this.timed = false;
-        this.PlayerTimes = [-1, -1, -1, -1];
+        this.playerTimes = [-1, -1, -1, -1];
       }
     }
     this.players.forEach((value: Player, index: number) => {
@@ -131,7 +131,7 @@ export class Room {
     this.order.forEach((value: PlayerColor) => {
       const colorIndex = this.assignedColors.indexOf(value);
       if (colorIndex >= 0) {
-        times.push(this.PlayerTimes[colorIndex]);
+        times.push(this.playerTimes[colorIndex]);
       }
     });
     return times;
@@ -142,8 +142,8 @@ export class Room {
       const turnIndex = this.assignedColors.indexOf(
         this.gameLogic.boardState.turn,
       );
-      this.PlayerTimes[turnIndex] = this.PlayerTimes[turnIndex] - time_passed;
-      if (this.PlayerTimes[turnIndex] < 0) {
+      this.playerTimes[turnIndex] = this.playerTimes[turnIndex] - time_passed;
+      if (this.playerTimes[turnIndex] < 0) {
         this.gameLogic.timeout(this.getColor(turnIndex));
       }
     }
