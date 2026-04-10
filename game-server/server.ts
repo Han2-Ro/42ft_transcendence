@@ -27,7 +27,7 @@ const io = new Server<CToSEvents, SToCEvents>(4000, {
 });
 
 io.use((socket, next) => {
-  const cookieString = socket.handshake.headers.cookie;
+  const cookieString = socket.handshake.headers.cookie ?? "";
   const cookies = parseCookie(cookieString);
   const token = cookies.token;
   console.log("token:", token);
@@ -37,9 +37,30 @@ io.use((socket, next) => {
     return next(new Error("Authentication error: Token required"));
   }
 
-  const uid = crypto.randomUUID();
-  socket.data.user = uid;
-  next();
+  const nextjsUrl = process.env.SERVICE_URL_NEXTJS;
+  if (!nextjsUrl) {
+    console.log("Authentication error: SERVICE_URL_NEXTJS not set");
+    return next(new Error("Authentication error: Server misconfiguration"));
+  }
+
+  fetch(`${nextjsUrl}/api/internal/user/authenticate`, {
+    method: "GET",
+    headers: {
+      Cookie: `token=${token}`,
+    },
+  })
+    .then(async (response) => {
+      if (!response.ok) {
+        throw new Error("Unauthorized");
+      }
+      const session = (await response.json()) as { userId: number };
+      socket.data.user = String(session.userId);
+      next();
+    })
+    .catch((error: unknown) => {
+      console.log("Authentication error:", error);
+      next(new Error("Authentication error: Invalid session"));
+    });
 });
 
 export type Player = {
