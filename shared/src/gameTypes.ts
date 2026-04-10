@@ -40,11 +40,12 @@ export type BoardState = {
   board: Board;
   turn: PlayerColor;
   movesPlayed: number;
+  enPassantSqare: number | null;
 };
 
 export type Move = {
   from: number;
   to: number;
-  special: "0-0-0" | "0-0" | "promotion" | null;
+  special: "0-0-0" | "0-0" | "promotion" | "double_move" | "en_passant" | null;
   promotion?: PieceType;
 };
