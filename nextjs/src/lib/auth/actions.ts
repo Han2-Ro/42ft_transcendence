@@ -55,6 +55,7 @@ export async function login(
     sameSite: "strict" as const,
     maxAge: 60 * 60 * 24, // 24h
     domain: undefined as string | undefined,
+    path: "/",
   };
   if (process.env.COOKIE_DOMAIN) {
     cookieOptions.domain = process.env.COOKIE_DOMAIN;
@@ -114,6 +115,17 @@ export async function fetchSession() {
 }
 
 export async function logout() {
-  (await cookies()).delete("token");
+  const cookieOptions = {
+    name: "token",
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict" as const,
+    domain: undefined as string | undefined,
+    path: "/",
+  };
+  if (process.env.COOKIE_DOMAIN) {
+    cookieOptions.domain = process.env.COOKIE_DOMAIN;
+  }
+  (await cookies()).delete(cookieOptions);
   //TODO: What else needs to be done on logout?
 }
