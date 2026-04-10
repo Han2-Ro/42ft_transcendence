@@ -28,7 +28,8 @@ services:
       - "4000"
     restart: unless-stopped
     environment:
-      - SERVICE_URL_NEXTJS=${SERVICE_URL_NEXTJS:-http://localhost:3000}
+      - SERVICE_URL_NEXTJS=${SERVICE_URL_NEXTJS:-http://localhost:${PORT}}
+      - SERVICE_URL_NEXTJS_INTERNAL=${SERVICE_URL_NEXTJS_INTERNAL:-http://nextjs:${PORT}}
 
   db:
     image: postgres:16-alpine

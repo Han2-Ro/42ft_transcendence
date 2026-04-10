@@ -37,12 +37,12 @@ io.use((socket, next) => {
     return next(new Error("Authentication error: Token required"));
   }
 
-  const nextjsUrl = process.env.SERVICE_URL_NEXTJS;
+  const nextjsUrl = process.env.SERVICE_URL_NEXTJS_INTERNAL || process.env.SERVICE_URL_NEXTJS;
   if (!nextjsUrl) {
-    console.log("Authentication error: SERVICE_URL_NEXTJS not set");
+    console.log("Authentication error: SERVICE_URL_NEXTJS_INTERNAL or SERVICE_URL_NEXTJS not set");
     return next(new Error("Authentication error: Server misconfiguration"));
   }
-
+  console.log("nextjsUrl:", nextjsUrl);
   fetch(`${nextjsUrl}/api/internal/user/authenticate`, {
     method: "GET",
     headers: {
