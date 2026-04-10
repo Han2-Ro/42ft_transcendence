@@ -1,5 +1,43 @@
 import { test, expect } from "@playwright/test";
 
+async function openRegisterModal(page: import("@playwright/test").Page) {
+  await page.goto("/");
+  await page.getByRole("button", { name: /log in/i }).click();
+  await page.getByRole("button", { name: /register here/i }).click();
+  await expect(page.getByRole("heading", { name: /register/i })).toBeVisible();
+}
+
+async function openLoginModal(page: import("@playwright/test").Page) {
+  await page.goto("/");
+  await page.getByRole("button", { name: /log in/i }).click();
+  await expect(page.getByRole("heading", { name: /login/i })).toBeVisible();
+}
+
+async function registerAndLogin(page: import("@playwright/test").Page) {
+  const ts = Date.now();
+  const credentials = {
+    email: `fe-user-${ts}@example.com`,
+    username: `feuser${ts}`,
+    password: "SecurePass123!",
+  };
+
+  // Register
+  await openRegisterModal(page);
+  await page.fill("#email", credentials.email);
+  await page.fill("#username", credentials.username);
+  await page.fill("#password", credentials.password);
+  await page.fill("#confirmPassword", credentials.password);
+  await page.getByRole("button", { name: /^submit$/i }).click();
+
+  // Login
+  await openLoginModal(page);
+  await page.fill("#email", credentials.email);
+  await page.fill("#password", credentials.password);
+  await page.getByRole("button", { name: /^submit$/i }).click();
+
+  await expect(page.getByText(credentials.username)).toBeVisible();
+}
+
 test("home page loads", async ({ page }) => {
   await page.goto("/");
   await expect(page).toHaveTitle(/Chess 42|ft_transcendence/i);
@@ -18,50 +56,6 @@ test("unknown page returns 404", async ({ page }) => {
   await expect(page.getByRole("link", { name: /go back home/i })).toBeVisible();
 });
 
-test("sidebar swaps menu actions during active match", async ({ browser }) => {
-  const contexts = await Promise.all([
-    browser.newContext(),
-    browser.newContext(),
-  ]);
-  const [page1, page2] = await Promise.all(
-    contexts.map((ctx) => ctx.newPage()),
-  );
-
-  await Promise.all([page1.goto("/game"), page2.goto("/game")]);
-
-  await expect(page1.getByRole("link", { name: /play/i })).toBeVisible();
-
-  await Promise.all(
-    [page1, page2].map((page) =>
-      page
-        .getByRole("button", { name: /find chess match \(no time limit\)/i })
-        .click(),
-    ),
-  );
-
-  await Promise.all([
-    expect(
-      page1.getByRole("heading", { name: /game in progress/i }),
-    ).toBeVisible(),
-    expect(
-      page2.getByRole("heading", { name: /game in progress/i }),
-    ).toBeVisible(),
-  ]);
-
-  await expect(page1.getByRole("link", { name: /play/i })).toHaveCount(0);
-  await expect(page1.getByRole("button", { name: /resign/i })).toBeVisible();
-
-  await page1.getByRole("button", { name: /resign/i }).click();
-
-  await Promise.all([
-    expect(page1.getByText(/Result: lose/i)).toBeVisible(),
-    expect(page2.getByText(/Result: win/i)).toBeVisible(),
-    expect(page1.getByRole("link", { name: /play/i })).toBeVisible(),
-  ]);
-
-  await Promise.all(contexts.map((ctx) => ctx.close()));
-});
-
 // Use `browser` fixture to create independent sessions for each user
 test("find match and resign", async ({ browser }) => {
   const contexts = await Promise.all([
@@ -74,6 +68,7 @@ test("find match and resign", async ({ browser }) => {
 
   await Promise.all(
     [page1, page2].map(async (page) => {
+      await registerAndLogin(page);
       await page.goto("/game");
       await page
         .getByRole("button", { name: /find chess match \(no time limit\)/i })

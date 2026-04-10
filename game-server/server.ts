@@ -1,6 +1,8 @@
 import { Server, Socket } from "socket.io";
 import { Room } from "./src/room/room.js";
 import { CToSEvents, SToCEvents, Games } from "shared";
+import { parse as parseCookie } from "cookie";
+
 //import jwt from "jsonwebtoken";
 
 export type GameSocket = Socket<CToSEvents, SToCEvents>;
@@ -25,33 +27,43 @@ const io = new Server<CToSEvents, SToCEvents>(4000, {
 });
 
 io.use((socket, next) => {
-  const token = socket.handshake.auth?.token;
+  const cookieString = socket.handshake.headers.cookie ?? "";
+  const cookies = parseCookie(cookieString);
+  const token = cookies.token;
+  console.log("token:", token);
 
   if (!token) {
     console.log("Authentication error: Token required");
     return next(new Error("Authentication error: Token required"));
   }
-  const JWT_SECRET = process.env.JWT_SECRET;
-  if (JWT_SECRET === undefined) {
+
+  const nextjsUrl =
+    process.env.SERVICE_URL_NEXTJS_INTERNAL || process.env.SERVICE_URL_NEXTJS;
+  if (!nextjsUrl) {
     console.log(
-      "Authentication error: JWT_SECRET Not provided to SocketServer",
+      "Authentication error: SERVICE_URL_NEXTJS_INTERNAL or SERVICE_URL_NEXTJS not set",
     );
-    return next(
-      new Error(
-        "Authentication error: JWT_SECRET Not provided to SocketServer",
-      ),
-    );
+    return next(new Error("Authentication error: Server misconfiguration"));
   }
-  /*   try {	// once jwt gets send by client: Uncomment this and remove everything below it
-    const decoded = jwt.verify(token, JWT_SECRET);
-    socket.data.user = decoded; // Attach user info to the socket object
-    next();
-  } catch (error) {
-    return next(new Error('Authentication error: Invalid token'));
-  } */
-  const uid = crypto.randomUUID();
-  socket.data.user = uid;
-  next();
+  console.log("nextjsUrl:", nextjsUrl);
+  fetch(`${nextjsUrl}/api/internal/user/authenticate`, {
+    method: "GET",
+    headers: {
+      Cookie: `token=${token}`,
+    },
+  })
+    .then(async (response) => {
+      if (!response.ok) {
+        throw new Error("Unauthorized");
+      }
+      const session = (await response.json()) as { userId: number };
+      socket.data.user = String(session.userId);
+      next();
+    })
+    .catch((error: unknown) => {
+      console.log("Authentication error:", error);
+      next(new Error("Authentication error: Invalid session"));
+    });
 });
 
 export type Player = {
