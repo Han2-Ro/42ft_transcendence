@@ -34,7 +34,7 @@ io.use((socket, next) => {
 
   if (!token) {
     console.log("Authentication error: Token required");
-    return next(new Error("Authentication error: Token required"));
+    return next(new Error("Unauthorized"));
   }
 
   const nextjsUrl =
