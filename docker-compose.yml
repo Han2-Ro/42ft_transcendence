@@ -19,6 +19,7 @@ services:
       - DATABASE_URL=postgresql://${POSTGRES_USER:?}:${POSTGRES_PASSWORD:?}@${POSTGRES_ADDRESS:-db}:5432/${POSTGRES_DB:?}
       - PORT=${PORT:-3000}
       - JWT_SECRET=${JWT_SECRET:?}
+      - COOKIE_DOMAIN=${COOKIE_DOMAIN}
 
   gamesserver:
     build:
@@ -28,8 +29,8 @@ services:
       - "4000"
     restart: unless-stopped
     environment:
-      - SERVICE_URL_NEXTJS=${SERVICE_URL_NEXTJS}
-      - JWT_SECRET=${JWT_SECRET:?}
+      - SERVICE_URL_NEXTJS=${SERVICE_URL_NEXTJS:-http://localhost:${PORT}}
+      - SERVICE_URL_NEXTJS_INTERNAL=${SERVICE_URL_NEXTJS_INTERNAL:-http://nextjs:${PORT}}
 
   db:
     image: postgres:16-alpine

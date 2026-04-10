@@ -54,9 +54,7 @@ test.describe.serial("auth UI flows", () => {
     await submitButton.click();
     await expect(submitButton).not.toBeVisible();
 
-    await expect(page.getByText("john_42")).toBeVisible();
-    // TODO: replace with line below once getSession() (nextjs/src/lib/auth/session.ts) is properly implented
-    // await expect(page.getByText(feUser.username)).toBeVisible();
+    await expect(page.getByText(feUser.username)).toBeVisible();
   });
 
   test("logout", async ({ page }) => {
@@ -65,9 +63,7 @@ test.describe.serial("auth UI flows", () => {
     await page.fill("#email", feUser.email);
     await page.fill("#password", feUser.password);
     await page.getByRole("button", { name: /^submit$/i }).click();
-    await expect(page.getByText("john_42")).toBeVisible();
-    // TODO: replace with line below once getSession (nextjs/src/lib/auth/session.ts) is properly implented
-    // await expect(page.getByText(feUser.username)).toBeVisible();
+    await expect(page.getByText(feUser.username)).toBeVisible();
 
     // Log out
     await page.getByRole("button", { name: /log out/i }).click();
