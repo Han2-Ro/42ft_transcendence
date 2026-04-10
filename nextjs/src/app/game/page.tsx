@@ -49,6 +49,7 @@ export default function Page() {
   const [gameType, setGameType] = useState<Games | null>(null);
   const [color, setColor] = useState<PlayerColor>("white");
   const [boardState, setBoardState] = useState<BoardState>(startingBoardState);
+  const [times, setTimes] = useState<number[] | null>(null);
   const [result, setResult] = useState<GameResult | null>(null);
   const [resultReason, setResultReason] = useState<string | null>(null);
   const [isSearching, setIsSearching] = useState(false);
@@ -60,12 +61,14 @@ export default function Page() {
       setGameType(data.type);
       setBoardState(data.boardState);
       setColor(data.color);
+      setTimes(data.times);
       setIsSearching(false);
     });
 
     socket.on("moveMade", (data) => {
       console.log("move_recieved", boardState);
       setBoardState(data.boardState);
+      setTimes(data.times);
     });
 
     socket.on("gameOver", (data) => {
@@ -86,6 +89,7 @@ export default function Page() {
     setResult(null);
     setResultReason(null);
     setGameType(null);
+    setTimes(null);
     setBoardState(startingBoardState);
     setColor("white");
   };
@@ -131,6 +135,7 @@ export default function Page() {
           gameType={gameType ?? "chess"}
           color={color ?? "white"}
           onPlayerMove={gameId && !result ? emitPlayerMove : () => {}}
+          times={times ?? [-1]}
         />
       </main>
       <aside className="w-full md:w-[360px] flex flex-col items-center gap-6 px-4 py-6">

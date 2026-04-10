@@ -19,10 +19,11 @@ export class Room {
   gameLogic: Game;
   gameType: Games;
   positionUpdated: boolean = false;
+  order: PlayerColor[];
 
   //time vars
   timed: boolean;
-  PlayerTimes: number[];
+  playerTimes: number[];
   last_move: number = 0;
 
   constructor(players: Player[], uids: string[], type: Games, gameId: string) {
@@ -32,22 +33,24 @@ export class Room {
     if (type == "chess" || type == "timedChess") {
       this.gameLogic = new Chess();
       this.assignedColors = this.generateRandomColors2p();
+      this.order = ["white", "black"];
       if (type == "timedChess") {
         this.timed = true;
-        this.PlayerTimes = [10, 10];
+        this.playerTimes = [600, 600];
       } else {
         this.timed = false;
-        this.PlayerTimes = [-1, -1];
+        this.playerTimes = [-1, -1];
       }
     } else {
       this.gameLogic = new FourPlayerChess();
       this.assignedColors = this.generateRandomColors4p();
+      this.order = ["red", "blue", "yellow", "green"];
       if (type == "4pTimedChess") {
         this.timed = true;
-        this.PlayerTimes = [10, 10, 10, 10];
+        this.playerTimes = [600, 600, 600, 600];
       } else {
         this.timed = false;
-        this.PlayerTimes = [-1, -1, -1, -1];
+        this.playerTimes = [-1, -1, -1, -1];
       }
     }
     this.players.forEach((value: Player, index: number) => {
@@ -57,6 +60,7 @@ export class Room {
           type,
           color: this.assignedColors[index],
           boardState: this.gameLogic.boardState,
+          times: this.getTimes(),
         });
       });
     });
@@ -80,6 +84,7 @@ export class Room {
       type: this.gameType,
       color: this.assignedColors[playerIndex],
       boardState: this.gameLogic.boardState,
+      times: this.getTimes(),
     });
   }
 
@@ -106,7 +111,10 @@ export class Room {
       this.positionUpdated = false;
       this.players.forEach((value: Player) => {
         value.sockets.forEach((value: GameSocket) => {
-          value.emit("moveMade", { boardState: this.gameLogic.boardState });
+          value.emit("moveMade", {
+            boardState: this.gameLogic.boardState,
+            times: this.getTimes(),
+          });
         });
       });
     }
@@ -118,13 +126,24 @@ export class Room {
     return false;
   }
 
+  private getTimes(): number[] {
+    const times: number[] = [];
+    this.order.forEach((value: PlayerColor) => {
+      const colorIndex = this.assignedColors.indexOf(value);
+      if (colorIndex >= 0) {
+        times.push(this.playerTimes[colorIndex]);
+      }
+    });
+    return times;
+  }
+
   private checkTimeout(time_passed: number) {
     if (this.timed == true) {
       const turnIndex = this.assignedColors.indexOf(
         this.gameLogic.boardState.turn,
       );
-      this.PlayerTimes[turnIndex] = this.PlayerTimes[turnIndex] - time_passed;
-      if (this.PlayerTimes[turnIndex] < 0) {
+      this.playerTimes[turnIndex] = this.playerTimes[turnIndex] - time_passed;
+      if (this.playerTimes[turnIndex] < 0) {
         this.gameLogic.timeout(this.getColor(turnIndex));
       }
     }

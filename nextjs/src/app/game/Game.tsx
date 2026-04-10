@@ -6,6 +6,7 @@ interface GameProps {
   boardState: BoardState;
   gameType: Games;
   color: PlayerColor;
+  times: number[];
   onPlayerMove: (move: Move) => void;
 }
 
@@ -14,6 +15,7 @@ export default function Game({
   gameType,
   color,
   onPlayerMove,
+  times,
 }: GameProps) {
   return (
     <div className="text-center flex flex-col justify-center">
@@ -25,12 +27,14 @@ export default function Game({
           boardState={boardState}
           onPlayerMove={onPlayerMove}
           playerColor={color}
+          times={times}
         />
       ) : (
         <FourPlayerBoard
           boardState={boardState}
           onPlayerMove={onPlayerMove}
           playerColor={color}
+          times={times}
         />
       )}
       <p className="mt-4">You are playing as {color}</p>

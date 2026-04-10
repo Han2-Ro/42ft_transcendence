@@ -92,7 +92,7 @@ const disconnectPlayer = (uid: string) => {
   }
 };
 
-const disconnect = (socket: GameSocket) => {
+const disconnectSocket = (socket: GameSocket) => {
   console.log("disconnect called on socket: ", socket.id);
   const player = players.get(socket.data.user);
   if (player === undefined) return;
@@ -128,20 +128,25 @@ io.on("connection", (socket) => {
   }
   //Check for Disconnect
   let drop: NodeJS.Timeout;
+  let setDropTimeout: NodeJS.Timeout;
   const dropCheck = () => {
     if (!socket) return;
-    drop = setTimeout(() => disconnect(socket), 5000);
+    drop = setTimeout(() => disconnectSocket(socket), 5000);
     socket.emit("dropCheck");
   };
 
-  const setDrop = () => setTimeout(() => dropCheck(), 10000); // 10 secs to restart (so clients need to do handshake every 10 secs)
-  setDrop();
+  const setDrop = () => {
+    clearTimeout(setDropTimeout);
+    setDropTimeout = setTimeout(() => dropCheck(), 10000);
+  }; // 10 secs to restart (so clients need to do handshake every 10 secs)
 
   socket.on("dropCheck", () => {
     //console.log("dropCheck called on: ", socket.id);
     clearTimeout(drop);
     setDrop();
   });
+
+  setDrop();
 
   socket.on("findMatch", (type) => {
     const player = players.get(socket.data.user);
