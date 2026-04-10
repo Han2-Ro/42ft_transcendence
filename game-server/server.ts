@@ -1,6 +1,7 @@
 import { Server, Socket } from "socket.io";
 import { Room } from "./src/room/room.js";
 import { CToSEvents, SToCEvents, Games } from "shared";
+//import jwt from "jsonwebtoken";
 
 export type GameSocket = Socket<CToSEvents, SToCEvents>;
 let running = false;
@@ -23,34 +24,117 @@ const io = new Server<CToSEvents, SToCEvents>(4000, {
   },
 });
 
-type Player = {
-  socket: GameSocket;
+io.use((socket, next) => {
+  const token = socket.handshake.auth?.token;
+
+  if (!token) {
+    console.log("Authentication error: Token required");
+    return next(new Error("Authentication error: Token required"));
+  }
+  const JWT_SECRET = process.env.JWT_SECRET;
+  if (JWT_SECRET === undefined) {
+    console.log(
+      "Authentication error: JWT_SECRET Not provided to SocketServer",
+    );
+    return next(
+      new Error(
+        "Authentication error: JWT_SECRET Not provided to SocketServer",
+      ),
+    );
+  }
+  /*   try {	// once jwt gets send by client: Uncomment this and remove everything below it
+    const decoded = jwt.verify(token, JWT_SECRET);
+    socket.data.user = decoded; // Attach user info to the socket object
+    next();
+  } catch (error) {
+    return next(new Error('Authentication error: Invalid token'));
+  } */
+  const uid = crypto.randomUUID();
+  socket.data.user = uid;
+  next();
+});
+
+export type Player = {
+  sockets: GameSocket[];
+  //uid: string
   status: "lobby" | "in_game";
   game_id: string | null;
   searching: Games[];
 };
 
-const playerStates: Player[] = [];
+const players: Map<string, Player> = new Map();
 const rooms: Map<string, Room> = new Map();
 
-io.on("connection", (socket) => {
-  playerStates.push({
-    socket: socket,
-    status: "lobby",
-    game_id: null,
-    searching: [],
-  });
-  console.log("Client connected:", socket.id);
+const disconnectPlayer = (uid: string) => {
+  console.log("disconnect called on player: ", uid);
+  const player = players.get(uid);
+  if (player !== undefined) {
+    if (player.sockets.length == 0) {
+      const gameId = player.game_id;
+      if (player.status === "in_game" && gameId !== null) {
+        const room = rooms.get(gameId);
+        if (room) room.clientDisconnect(uid);
+      }
+      players.delete(uid);
+    }
+  }
+};
 
-  /*     socket.on('disconnect', ()=> {
-      console.log('Client disconnect: ', socket.id );
-  }); */
+const disconnect = (socket: GameSocket) => {
+  console.log("disconnect called on socket: ", socket.id);
+  const player = players.get(socket.data.user);
+  if (player === undefined) return;
+  const index = player.sockets.indexOf(socket, 0);
+  if (index > -1) player.sockets.splice(index, 1);
+  if (
+    player.sockets.length == 0
+  ) //If there are no sockets connected to the player
+  {
+    setTimeout(() => disconnectPlayer(socket.data.user), 10000);
+  }
+};
+
+io.on("connection", (socket) => {
+  socket.emit("connection");
+  console.log("Client connected:", socket.id);
+  const player = players.get(socket.data.user);
+  if (player === undefined) {
+    players.set(socket.data.user, {
+      sockets: [socket],
+      status: "lobby",
+      game_id: null,
+      searching: [],
+    });
+  } else {
+    player.sockets.push(socket);
+    if (player.status === "in_game") {
+      const gameId = player.game_id;
+      if (gameId !== null) {
+        rooms.get(gameId)?.syncState(socket, socket.data.user, gameId);
+      }
+    }
+  }
+  //Check for Disconnect
+  let drop: NodeJS.Timeout;
+  const dropCheck = () => {
+    if (!socket) return;
+    drop = setTimeout(() => disconnect(socket), 5000);
+    socket.emit("dropCheck");
+  };
+
+  const setDrop = () => setTimeout(() => dropCheck(), 10000); // 10 secs to restart (so clients need to do handshake every 10 secs)
+  setDrop();
+
+  socket.on("dropCheck", () => {
+    //console.log("dropCheck called on: ", socket.id);
+    clearTimeout(drop);
+    setDrop();
+  });
 
   socket.on("findMatch", (type) => {
-    //add type to searching
-    const player = getPlayer(socket);
+    const player = players.get(socket.data.user);
     if (
-      player === null ||
+      player === undefined ||
       player.status !== "lobby" ||
       player.searching.includes(type)
     )
@@ -63,18 +147,19 @@ io.on("connection", (socket) => {
       type,
     );
     //check if Room can be created
-    const players: Player[] = [];
-    const sockets: GameSocket[] = [];
-    playerStates.forEach((value: Player) => {
+    const searchingPlayers: Player[] = [];
+    const uids: string[] = [];
+    players.forEach((value: Player, key: string) => {
       if (value.searching.includes(type)) {
-        sockets.push(value.socket);
-        players.push(value);
+        searchingPlayers.push(value);
+        uids.push(key);
       }
     });
     if (
       ((type === "4pChess" || type === "4pTimedChess") &&
-        players.length === 4) ||
-      ((type === "chess" || type === "timedChess") && players.length === 2)
+        searchingPlayers.length === 4) ||
+      ((type === "chess" || type === "timedChess") &&
+        searchingPlayers.length === 2)
     ) {
       const gameId = crypto.randomUUID();
       players.forEach((value: Player) => {
@@ -82,7 +167,7 @@ io.on("connection", (socket) => {
         value.status = "in_game";
         value.searching = [];
       });
-      const newRoom = new Room(sockets, type, gameId);
+      const newRoom = new Room(searchingPlayers, uids, type, gameId);
       rooms.set(gameId, newRoom);
       if (running == false) {
         running = true;
@@ -94,20 +179,14 @@ io.on("connection", (socket) => {
 
   socket.on("move", ({ gameId, move }) => {
     const room = rooms.get(gameId);
-    if (room) room.clientMove(move, socket);
+    if (room) room.clientMove(move, socket.data.user);
   });
 
   socket.on("resign", (gameId) => {
     const room = rooms.get(gameId);
-    if (room) room.clientResign(socket);
+    if (room) room.clientResign(socket.data.user);
   });
 });
-
-function getPlayer(socket: GameSocket): Player | null {
-  return (
-    playerStates.find((value: Player) => value.socket.id === socket.id) || null
-  );
-}
 
 const TICK_RATE = 20;
 const DT = 1 / TICK_RATE;
@@ -123,11 +202,11 @@ function nowSeconds(): number {
 function checkRunningGames(time_passed: number) {
   rooms.forEach((value: Room, key: string) => {
     if (value.updateAndCheckOver(time_passed) === true) {
-      value.Players.forEach((value: GameSocket) => {
-        const player = getPlayer(value);
-        if (player !== null) {
-          player.status = "lobby";
-          player.game_id = null;
+      value.players.forEach((value: Player) => {
+        if (value !== null) {
+          value.status = "lobby";
+          value.game_id = null;
+          value.searching = [];
         }
       });
       rooms.delete(key);

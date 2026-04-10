@@ -33,7 +33,16 @@ const turnDotStyles: Record<PlayerColor, string> = {
 // Connect to the exposed backend port
 const socket: Socket<SToCEvents, CToSEvents> = io(
   process.env.NEXT_PUBLIC_GAMESERVER_URL || "http://localhost:4000",
+  {
+    auth: { token: "your_jwt_token_here" },
+  },
 );
+socket.on("connection", () => {
+  socket.on("dropCheck", () => {
+    // responds to the checker
+    socket.emit("dropCheck");
+  });
+});
 
 export default function Page() {
   const [gameId, setGameId] = useState<string | null>(null);
