@@ -8,13 +8,7 @@ import {
   PromotablePieceType,
 } from "shared";
 import Image from "next/image";
-
-const PROMOTION_OPTIONS: PromotablePieceType[] = [
-  "queen",
-  "rook",
-  "bishop",
-  "knight",
-];
+import { PromotionDialog } from "./PromotionDialog";
 
 const boardRotation: Record<string, string> = {
   red: "",
@@ -83,6 +77,10 @@ export default function FourPlayerBoard({
   const handlePromotionSelect = (promotion: PromotablePieceType) => {
     if (!pendingPromotionMove) return;
     onPlayerMove({ ...pendingPromotionMove, promotion });
+    setPendingPromotionMove(null);
+  };
+
+  const handlePromotionClose = () => {
     setPendingPromotionMove(null);
   };
 
@@ -172,26 +170,11 @@ export default function FourPlayerBoard({
           );
         })}
       </div>
-      {pendingPromotionMove && (
-        <div
-          role="dialog"
-          aria-modal="true"
-          aria-label="Choose promotion piece"
-          className="flex items-center gap-2 rounded-md border border-zinc-700 bg-zinc-900 p-2"
-        >
-          <span className="text-sm">Promote to:</span>
-          {PROMOTION_OPTIONS.map((piece) => (
-            <button
-              key={piece}
-              onClick={() => handlePromotionSelect(piece)}
-              className="rounded border border-zinc-500 bg-zinc-800 px-2 py-1 text-sm capitalize hover:bg-zinc-700"
-              aria-label={`Promote to ${piece}`}
-            >
-              {piece}
-            </button>
-          ))}
-        </div>
-      )}
+      <PromotionDialog
+        open={pendingPromotionMove !== null}
+        onClose={handlePromotionClose}
+        onSelect={handlePromotionSelect}
+      />
     </div>
   );
 }
