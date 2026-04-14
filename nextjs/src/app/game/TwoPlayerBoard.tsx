@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   twoPlayer,
   Move,
@@ -36,6 +36,16 @@ export default function TwoPlayerBoard({
     null,
   );
 
+  const isPawnPromotionTarget = (move: Move): boolean => {
+    const piece = boardState.board[move.from];
+    if (!piece || piece.type !== "pawn") return false;
+    const targetRank = Math.floor(move.to / 8);
+    return (
+      (piece.color === "white" && targetRank === 0) ||
+      (piece.color === "black" && targetRank === 7)
+    );
+  };
+
   const handleSquareClick = (square: number) => {
     if (pendingPromotionMove) return;
     if (selectedSquare === null) {
@@ -59,8 +69,8 @@ export default function TwoPlayerBoard({
     setSelectedSquare(null);
     setMovesFromSqareInt(null);
     setMovesFromSqare(null);
-    if (move.special === "promotion") {
-      setPendingPromotionMove(move);
+    if (move.special === "promotion" || isPawnPromotionTarget(move)) {
+      setPendingPromotionMove({ ...move, special: "promotion" });
       return;
     }
     onPlayerMove(move);
@@ -71,8 +81,6 @@ export default function TwoPlayerBoard({
     onPlayerMove({ ...pendingPromotionMove, promotion });
     setPendingPromotionMove(null);
   };
-
-  useEffect(() => {}, [movesFromSqareInt]);
 
   const formatTime = (time: number): string => {
     const minutes = Math.floor(time / 60);
