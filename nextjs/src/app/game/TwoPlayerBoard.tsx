@@ -22,7 +22,7 @@ export default function TwoPlayerBoard({
   const handleSquareClick = (square: number) => {
     if (selectedSquare === null) {
       setSelectedSquare(square);
-      const moves = twoPlayer.generateMoves(boardState.board, square);
+      const moves = twoPlayer.generateMoves(boardState.board, square, boardState.enPassantSqare);
       const movesNumbers = moves.map((move) => move.to);
       setMovesFromSqare(moves);
       setMovesFromSqareInt(movesNumbers);

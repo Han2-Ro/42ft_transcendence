@@ -85,9 +85,9 @@ function updateBoard(board: Board, move: Move, turn: PlayerColor) : number | nul
 	if (move.special == "en_passant")
 	{
 	  if (turn == "black") {
-		 board[move.to - 8] == null
+		 board[move.to - 8] = null
       } else {
-		board[move.to + 8] == null
+		board[move.to + 8] = null
       }
 	}
   }
