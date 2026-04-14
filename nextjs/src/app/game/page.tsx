@@ -35,6 +35,7 @@ const socket: Socket<SToCEvents, CToSEvents> = io(
   process.env.NEXT_PUBLIC_GAMESERVER_URL || "http://localhost:4000",
   {
     withCredentials: true,
+    autoConnect: false,
   },
 );
 
@@ -52,7 +53,11 @@ export default function Page() {
   const { setActions, clearActions } = useSidebarActions();
 
   useEffect(() => {
+    console.log("trying to connect socket");
+    socket.connect();
+
     socket.on("connect", () => {
+      console.log("connected to game-server");
       setServerConnectionStatus("connected");
     });
 
@@ -67,11 +72,9 @@ export default function Page() {
       }
     });
 
-    socket.on("connection", () => {
-      socket.on("dropCheck", () => {
-        // responds to the checker
-        socket.emit("dropCheck");
-      });
+    socket.on("dropCheck", () => {
+      // responds to the checker
+      socket.emit("dropCheck");
     });
 
     socket.on("gameStart", (data) => {
@@ -84,7 +87,6 @@ export default function Page() {
     });
 
     socket.on("moveMade", (data) => {
-      console.log("move_recieved", boardState);
       setBoardState(data.boardState);
       setTimes(data.times);
     });
@@ -97,11 +99,16 @@ export default function Page() {
     });
 
     return () => {
+      console.log("disconnecting socket");
+      socket.off("connect");
+      socket.off("connect_error");
+      socket.off("dropCheck");
       socket.off("gameStart");
       socket.off("moveMade");
       socket.off("gameOver");
+      socket.disconnect();
     };
-  });
+  }, []);
 
   const closeResultScreen = () => {
     setResult(null);
