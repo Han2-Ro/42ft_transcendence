@@ -29,12 +29,7 @@ export function validateMove(
     moveExists
   ) {
     if (move.special == "promotion") {
-      if (
-        move.promotion &&
-        move.promotion != "pawn" &&
-        move.promotion != "king"
-      )
-        return true;
+      if (move.promotion) return true;
       else return false;
     }
     return true;

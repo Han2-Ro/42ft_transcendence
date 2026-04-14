@@ -1,6 +1,20 @@
 import { useEffect, useState } from "react";
-import { twoPlayer, Move, PieceOrNull, BoardState, PlayerColor } from "shared";
+import {
+  twoPlayer,
+  Move,
+  PieceOrNull,
+  BoardState,
+  PlayerColor,
+  PromotablePieceType,
+} from "shared";
 import Image from "next/image";
+
+const PROMOTION_OPTIONS: PromotablePieceType[] = [
+  "queen",
+  "rook",
+  "bishop",
+  "knight",
+];
 
 export default function TwoPlayerBoard({
   boardState,
@@ -18,8 +32,12 @@ export default function TwoPlayerBoard({
     null,
   );
   const [movesFromSqare, setMovesFromSqare] = useState<Move[] | null>(null);
+  const [pendingPromotionMove, setPendingPromotionMove] = useState<Move | null>(
+    null,
+  );
 
   const handleSquareClick = (square: number) => {
+    if (pendingPromotionMove) return;
     if (selectedSquare === null) {
       setSelectedSquare(square);
       const moves = twoPlayer.generateMoves(boardState.board, square);
@@ -38,12 +56,20 @@ export default function TwoPlayerBoard({
       return;
     }
     const move: Move = { ...movesFromSqare[index] };
-    //todo: make some kind of ui element, that makes player choose which piece to promote to
-    if (move.special == "promotion") move.promotion = "queen";
     setSelectedSquare(null);
     setMovesFromSqareInt(null);
     setMovesFromSqare(null);
+    if (move.special === "promotion") {
+      setPendingPromotionMove(move);
+      return;
+    }
     onPlayerMove(move);
+  };
+
+  const handlePromotionSelect = (promotion: PromotablePieceType) => {
+    if (!pendingPromotionMove) return;
+    onPlayerMove({ ...pendingPromotionMove, promotion });
+    setPendingPromotionMove(null);
   };
 
   useEffect(() => {}, [movesFromSqareInt]);
@@ -70,6 +96,7 @@ export default function TwoPlayerBoard({
           <button
             key={index}
             onClick={() => handleSquareClick(index)}
+            disabled={pendingPromotionMove !== null}
             className="relative"
             style={{
               background:
@@ -105,6 +132,26 @@ export default function TwoPlayerBoard({
           </button>
         ))}
       </div>
+      {pendingPromotionMove && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label="Choose promotion piece"
+          className="flex items-center gap-2 rounded-md border border-zinc-700 bg-zinc-900 p-2"
+        >
+          <span className="text-sm">Promote to:</span>
+          {PROMOTION_OPTIONS.map((piece) => (
+            <button
+              key={piece}
+              onClick={() => handlePromotionSelect(piece)}
+              className="rounded border border-zinc-500 bg-zinc-800 px-2 py-1 text-sm capitalize hover:bg-zinc-700"
+              aria-label={`Promote to ${piece}`}
+            >
+              {piece}
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
