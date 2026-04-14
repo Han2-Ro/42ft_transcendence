@@ -38,11 +38,9 @@ io.use((socket, next) => {
   }
 
   const nextjsUrl =
-    process.env.SERVICE_URL_NEXTJS_INTERNAL || process.env.SERVICE_URL_NEXTJS;
+    process.env.INTERNAL_NEXTJS_URL || process.env.SERVICE_URL_NEXTJS;
   if (!nextjsUrl) {
-    console.log(
-      "Authentication error: SERVICE_URL_NEXTJS_INTERNAL or SERVICE_URL_NEXTJS not set",
-    );
+    console.log("Authentication error: INTERNAL_NEXTJS_URL not set");
     return next(new Error("Authentication error: Server misconfiguration"));
   }
   console.log("nextjsUrl:", nextjsUrl);
@@ -62,7 +60,7 @@ io.use((socket, next) => {
     })
     .catch((error: unknown) => {
       console.log("Authentication error:", error);
-      next(new Error("Authentication error: Invalid session"));
+      next(new Error(`Authentication error: ${error}`));
     });
 });
 
