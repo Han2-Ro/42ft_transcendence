@@ -31,10 +31,10 @@ model User {
   gamesAsWhite     Game[]   @relation("WhitePlayer")
   gamesAsBlack     Game[]   @relation("BlackPlayer")
 
-  gamesAsBlue     Game_four[]   @relation("BluePlayer")
-  gamesAsYellow     Game_four[]   @relation("YellowPlayer")
-  gamesAsRed     Game_four[]   @relation("RedPlayer")
-  gamesAsGreen     Game_four[]   @relation("GreenPlayer")
+  gamesAsBlue     GameFour[]   @relation("BluePlayer")
+  gamesAsYellow     GameFour[]   @relation("YellowPlayer")
+  gamesAsRed     GameFour[]   @relation("RedPlayer")
+  gamesAsGreen     GameFour[]   @relation("GreenPlayer")
 }
 
 model Game {
@@ -54,7 +54,7 @@ model Game {
   finishedAt    DateTime?
 }
 
-model Game_four {
+model GameFour {
   id            Int       @id @default(autoincrement())
 
   bluePlayerId Int

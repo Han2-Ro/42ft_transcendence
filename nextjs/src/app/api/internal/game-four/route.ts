@@ -49,8 +49,8 @@ export async function POST(req: NextRequest) {
   };
 
   try {
-    const [game_four] = await prisma.$transaction([
-      prisma.game_four.create({
+    const [gameFour] = await prisma.$transaction([
+      prisma.gameFour.create({
         data: {
           bluePlayerId,
           greenPlayerId,
@@ -79,7 +79,7 @@ export async function POST(req: NextRequest) {
       }),
     ]);
 
-    return NextResponse.json(game_four, { status: 200 });
+    return NextResponse.json(gameFour, { status: 200 });
   } catch (e: unknown) {
     const error = e as { code?: string };
     if (error?.code === "P2025") {
