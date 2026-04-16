@@ -32,6 +32,7 @@ services:
     environment:
       - SERVICE_URL_NEXTJS=${SERVICE_URL_NEXTJS:-http://localhost:${PORT}}
       - INTERNAL_NEXTJS_URL=${INTERNAL_NEXTJS_URL:-http://nextjs:${PORT}}
+      - INTERNAL_SECRET=${INTERNAL_SECRET:?}
 
   db:
     image: postgres:16-alpine
