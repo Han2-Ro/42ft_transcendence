@@ -9,12 +9,12 @@ export type ConnectionStatus =
   | "waiting";
 
 export default function Lobby({
-  onFindMatchPressed,
-  isSearching,
+  onFindMatchTogglePressed,
+  searching,
   serverConnectionStatus,
 }: {
-  onFindMatchPressed: (type: Games) => void;
-  isSearching: boolean;
+  onFindMatchTogglePressed: (type: Games) => void;
+  searching: Games[];
   serverConnectionStatus: ConnectionStatus;
 }) {
   return (
@@ -22,18 +22,18 @@ export default function Lobby({
       <h1 className="text-4xl font-bold text-slate-800">Chess Lobby</h1>
 
       <Button
-        onClick={() => onFindMatchPressed("chess")}
-        loading={isSearching}
-        disabled={isSearching || serverConnectionStatus != "connected"}
+        onClick={() => onFindMatchTogglePressed("chess")}
+        loadingNoDisabled={searching.includes("chess")}
+        disabled={serverConnectionStatus != "connected"}
         className="text-lg px-7 py-3 rounded-xl shadow-lg"
         loadingText="Finding game…"
       >
         find chess match (no time limit)
       </Button>
       <Button
-        onClick={() => onFindMatchPressed("4pChess")}
-        loading={isSearching}
-        disabled={isSearching || serverConnectionStatus != "connected"}
+        onClick={() => onFindMatchTogglePressed("4pChess")}
+        loadingNoDisabled={searching.includes("4pChess")}
+        disabled={serverConnectionStatus != "connected"}
         className="text-lg px-7 py-3 rounded-xl shadow-lg"
         loadingText="Finding game…"
       >
@@ -41,18 +41,18 @@ export default function Lobby({
       </Button>
 
       <Button
-        onClick={() => onFindMatchPressed("timedChess")}
-        loading={isSearching}
-        disabled={isSearching || serverConnectionStatus != "connected"}
+        onClick={() => onFindMatchTogglePressed("timedChess")}
+        loadingNoDisabled={searching.includes("timedChess")}
+        disabled={serverConnectionStatus != "connected"}
         className="text-lg px-7 py-3 rounded-xl shadow-lg"
         loadingText="Finding game…"
       >
         find chess match (10 minutes)
       </Button>
       <Button
-        onClick={() => onFindMatchPressed("4pTimedChess")}
-        loading={isSearching}
-        disabled={isSearching || serverConnectionStatus != "connected"}
+        onClick={() => onFindMatchTogglePressed("4pTimedChess")}
+        loadingNoDisabled={searching.includes("4pTimedChess")}
+        disabled={serverConnectionStatus != "connected"}
         className="text-lg px-7 py-3 rounded-xl shadow-lg"
         loadingText="Finding game…"
       >
@@ -72,7 +72,7 @@ export default function Lobby({
       </div>
 
       <div className="text-sm text-slate-600">
-        {isSearching ? (
+        {searching.length > 0 ? (
           <span className="inline-flex items-center gap-2">
             <span className="h-2 w-2 rounded-full bg-blue-500 animate-ping" />
             Searching game lobby...

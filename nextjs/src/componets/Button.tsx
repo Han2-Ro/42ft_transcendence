@@ -2,6 +2,7 @@ interface ButtonProps {
   onClick: () => void;
   children: React.ReactNode;
   disabled?: boolean;
+  loadingNoDisabled?: boolean;
   loading?: boolean;
   className?: string;
   loadingText?: string;
@@ -11,6 +12,7 @@ interface ButtonProps {
 export default function Button({
   onClick,
   children,
+  loadingNoDisabled = false,
   loading = false,
   disabled = false,
   className = "",
@@ -26,7 +28,7 @@ export default function Button({
       aria-label={arialabel}
       className={`px-6 py-2 text-sm font-semibold rounded-lg transition-all ${isDisabled ? "bg-accent-primary/10 cursor-not-allowed" : "bg-accent-primary hover:bg-accent-primary/50"} ${className}`}
     >
-      {loading ? loadingText : children}
+      {loading || loadingNoDisabled ? loadingText : children}
     </button>
   );
 }

@@ -10,11 +10,10 @@ export type Result = "win" | "lose" | "draw";
 
 // shared/socketEvents.ts
 export interface CToSEvents {
-  findMatch: (type: Games) => void;
+  findMatchToggle: (type: Games) => void;
 
   move: (data: { gameId: string; move: Move }) => void;
 
-  uid: (uid: string) => void; //Todo: This should send whatever key is necessary to validate this user exists in our database
   resign: (gameId: string) => void;
 
   dropCheck: () => void;
@@ -29,9 +28,9 @@ export interface SToCEvents {
     times: number[];
   }) => void;
 
+  setSearching: (type: Games[]) => void;
+
   moveMade: (data: { boardState: BoardState; times: number[] }) => void;
 
   gameOver: (data: { result: Result; reason: string }) => void;
-
-  dropCheck: () => void;
 }

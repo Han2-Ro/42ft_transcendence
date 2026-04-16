@@ -26,11 +26,13 @@ const io = new Server<CToSEvents, SToCEvents>(4000, {
   },
 });
 
+io.engine.opts.pingTimeout = 5000;
+io.engine.opts.pingInterval = 10000;
+
 io.use((socket, next) => {
   const cookieString = socket.handshake.headers.cookie ?? "";
   const cookies = parseCookie(cookieString);
   const token = cookies.token;
-  console.log("token:", token);
 
   if (!token) {
     console.log("Authentication error: Token required");
@@ -43,7 +45,6 @@ io.use((socket, next) => {
     console.log("Authentication error: INTERNAL_NEXTJS_URL not set");
     return next(new Error("Authentication error: Server misconfiguration"));
   }
-  console.log("nextjsUrl:", nextjsUrl);
   fetch(`${nextjsUrl}/api/internal/user/authenticate`, {
     method: "GET",
     headers: {
@@ -90,22 +91,8 @@ const disconnectPlayer = (uid: string) => {
   }
 };
 
-const disconnectSocket = (socket: GameSocket) => {
-  console.log("disconnect called on socket: ", socket.id);
-  const player = players.get(socket.data.user);
-  if (player === undefined) return;
-  const index = player.sockets.indexOf(socket, 0);
-  if (index > -1) player.sockets.splice(index, 1);
-  if (
-    player.sockets.length == 0
-  ) //If there are no sockets connected to the player
-  {
-    setTimeout(() => disconnectPlayer(socket.data.user), 10000);
-  }
-};
-
 io.on("connection", (socket) => {
-  console.log("Client connected:", socket.id);
+  console.log("Client connected: socketid: ", socket.id, "playerid: ", socket.data.user);
   const player = players.get(socket.data.user);
   if (player === undefined) {
     players.set(socket.data.user, {
@@ -121,45 +108,53 @@ io.on("connection", (socket) => {
       if (gameId !== null) {
         rooms.get(gameId)?.syncState(socket, socket.data.user, gameId);
       }
+    } else if (player.searching.length !== 0) {
+      socket.emit("setSearching", player.searching);
     }
   }
-  //Check for Disconnect
-  let drop: NodeJS.Timeout;
-  let setDropTimeout: NodeJS.Timeout;
-  const dropCheck = () => {
-    if (!socket) return;
-    drop = setTimeout(() => disconnectSocket(socket), 5000);
-    socket.emit("dropCheck");
-  };
 
-  const setDrop = () => {
-    clearTimeout(setDropTimeout);
-    setDropTimeout = setTimeout(() => dropCheck(), 10000);
-  }; // 10 secs to restart (so clients need to do handshake every 10 secs)
-
-  socket.on("dropCheck", () => {
-    //console.log("dropCheck called on: ", socket.id);
-    clearTimeout(drop);
-    setDrop();
+  socket.on("disconnect", function (reason) {
+    console.log(
+      "disconnect called on socket: ",
+      socket.id,
+      "\nreason: ",
+      reason,
+    );
+    const player = players.get(socket.data.user);
+    if (player === undefined) return;
+    const index = player.sockets.indexOf(socket, 0);
+    if (index > -1) player.sockets.splice(index, 1);
+    if (
+      player.sockets.length == 0
+    ) //If there are no sockets connected to the player
+    {
+      setTimeout(() => disconnectPlayer(socket.data.user), 10000);
+    }
   });
 
-  setDrop();
-
-  socket.on("findMatch", (type) => {
+  socket.on("findMatchToggle", (type) => {
     const player = players.get(socket.data.user);
-    if (
-      player === undefined ||
-      player.status !== "lobby" ||
-      player.searching.includes(type)
-    )
+    if (player === undefined || player.status !== "lobby") return;
+    if (player.searching.includes(type)) {
+      const index = player.searching.indexOf(type);
+      if (index > -1) {
+        player.searching.splice(index, 1);
+        player.sockets.forEach((value: GameSocket) => {
+          value.emit("setSearching", player.searching);
+        });
+      }
+      console.log(
+        "Player: ", socket.data.user, "stopped searching for opponent for type:", type,
+      );
       return;
+    }
     player.searching.push(type);
     console.log(
-      "Client searching for opponent:",
-      socket.id,
-      ", for type:",
-      type,
+      "Player: ", socket.data.user, "started searching for opponent for type:", type,
     );
+    player.sockets.forEach((value: GameSocket) => {
+      value.emit("setSearching", player.searching);
+    });
     //check if Room can be created
     const searchingPlayers: Player[] = [];
     const uids: string[] = [];
