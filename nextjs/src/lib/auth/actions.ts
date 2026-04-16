@@ -5,7 +5,7 @@ import { SignJWT } from "jose";
 import { prisma } from "@/lib/prisma";
 import { cookies } from "next/headers";
 import { getSession } from "./session";
-import { use } from "react";
+import { User } from "@prisma/client";
 
 function getJwtSecret() {
   const secret = process.env.JWT_SECRET;
@@ -13,6 +13,34 @@ function getJwtSecret() {
     throw new Error("JWT_SECRET environment variable is not set");
   }
   return new TextEncoder().encode(secret);
+}
+
+async function createToken(user: User): Promise<string> {
+  const token = await new SignJWT({
+    userId: user.id,
+    email: user.email,
+    username: user.username,
+  })
+    .setProtectedHeader({ alg: "HS256" })
+    .setIssuedAt()
+    .setExpirationTime("24h")
+    .sign(getJwtSecret());
+  return token;
+}
+
+function getCookieOptions() {
+  const cookieOptions = {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict" as const,
+    maxAge: 60 * 60 * 24, // 24h
+    domain: undefined as string | undefined,
+    path: "/",
+  };
+  if (process.env.COOKIE_DOMAIN) {
+    cookieOptions.domain = process.env.COOKIE_DOMAIN;
+  }
+  return cookieOptions;
 }
 
 export type LoginResult =
@@ -40,28 +68,7 @@ export async function login(
     return { requiresTwoFactor: true, userId: user.id };
   }
 
-  const token = await new SignJWT({
-    userId: user.id,
-    email: user.email,
-    username: user.username,
-  })
-    .setProtectedHeader({ alg: "HS256" })
-    .setIssuedAt()
-    .setExpirationTime("24h")
-    .sign(getJwtSecret());
-
-  const cookieOptions = {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "strict" as const,
-    maxAge: 60 * 60 * 24, // 24h
-    domain: undefined as string | undefined,
-    path: "/",
-  };
-  if (process.env.COOKIE_DOMAIN) {
-    cookieOptions.domain = process.env.COOKIE_DOMAIN;
-  }
-  (await cookies()).set("token", token, cookieOptions);
+  (await cookies()).set("token", await createToken(user), getCookieOptions());
 
   return {
     success: true,
@@ -104,6 +111,8 @@ export async function register(
     data: { email, username, passwordHash },
     select: { id: true, email: true, username: true, createdAt: true },
   });
+
+  (await cookies()).set("token", await createToken(user), getCookieOptions());
 
   return { success: true, user };
 }
