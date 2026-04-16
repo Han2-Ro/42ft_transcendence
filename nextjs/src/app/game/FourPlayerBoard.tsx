@@ -36,10 +36,10 @@ export default function FourPlayerBoard({
   times: number[];
 }) {
   const [selectedSquare, setSelectedSquare] = useState<number | null>(null);
-  const [movesFromSqareInt, setMovesFromSqareInt] = useState<number[] | null>(
+  const [movesFromSquareInt, setMovesFromSquareInt] = useState<number[] | null>(
     null,
   );
-  const [movesFromSqare, setMovesFromSqare] = useState<Move[] | null>(null);
+  const [movesFromSquare, setMovesFromSquare] = useState<Move[] | null>(null);
   const [pendingPromotionMove, setPendingPromotionMove] = useState<Move | null>(
     null,
   );
@@ -50,23 +50,23 @@ export default function FourPlayerBoard({
       setSelectedSquare(square);
       const moves = fourPlayer.generateMoves(boardState.board, square);
       const movesNumbers = moves.map((move) => move.to);
-      setMovesFromSqare(moves);
-      setMovesFromSqareInt(movesNumbers);
+      setMovesFromSquare(moves);
+      setMovesFromSquareInt(movesNumbers);
       return;
     }
 
-    if (!movesFromSqareInt || !movesFromSqare) return;
-    const index = movesFromSqareInt.indexOf(square);
+    if (!movesFromSquareInt || !movesFromSquare) return;
+    const index = movesFromSquareInt.indexOf(square);
     if (index == -1) {
       setSelectedSquare(null);
-      setMovesFromSqareInt(null);
-      setMovesFromSqare(null);
+      setMovesFromSquareInt(null);
+      setMovesFromSquare(null);
       return;
     }
-    const move: Move = { ...movesFromSqare[index] };
+    const move: Move = { ...movesFromSquare[index] };
     setSelectedSquare(null);
-    setMovesFromSqareInt(null);
-    setMovesFromSqare(null);
+    setMovesFromSquareInt(null);
+    setMovesFromSquare(null);
     if (move.special === "promotion") {
       setPendingPromotionMove(move);
       return;
@@ -84,7 +84,7 @@ export default function FourPlayerBoard({
     setPendingPromotionMove(null);
   };
 
-  useEffect(() => {}, [movesFromSqareInt]);
+  useEffect(() => {}, [movesFromSquareInt]);
 
   const formatTime = (time: number): string => {
     const minutes = Math.floor(time / 60);
@@ -155,9 +155,9 @@ export default function FourPlayerBoard({
                   className={`w-full h-full ${pieceRotation[playerColor]}`}
                 />
               )}
-              {movesFromSqareInt &&
-                movesFromSqareInt.length > 0 &&
-                movesFromSqareInt.includes(index) && (
+              {movesFromSquareInt &&
+                movesFromSquareInt.length > 0 &&
+                movesFromSquareInt.includes(index) && (
                   <Image
                     width="45"
                     height="45"

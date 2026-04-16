@@ -18,6 +18,7 @@ export class Chess extends Game {
       this.gameStatus = twoPlayer.checkMates(
         this.boardState.board,
         this.boardState.turn,
+        this.boardState.enPassantSquare,
       );
       return true;
     }
