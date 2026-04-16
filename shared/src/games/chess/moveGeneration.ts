@@ -15,7 +15,11 @@ export function validateMove(
   played_by: PlayerColor,
 ): boolean {
   const piece = boardState.board[move.from];
-  const moves = generateMoves(boardState.board, move.from, boardState.enPassantSqare);
+  const moves = generateMoves(
+    boardState.board,
+    move.from,
+    boardState.enPassantSqare,
+  );
   const moveExists = moves.some(
     (m) =>
       m.from === move.from && m.to === move.to && m.special === move.special,
@@ -38,14 +42,21 @@ export function validateMove(
 }
 
 export function updateBoardState(boardState: BoardState, move: Move) {
-
-  boardState.enPassantSqare = updateBoard(boardState.board, move, boardState.turn);
+  boardState.enPassantSqare = updateBoard(
+    boardState.board,
+    move,
+    boardState.turn,
+  );
 
   if (boardState.turn == "white") boardState.turn = "black";
   else boardState.turn = "white";
 }
 
-function updateBoard(board: Board, move: Move, turn: PlayerColor) : number | null {
+function updateBoard(
+  board: Board,
+  move: Move,
+  turn: PlayerColor,
+): number | null {
   const piece = board[move.from];
   if (piece) piece.hasMoved = true;
   board[move.to] = board[move.from];
@@ -73,25 +84,21 @@ function updateBoard(board: Board, move: Move, turn: PlayerColor) : number | nul
       const piece = board[move.to];
       if (move.promotion && piece) piece.type = move.promotion;
     }
-	if (move.special == "double_move")
-	{
-		return getEnPassantableSqare(move)
-	}
-	if (move.special == "en_passant")
-	{
-	  if (turn == "black") {
-		 board[move.to - 8] = null
+    if (move.special == "double_move") {
+      return getEnPassantableSqare(move);
+    }
+    if (move.special == "en_passant") {
+      if (turn == "black") {
+        board[move.to - 8] = null;
       } else {
-		board[move.to + 8] = null
+        board[move.to + 8] = null;
       }
-	}
+    }
   }
-  return null
+  return null;
 }
 
-
-function getEnPassantableSqare(move: Move) : number
-{
+function getEnPassantableSqare(move: Move): number {
   const from2d: Pos2 = { x: -1, y: -1 };
   from2d.x = (move.from % 8) + 1;
   from2d.y = Math.floor(move.from / 8) + 1;
@@ -100,11 +107,15 @@ function getEnPassantableSqare(move: Move) : number
   to2d.x = (move.to % 8) + 1;
   to2d.y = Math.floor(move.to / 8) + 1;
 
-  const sq2d: Pos2 = { x: ((from2d.x + to2d.x) / 2), y: ((from2d.y + to2d.y) / 2)}
+  const sq2d: Pos2 = { x: (from2d.x + to2d.x) / 2, y: (from2d.y + to2d.y) / 2 };
   return (sq2d.y - 1) * 8 + (sq2d.x - 1);
 }
 
-export function checkMates(board: Board, turn: PlayerColor, enPassantSqare: number | null): GameStatus {
+export function checkMates(
+  board: Board,
+  turn: PlayerColor,
+  enPassantSqare: number | null,
+): GameStatus {
   const moves = generateAllMoves(board, turn, enPassantSqare);
   if (moves.length == 0) {
     if (checkKingInCheck(board, turn)) {
@@ -120,7 +131,7 @@ export function checkMates(board: Board, turn: PlayerColor, enPassantSqare: numb
 export function generateAllMoves(
   board: Board,
   color: PlayerColor,
-  enPassantSqare: number | null
+  enPassantSqare: number | null,
 ): Array<Move> {
   const moves: Move[] = [];
   for (let sq = 0; sq < 64; sq++) {
@@ -132,14 +143,24 @@ export function generateAllMoves(
   return moves;
 }
 
-export function generateMoves(board: Board, sq: number, enPassantSqare: number | null): Array<Move> {
+export function generateMoves(
+  board: Board,
+  sq: number,
+  enPassantSqare: number | null,
+): Array<Move> {
   let moves: Move[] = [];
 
   const piece: PieceOrNull = board[sq];
   if (!piece) return moves;
   const pieceMoves =
     piece.type === "pawn"
-      ? generatePawnMoves(board, sq, piece.color, piece.hasMoved, enPassantSqare)
+      ? generatePawnMoves(
+          board,
+          sq,
+          piece.color,
+          piece.hasMoved,
+          enPassantSqare,
+        )
       : piece.type === "knight"
         ? generateKnightMoves(board, sq, piece.color)
         : piece.type === "bishop"
@@ -164,7 +185,7 @@ function generatePawnMoves(
   sq: number,
   color: PlayerColor,
   hasMoved: boolean,
-  enPassantSqare: number | null
+  enPassantSqare: number | null,
 ): Array<Move> {
   const moves: Move[] = [];
   let dir = 1;
@@ -179,7 +200,7 @@ function generatePawnMoves(
       checkSqareEmpty(board, newPos) &&
       checkSqareEmpty(board, newPos2)
     )
-      moves.push({ from: sq, to: newPos, special: "double_move"});
+      moves.push({ from: sq, to: newPos, special: "double_move" });
   //Move
   newPos = generateOffset(sq, { x: 0, y: dir });
   if (newPos != null && checkSqareEmpty(board, newPos)) {
@@ -193,29 +214,32 @@ function generatePawnMoves(
   //Attacks
   newPos = generateOffset(sq, { x: 1, y: dir });
   if (
-    newPos != null && ((checkSqare(board, newPos, color) && !checkSqareEmpty(board, newPos) || newPos === enPassantSqare))
+    newPos != null &&
+    ((checkSqare(board, newPos, color) && !checkSqareEmpty(board, newPos)) ||
+      newPos === enPassantSqare)
   ) {
     if (
       (color == "white" && newPos > -1 && newPos < 8) ||
       (color == "black" && newPos > 55 && newPos < 64)
     )
       moves.push({ from: sq, to: newPos, special: "promotion" });
-	else if (newPos === enPassantSqare)
-		moves.push({ from: sq, to: newPos, special: "en_passant"});
+    else if (newPos === enPassantSqare)
+      moves.push({ from: sq, to: newPos, special: "en_passant" });
     else moves.push({ from: sq, to: newPos, special: null });
   }
   newPos = generateOffset(sq, { x: -1, y: dir });
   if (
-	newPos != null && ((checkSqare(board, newPos, color) && !checkSqareEmpty(board, newPos) || newPos === enPassantSqare))
+    newPos != null &&
+    ((checkSqare(board, newPos, color) && !checkSqareEmpty(board, newPos)) ||
+      newPos === enPassantSqare)
   ) {
     if (
       (color == "white" && newPos > -1 && newPos < 8) ||
       (color == "black" && newPos > 55 && newPos < 64)
     )
-	
       moves.push({ from: sq, to: newPos, special: "promotion" });
-	else if (newPos === enPassantSqare)
-		moves.push({ from: sq, to: newPos, special: "en_passant"});
+    else if (newPos === enPassantSqare)
+      moves.push({ from: sq, to: newPos, special: "en_passant" });
     else moves.push({ from: sq, to: newPos, special: null });
   }
   return moves;
