@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { io, Socket } from "socket.io-client";
-import Lobby from "./Lobby";
+import Lobby, { ConnectionStatus } from "./Lobby";
 import Game from "./Game";
 import EndScreen from "./EndScreen";
 
@@ -35,14 +35,9 @@ const socket: Socket<SToCEvents, CToSEvents> = io(
   process.env.NEXT_PUBLIC_GAMESERVER_URL || "http://localhost:4000",
   {
     withCredentials: true,
+    autoConnect: false,
   },
 );
-socket.on("connection", () => {
-  socket.on("dropCheck", () => {
-    // responds to the checker
-    socket.emit("dropCheck");
-  });
-});
 
 export default function Page() {
   const [gameId, setGameId] = useState<string | null>(null);
@@ -53,9 +48,35 @@ export default function Page() {
   const [result, setResult] = useState<GameResult | null>(null);
   const [resultReason, setResultReason] = useState<string | null>(null);
   const [isSearching, setIsSearching] = useState(false);
+  const [serverConnectionStatus, setServerConnectionStatus] =
+    useState<ConnectionStatus>("waiting");
   const { setActions, clearActions } = useSidebarActions();
 
   useEffect(() => {
+    console.log("trying to connect socket");
+    socket.connect();
+
+    socket.on("connect", () => {
+      console.log("connected to game-server");
+      setServerConnectionStatus("connected");
+    });
+
+    socket.on("connect_error", (err) => {
+      console.log("connect_error", err.message);
+      if (err.message === "Unauthorized") {
+        console.log("You need to log in");
+        setServerConnectionStatus("unauthorized");
+      } else {
+        console.error("Couldn't connect to game server.");
+        setServerConnectionStatus("error");
+      }
+    });
+
+    socket.on("dropCheck", () => {
+      // responds to the checker
+      socket.emit("dropCheck");
+    });
+
     socket.on("gameStart", (data) => {
       setGameId(data.gameId);
       setGameType(data.type);
@@ -66,7 +87,6 @@ export default function Page() {
     });
 
     socket.on("moveMade", (data) => {
-      console.log("move_recieved", boardState);
       setBoardState(data.boardState);
       setTimes(data.times);
     });
@@ -79,11 +99,16 @@ export default function Page() {
     });
 
     return () => {
+      console.log("disconnecting socket");
+      socket.off("connect");
+      socket.off("connect_error");
+      socket.off("dropCheck");
       socket.off("gameStart");
       socket.off("moveMade");
       socket.off("gameOver");
+      socket.disconnect();
     };
-  });
+  }, []);
 
   const closeResultScreen = () => {
     setResult(null);
@@ -176,6 +201,7 @@ export default function Page() {
               socket.emit("findMatch", type);
             }}
             isSearching={isSearching}
+            serverConnectionStatus={serverConnectionStatus}
           />
         )}
       </aside>
