@@ -18,6 +18,7 @@ export class Chess extends Game {
       this.gameStatus = twoPlayer.checkMates(
         this.boardState.board,
         this.boardState.turn,
+        this.boardState.enPassantSquare,
       );
       return true;
     }
@@ -28,6 +29,13 @@ export class Chess extends Game {
     if (played_by == "white") winners = ["black"];
     else winners = ["white"];
     this.gameStatus = { isOver: true, winners: winners, reason: "resignation" };
+  }
+
+  disconnect(player: PlayerColor): void {
+    let winners: PlayerColor[];
+    if (player == "white") winners = ["black"];
+    else winners = ["white"];
+    this.gameStatus = { isOver: true, winners: winners, reason: "disconnect" };
   }
 
   timeout(player: PlayerColor): void {

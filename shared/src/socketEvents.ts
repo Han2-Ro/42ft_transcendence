@@ -10,11 +10,13 @@ export type Result = "win" | "lose" | "draw";
 
 // shared/socketEvents.ts
 export interface CToSEvents {
-  findMatch: (type: Games) => void;
+  findMatchToggle: (type: Games) => void;
 
   move: (data: { gameId: string; move: Move }) => void;
 
   resign: (gameId: string) => void;
+
+  dropCheck: () => void;
 }
 
 export interface SToCEvents {
@@ -23,9 +25,12 @@ export interface SToCEvents {
     color: PlayerColor;
     type: Games;
     boardState: BoardState;
+    times: number[];
   }) => void;
 
-  moveMade: (data: { boardState: BoardState }) => void;
+  setSearching: (type: Games[]) => void;
+
+  moveMade: (data: { boardState: BoardState; times: number[] }) => void;
 
   gameOver: (data: { result: Result; reason: string }) => void;
 }

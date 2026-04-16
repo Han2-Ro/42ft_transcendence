@@ -20,6 +20,7 @@ services:
       - PORT=${PORT:-3000}
       - JWT_SECRET=${JWT_SECRET:?}
       - INTERNAL_SECRET=${INTERNAL_SECRET:?}
+      - COOKIE_DOMAIN=${COOKIE_DOMAIN}
 
   gamesserver:
     build:
@@ -29,8 +30,8 @@ services:
       - "4000"
     restart: unless-stopped
     environment:
-      - SERVICE_URL_NEXTJS=${SERVICE_URL_NEXTJS}
-      - INTERNAL_SECRET=${INTERNAL_SECRET:?}
+      - SERVICE_URL_NEXTJS=${SERVICE_URL_NEXTJS:-http://localhost:${PORT}}
+      - INTERNAL_NEXTJS_URL=${INTERNAL_NEXTJS_URL:-http://nextjs:${PORT}}
 
   db:
     image: postgres:16-alpine

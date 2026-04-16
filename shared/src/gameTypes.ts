@@ -14,6 +14,7 @@ export type PieceType =
   | "bishop"
   | "queen"
   | "king";
+export type PromotablePieceType = "queen" | "rook" | "bishop" | "knight";
 
 type Piece = {
   color: PlayerColor;
@@ -40,11 +41,12 @@ export type BoardState = {
   board: Board;
   turn: PlayerColor;
   movesPlayed: number;
+  enPassantSquare: number | null;
 };
 
 export type Move = {
   from: number;
   to: number;
-  special: "0-0-0" | "0-0" | "promotion" | null;
-  promotion?: PieceType;
+  special: "0-0-0" | "0-0" | "promotion" | "double_move" | "en_passant" | null;
+  promotion?: PromotablePieceType;
 };
