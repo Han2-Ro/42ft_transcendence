@@ -22,10 +22,10 @@ export default function TwoPlayerBoard({
   times: number[];
 }) {
   const [selectedSquare, setSelectedSquare] = useState<number | null>(null);
-  const [movesFromSqareInt, setMovesFromSqareInt] = useState<number[] | null>(
+  const [movesFromSquareInt, setMovesFromSquareInt] = useState<number[] | null>(
     null,
   );
-  const [movesFromSqare, setMovesFromSqare] = useState<Move[] | null>(null);
+  const [movesFromSquare, setMovesFromSquare] = useState<Move[] | null>(null);
   const [pendingPromotionMove, setPendingPromotionMove] = useState<Move | null>(
     null,
   );
@@ -44,25 +44,29 @@ export default function TwoPlayerBoard({
     if (pendingPromotionMove) return;
     if (selectedSquare === null) {
       setSelectedSquare(square);
-      const moves = twoPlayer.generateMoves(boardState.board, square);
+      const moves = twoPlayer.generateMoves(
+        boardState.board,
+        square,
+        boardState.enPassantSquare,
+      );
       const movesNumbers = moves.map((move) => move.to);
-      setMovesFromSqare(moves);
-      setMovesFromSqareInt(movesNumbers);
+      setMovesFromSquare(moves);
+      setMovesFromSquareInt(movesNumbers);
       return;
     }
 
-    if (!movesFromSqareInt || !movesFromSqare) return;
-    const index = movesFromSqareInt.indexOf(square);
+    if (!movesFromSquareInt || !movesFromSquare) return;
+    const index = movesFromSquareInt.indexOf(square);
     if (index == -1) {
       setSelectedSquare(null);
-      setMovesFromSqareInt(null);
-      setMovesFromSqare(null);
+      setMovesFromSquareInt(null);
+      setMovesFromSquare(null);
       return;
     }
-    const move: Move = { ...movesFromSqare[index] };
+    const move: Move = { ...movesFromSquare[index] };
     setSelectedSquare(null);
-    setMovesFromSqareInt(null);
-    setMovesFromSqare(null);
+    setMovesFromSquareInt(null);
+    setMovesFromSquare(null);
     if (move.special === "promotion" || isPawnPromotionTarget(move)) {
       setPendingPromotionMove({ ...move, special: "promotion" });
       return;
@@ -124,9 +128,9 @@ export default function TwoPlayerBoard({
                 className={`w-full h-full ${playerColor === "black" ? "rotate-180" : ""}`}
               />
             )}
-            {movesFromSqareInt &&
-              movesFromSqareInt.length > 0 &&
-              movesFromSqareInt.includes(index) && (
+            {movesFromSquareInt &&
+              movesFromSquareInt.length > 0 &&
+              movesFromSquareInt.includes(index) && (
                 <Image
                   width="100"
                   height="100"

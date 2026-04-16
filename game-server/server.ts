@@ -105,7 +105,7 @@ const disconnectSocket = (socket: GameSocket) => {
 };
 
 io.on("connection", (socket) => {
-  console.log("Client connected:", socket.id);
+  console.log("Client connected:", socket.data.user);
   const player = players.get(socket.data.user);
   if (player === undefined) {
     players.set(socket.data.user, {
