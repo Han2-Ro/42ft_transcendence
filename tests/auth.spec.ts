@@ -1,4 +1,5 @@
 import { test, expect } from "@playwright/test";
+import { openRegisterModal, openLoginModal } from "./utils";
 
 const ts = Date.now();
 const feUser = {
@@ -6,19 +7,6 @@ const feUser = {
   username: `feuser${ts}`,
   password: "SecurePass123!",
 };
-
-async function openRegisterModal(page: import("@playwright/test").Page) {
-  await page.goto("/");
-  await page.getByRole("button", { name: /log in/i }).click();
-  await page.getByRole("button", { name: /register here/i }).click();
-  await expect(page.getByRole("heading", { name: /register/i })).toBeVisible();
-}
-
-async function openLoginModal(page: import("@playwright/test").Page) {
-  await page.goto("/");
-  await page.getByRole("button", { name: /log in/i }).click();
-  await expect(page.getByRole("heading", { name: /login/i })).toBeVisible();
-}
 
 // Serial mode: tests run in order and subsequent tests are skipped if a previous one fails.
 // login and logout rely on the user created by the register test.
@@ -50,13 +38,10 @@ test.describe.serial("auth UI flows", () => {
     await page.fill("#password", feUser.password);
     const submitButton = await page.getByRole("button", { name: /^submit$/i });
     await expect(submitButton).toBeVisible();
-    await submitButton.first().screenshot();
     await submitButton.click();
     await expect(submitButton).not.toBeVisible();
 
-    await expect(page.getByText("john_42")).toBeVisible();
-    // TODO: replace with line below once getSession() (nextjs/src/lib/auth/session.ts) is properly implented
-    // await expect(page.getByText(feUser.username)).toBeVisible();
+    await expect(page.getByText(feUser.username)).toBeVisible();
   });
 
   test("logout", async ({ page }) => {
@@ -65,9 +50,7 @@ test.describe.serial("auth UI flows", () => {
     await page.fill("#email", feUser.email);
     await page.fill("#password", feUser.password);
     await page.getByRole("button", { name: /^submit$/i }).click();
-    await expect(page.getByText("john_42")).toBeVisible();
-    // TODO: replace with line below once getSession (nextjs/src/lib/auth/session.ts) is properly implented
-    // await expect(page.getByText(feUser.username)).toBeVisible();
+    await expect(page.getByText(feUser.username)).toBeVisible();
 
     // Log out
     await page.getByRole("button", { name: /log out/i }).click();

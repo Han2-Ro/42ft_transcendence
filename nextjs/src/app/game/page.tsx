@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { io, Socket } from "socket.io-client";
-import Lobby from "./Lobby";
+import Lobby, { ConnectionStatus } from "./Lobby";
 import Game from "./Game";
 import EndScreen from "./EndScreen";
 
@@ -12,9 +12,31 @@ import { Result as GameResult } from "shared";
 import { useSidebarActions } from "@/componets/sidebar/SidebarActionsProvider";
 import { DeadKing } from "@/componets/icons/DeadKing";
 
+const turnBadgeStyles: Record<PlayerColor, string> = {
+  white: "border border-slate-300 bg-slate-100 text-slate-900",
+  black: "border border-slate-700 bg-slate-900 text-white",
+  red: "border border-red-500 bg-red-500/10 text-red-400",
+  yellow: "border border-yellow-400 bg-yellow-300/10 text-yellow-950",
+  green: "border border-emerald-500 bg-emerald-500/10 text-emerald-900",
+  blue: "border border-sky-500 bg-sky-500/10 text-sky-900",
+};
+
+const turnDotStyles: Record<PlayerColor, string> = {
+  white: "bg-slate-300",
+  black: "bg-slate-900",
+  red: "bg-red-500",
+  yellow: "bg-yellow-400",
+  green: "bg-emerald-500",
+  blue: "bg-sky-500",
+};
+
 // Connect to the exposed backend port
 const socket: Socket<SToCEvents, CToSEvents> = io(
   process.env.NEXT_PUBLIC_GAMESERVER_URL || "http://localhost:4000",
+  {
+    withCredentials: true,
+    autoConnect: false,
+  },
 );
 
 export default function Page() {
@@ -22,43 +44,76 @@ export default function Page() {
   const [gameType, setGameType] = useState<Games | null>(null);
   const [color, setColor] = useState<PlayerColor>("white");
   const [boardState, setBoardState] = useState<BoardState>(startingBoardState);
+  const [times, setTimes] = useState<number[] | null>(null);
   const [result, setResult] = useState<GameResult | null>(null);
   const [resultReason, setResultReason] = useState<string | null>(null);
-  const [isSearching, setIsSearching] = useState(false);
+  const [searching, setSearching] = useState<Games[]>([]);
+  const [serverConnectionStatus, setServerConnectionStatus] =
+    useState<ConnectionStatus>("waiting");
   const { setActions, clearActions } = useSidebarActions();
 
   useEffect(() => {
+    console.log("trying to connect socket");
+    socket.connect();
+
+    socket.on("connect", () => {
+      console.log("connected to game-server");
+      setServerConnectionStatus("connected");
+    });
+
+    socket.on("connect_error", (err) => {
+      console.log("connect_error", err.message);
+      if (err.message === "Unauthorized") {
+        console.log("You need to log in");
+        setServerConnectionStatus("unauthorized");
+      } else {
+        console.error("Couldn't connect to game server.");
+        setServerConnectionStatus("error");
+      }
+    });
+
     socket.on("gameStart", (data) => {
       setGameId(data.gameId);
       setGameType(data.type);
       setBoardState(data.boardState);
       setColor(data.color);
-      setIsSearching(false);
+      setTimes(data.times);
+      setSearching([]);
     });
 
     socket.on("moveMade", (data) => {
-      console.log("move_recieved", boardState);
       setBoardState(data.boardState);
+      setTimes(data.times);
     });
 
     socket.on("gameOver", (data) => {
       setResult(data.result);
       setResultReason(data.reason);
       setGameId(null);
-      setIsSearching(false);
+      setSearching([]);
+    });
+
+    socket.on("setSearching", (data) => {
+      setSearching(data);
     });
 
     return () => {
+      console.log("disconnecting socket");
+      socket.off("connect");
+      socket.off("connect_error");
       socket.off("gameStart");
       socket.off("moveMade");
       socket.off("gameOver");
+      socket.off("setSearching");
+      socket.disconnect();
     };
-  });
+  }, []);
 
   const closeResultScreen = () => {
     setResult(null);
     setResultReason(null);
     setGameType(null);
+    setTimes(null);
     setBoardState(startingBoardState);
     setColor("white");
   };
@@ -94,7 +149,15 @@ export default function Page() {
     return () => {
       clearActions();
     };
-  }, [boardState, clearActions, emitPlayerResign, gameId, result, setActions]);
+  }, [
+    boardState,
+    clearActions,
+    emitPlayerResign,
+    gameId,
+    result,
+    setActions,
+    searching,
+  ]);
 
   return (
     <div className="flex flex-col md:flex-row items-center md:justify-around lg:px-10 min-h-full">
@@ -104,9 +167,32 @@ export default function Page() {
           gameType={gameType ?? "chess"}
           color={color ?? "white"}
           onPlayerMove={gameId && !result ? emitPlayerMove : () => {}}
+          times={times ?? [-1]}
         />
       </main>
-      <aside className="">
+      <aside className="w-full md:w-[360px] flex flex-col items-center gap-6 px-4 py-6">
+        {gameId && !result && (
+          //<div className="w-full rounded-3xl border border-slate-200 bg-slate-50/90 p-5 shadow-sm shadow-slate-200/50">
+          <div className="mt-4 flex flex-col gap-3">
+            <div className="inline-flex items-center gap-3 rounded-full bg-white px-4 py-3 text-sm font-medium shadow-sm ring-1 ring-slate-200">
+              <span
+                className={`inline-flex h-3.5 w-3.5 rounded-full ${turnDotStyles[boardState.turn]}`}
+              />
+              <span
+                className={`rounded-full px-3 py-1 ${turnBadgeStyles[boardState.turn]}`}
+              >
+                {boardState.turn} to move
+              </span>
+            </div>
+            <p className="text-sm text-slate-600">
+              {boardState.turn === color
+                ? "It’s your turn."
+                : "Waiting for opponent..."}
+            </p>
+          </div>
+          //</div>
+        )}
+
         {result && (
           <EndScreen
             result={result}
@@ -117,11 +203,11 @@ export default function Page() {
 
         {!gameId && !result && (
           <Lobby
-            onFindMatchPressed={(type) => {
-              setIsSearching(true);
-              socket.emit("findMatch", type);
+            onFindMatchTogglePressed={(type) => {
+              socket.emit("findMatchToggle", type);
             }}
-            isSearching={isSearching}
+            searching={searching}
+            serverConnectionStatus={serverConnectionStatus}
           />
         )}
       </aside>

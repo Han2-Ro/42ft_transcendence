@@ -5,7 +5,6 @@ import {
   GameStatus,
   Move,
   PieceOrNull,
-  PieceType,
   Pos2,
 } from "../../gameTypes.js";
 
@@ -29,12 +28,7 @@ export function validateMove(
     moveExists
   ) {
     if (move.special == "promotion") {
-      if (
-        move.promotion &&
-        move.promotion != "pawn" &&
-        move.promotion != "king"
-      )
-        return true;
+      if (move.promotion) return true;
       else return false;
     }
     return true;
@@ -165,7 +159,7 @@ export function generateMoves(board: Board, sq: number): Array<Move> {
   return moves;
 }
 
-function isPromotingSqare(sq: number, PlayerColor: PlayerColor): boolean {
+function isPromotingSquare(sq: number, PlayerColor: PlayerColor): boolean {
   if (PlayerColor == "red") {
     if (sq > 23 && sq < 38) return true;
   }
@@ -208,14 +202,14 @@ function generatePawnMoves(
     if (
       newPos != null &&
       newPos2 != null &&
-      checkSqareEmpty(board, newPos) &&
-      checkSqareEmpty(board, newPos2)
+      checkSquareEmpty(board, newPos) &&
+      checkSquareEmpty(board, newPos2)
     )
       moves.push({ from: sq, to: newPos, special: null });
   //Move
   newPos = generateOffset(sq, { x: dirx, y: diry });
-  if (newPos != null && checkSqareEmpty(board, newPos)) {
-    if (isPromotingSqare(newPos, PlayerColor))
+  if (newPos != null && checkSquareEmpty(board, newPos)) {
+    if (isPromotingSquare(newPos, PlayerColor))
       moves.push({ from: sq, to: newPos, special: "promotion" });
     else moves.push({ from: sq, to: newPos, special: null });
   }
@@ -225,10 +219,10 @@ function generatePawnMoves(
   else newPos = generateOffset(sq, { x: dirx, y: 1 });
   if (
     newPos != null &&
-    checkSqare(board, newPos, PlayerColor) &&
-    !checkSqareEmpty(board, newPos)
+    checkSquare(board, newPos, PlayerColor) &&
+    !checkSquareEmpty(board, newPos)
   ) {
-    if (isPromotingSqare(newPos, PlayerColor))
+    if (isPromotingSquare(newPos, PlayerColor))
       moves.push({ from: sq, to: newPos, special: "promotion" });
     else moves.push({ from: sq, to: newPos, special: null });
   }
@@ -237,10 +231,10 @@ function generatePawnMoves(
   else newPos = generateOffset(sq, { x: dirx, y: -1 });
   if (
     newPos != null &&
-    checkSqare(board, newPos, PlayerColor) &&
-    !checkSqareEmpty(board, newPos)
+    checkSquare(board, newPos, PlayerColor) &&
+    !checkSquareEmpty(board, newPos)
   ) {
-    if (isPromotingSqare(newPos, PlayerColor))
+    if (isPromotingSquare(newPos, PlayerColor))
       moves.push({ from: sq, to: newPos, special: "promotion" });
     else moves.push({ from: sq, to: newPos, special: null });
   }
@@ -266,7 +260,7 @@ function generateKnightMoves(
   const movePos = generateOffsets(sq, moveOffsets);
   for (let i = 0; i < movePos.length; i++) {
     const newPos = movePos[i];
-    if (checkSqare(board, newPos, PlayerColor))
+    if (checkSquare(board, newPos, PlayerColor))
       moves.push({ from: sq, to: newPos, special: null });
   }
   return moves;
@@ -328,7 +322,7 @@ function generateKingMoves(
   const movePos = generateOffsets(sq, moveOffsets);
   for (let i = 0; i < movePos.length; i++) {
     const newPos = movePos[i];
-    if (checkSqare(board, newPos, PlayerColor))
+    if (checkSquare(board, newPos, PlayerColor))
       moves.push({ from: sq, to: newPos, special: null });
   }
   const piece = board[sq];
@@ -343,7 +337,7 @@ function generateKingMoves(
         shortRook.type == "rook" &&
         shortRook.hasMoved == false &&
         !checkIsAttacked(board, sq, piece.color) &&
-        checkSqaresEmptyAndNotAttacked(board, shortKingMovements, piece.color)
+        checkSquaresEmptyAndNotAttacked(board, shortKingMovements, piece.color)
       ) {
         moves.push({ from: sq, to: 158, special: "0-0" });
       }
@@ -355,7 +349,7 @@ function generateKingMoves(
         longRook.type == "rook" &&
         longRook.hasMoved == false &&
         !checkIsAttacked(board, sq, piece.color) &&
-        checkSqaresEmptyAndNotAttacked(board, longKingMovements, piece.color)
+        checkSquaresEmptyAndNotAttacked(board, longKingMovements, piece.color)
       ) {
         moves.push({ from: sq, to: 154, special: "0-0-0" });
       }
@@ -370,7 +364,7 @@ function generateKingMoves(
         shortRook.type == "rook" &&
         shortRook.hasMoved == false &&
         !checkIsAttacked(board, sq, piece.color) &&
-        checkSqaresEmptyAndNotAttacked(board, shortKingMovements, piece.color)
+        checkSquaresEmptyAndNotAttacked(board, shortKingMovements, piece.color)
       ) {
         moves.push({ from: sq, to: 1, special: "0-0" });
       }
@@ -382,7 +376,7 @@ function generateKingMoves(
         longRook.type == "rook" &&
         longRook.hasMoved == false &&
         !checkIsAttacked(board, sq, piece.color) &&
-        checkSqaresEmptyAndNotAttacked(board, longKingMovements, piece.color)
+        checkSquaresEmptyAndNotAttacked(board, longKingMovements, piece.color)
       ) {
         moves.push({ from: sq, to: 5, special: "0-0-0" });
       }
@@ -397,7 +391,7 @@ function generateKingMoves(
         shortRook.type == "rook" &&
         shortRook.hasMoved == false &&
         !checkIsAttacked(board, sq, piece.color) &&
-        checkSqaresEmptyAndNotAttacked(board, shortKingMovements, piece.color)
+        checkSquaresEmptyAndNotAttacked(board, shortKingMovements, piece.color)
       ) {
         moves.push({ from: sq, to: 38, special: "0-0" });
       }
@@ -409,7 +403,7 @@ function generateKingMoves(
         longRook.type == "rook" &&
         longRook.hasMoved == false &&
         !checkIsAttacked(board, sq, piece.color) &&
-        checkSqaresEmptyAndNotAttacked(board, longKingMovements, piece.color)
+        checkSquaresEmptyAndNotAttacked(board, longKingMovements, piece.color)
       ) {
         moves.push({ from: sq, to: 94, special: "0-0-0" });
       }
@@ -424,7 +418,7 @@ function generateKingMoves(
         shortRook.type == "rook" &&
         shortRook.hasMoved == false &&
         !checkIsAttacked(board, sq, piece.color) &&
-        checkSqaresEmptyAndNotAttacked(board, shortKingMovements, piece.color)
+        checkSquaresEmptyAndNotAttacked(board, shortKingMovements, piece.color)
       ) {
         moves.push({ from: sq, to: 121, special: "0-0" });
       }
@@ -436,7 +430,7 @@ function generateKingMoves(
         longRook.type == "rook" &&
         longRook.hasMoved == false &&
         !checkIsAttacked(board, sq, piece.color) &&
-        checkSqaresEmptyAndNotAttacked(board, longKingMovements, piece.color)
+        checkSquaresEmptyAndNotAttacked(board, longKingMovements, piece.color)
       ) {
         moves.push({ from: sq, to: 65, special: "0-0-0" });
       }
@@ -454,11 +448,11 @@ function generateOffsetLine(
 ): Array<Move> {
   const moves: Move[] = [];
   let newPos = generateOffset(sq, offset);
-  while (newPos != null && checkSqareEmpty(board, newPos)) {
+  while (newPos != null && checkSquareEmpty(board, newPos)) {
     moves.push({ from: sq, to: newPos, special: null });
     newPos = generateOffset(newPos, offset);
   }
-  if (newPos != null && checkSqare(board, newPos, PlayerColor)) {
+  if (newPos != null && checkSquare(board, newPos, PlayerColor)) {
     moves.push({ from: sq, to: newPos, special: null });
   }
   return moves;
@@ -524,7 +518,7 @@ function generateOffsets(pos: number, offsets: Array<Pos2>): Array<number> {
 }
 
 //Checkers
-function checkSqaresEmptyAndNotAttacked(
+function checkSquaresEmptyAndNotAttacked(
   board: Board,
   sqs: Array<number>,
   PlayerColor: PlayerColor,
@@ -532,7 +526,7 @@ function checkSqaresEmptyAndNotAttacked(
   for (let i = 0; i < sqs.length; i++) {
     if (
       checkIsAttacked(board, sqs[i], PlayerColor) ||
-      !checkSqareEmpty(board, sqs[i])
+      !checkSquareEmpty(board, sqs[i])
     ) {
       return false;
     }
@@ -681,7 +675,7 @@ function checkBounds(i: number): boolean {
   return false;
 }
 
-function checkSqare(
+function checkSquare(
   board: Board,
   sq: number,
   PlayerColor: PlayerColor,
@@ -697,24 +691,7 @@ function checkSqare(
   return false;
 }
 
-function checkSqarePiece(
-  board: Board,
-  sq: number,
-  PlayerColor: PlayerColor,
-  type: PieceType,
-): boolean {
-  const newPiece = board[sq];
-  if (checkBounds(sq) == false) return false;
-  if (
-    newPiece != null &&
-    areOpposingPlayerColors(newPiece.color, PlayerColor)
-  ) {
-    return true;
-  }
-  return false;
-}
-
-function checkSqareEmpty(board: Board, sq: number): boolean {
+function checkSquareEmpty(board: Board, sq: number): boolean {
   const newPos = sq;
   const newPiece = board[newPos];
   if (checkBounds(newPos) == false) return false;

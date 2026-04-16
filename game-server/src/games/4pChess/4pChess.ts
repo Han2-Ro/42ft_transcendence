@@ -32,6 +32,13 @@ export class FourPlayerChess extends Game {
     this.gameStatus = { isOver: true, winners: winners, reason: "resignation" };
   }
 
+  disconnect(player: PlayerColor): void {
+    let winners: PlayerColor[];
+    if (player == "red" || player == "yellow") winners = ["blue", "green"];
+    else winners = ["red", "yellow"];
+    this.gameStatus = { isOver: true, winners: winners, reason: "disconnect" };
+  }
+
   timeout(player: PlayerColor): void {
     let winners: PlayerColor[];
     if (player == "red" || player == "yellow") winners = ["blue", "green"];

@@ -1,7 +1,14 @@
 import { useEffect, useState } from "react";
 
-import { fourPlayer, Move, BoardState, PlayerColor } from "shared";
+import {
+  fourPlayer,
+  Move,
+  BoardState,
+  PlayerColor,
+  PromotablePieceType,
+} from "shared";
 import Image from "next/image";
+import { PromotionDialog } from "./PromotionDialog";
 
 const boardRotation: Record<string, string> = {
   red: "",
@@ -21,48 +28,80 @@ export default function FourPlayerBoard({
   boardState,
   onPlayerMove,
   playerColor,
+  times,
 }: {
   boardState: BoardState;
   onPlayerMove: (move: Move) => void;
   playerColor: PlayerColor;
+  times: number[];
 }) {
   const [selectedSquare, setSelectedSquare] = useState<number | null>(null);
-  const [movesFromSqareInt, setMovesFromSqareInt] = useState<number[] | null>(
+  const [movesFromSquareInt, setMovesFromSquareInt] = useState<number[] | null>(
     null,
   );
-  const [movesFromSqare, setMovesFromSqare] = useState<Move[] | null>(null);
+  const [movesFromSquare, setMovesFromSquare] = useState<Move[] | null>(null);
+  const [pendingPromotionMove, setPendingPromotionMove] = useState<Move | null>(
+    null,
+  );
 
   const handleSquareClick = (square: number) => {
+    if (pendingPromotionMove) return;
     if (selectedSquare === null) {
       setSelectedSquare(square);
       const moves = fourPlayer.generateMoves(boardState.board, square);
       const movesNumbers = moves.map((move) => move.to);
-      setMovesFromSqare(moves);
-      setMovesFromSqareInt(movesNumbers);
+      setMovesFromSquare(moves);
+      setMovesFromSquareInt(movesNumbers);
       return;
     }
 
-    if (!movesFromSqareInt || !movesFromSqare) return;
-    const index = movesFromSqareInt.indexOf(square);
+    if (!movesFromSquareInt || !movesFromSquare) return;
+    const index = movesFromSquareInt.indexOf(square);
     if (index == -1) {
       setSelectedSquare(null);
-      setMovesFromSqareInt(null);
-      setMovesFromSqare(null);
+      setMovesFromSquareInt(null);
+      setMovesFromSquare(null);
       return;
     }
-    const move: Move = { ...movesFromSqare[index] };
-    //todo: make some kind of ui element, that makes player choose which piece to promote to
-    if (move.special == "promotion") move.promotion = "queen";
+    const move: Move = { ...movesFromSquare[index] };
     setSelectedSquare(null);
-    setMovesFromSqareInt(null);
-    setMovesFromSqare(null);
+    setMovesFromSquareInt(null);
+    setMovesFromSquare(null);
+    if (move.special === "promotion") {
+      setPendingPromotionMove(move);
+      return;
+    }
     onPlayerMove(move);
   };
 
-  useEffect(() => {}, [movesFromSqareInt]);
+  const handlePromotionSelect = (promotion: PromotablePieceType) => {
+    if (!pendingPromotionMove) return;
+    onPlayerMove({ ...pendingPromotionMove, promotion });
+    setPendingPromotionMove(null);
+  };
+
+  const handlePromotionClose = () => {
+    setPendingPromotionMove(null);
+  };
+
+  useEffect(() => {}, [movesFromSquareInt]);
+
+  const formatTime = (time: number): string => {
+    const minutes = Math.floor(time / 60);
+    const seconds = Math.round(time % 60);
+    return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+  };
 
   return (
-    <div className="flex justify-center items-center h-full">
+    <div className="flex flex-col justify-center items-center h-full gap-4">
+      {times[0] !== -1 && (
+        <div className="text-lg font-semibold">
+          <div>
+            Times: red: {formatTime(times[0])}, blue: {formatTime(times[1])},
+            yellow: {formatTime(times[2])}, green: {formatTime(times[3])}
+          </div>
+        </div>
+      )}
       <div
         className={`w-[min(100vw,50vh)] h-[min(100vw,50vh)] md:w-[min(50vw,70vh)] md:h-[min(50vw,70vh)] grid grid-rows-14 grid-cols-14 ${boardRotation[playerColor]}`}
       >
@@ -94,6 +133,7 @@ export default function FourPlayerBoard({
             <button
               key={index}
               onClick={() => handleSquareClick(index)}
+              disabled={pendingPromotionMove !== null}
               className="relative"
               style={{
                 background:
@@ -115,9 +155,9 @@ export default function FourPlayerBoard({
                   className={`w-full h-full ${pieceRotation[playerColor]}`}
                 />
               )}
-              {movesFromSqareInt &&
-                movesFromSqareInt.length > 0 &&
-                movesFromSqareInt.includes(index) && (
+              {movesFromSquareInt &&
+                movesFromSquareInt.length > 0 &&
+                movesFromSquareInt.includes(index) && (
                   <Image
                     width="45"
                     height="45"
@@ -130,6 +170,11 @@ export default function FourPlayerBoard({
           );
         })}
       </div>
+      <PromotionDialog
+        open={pendingPromotionMove !== null}
+        onClose={handlePromotionClose}
+        onSelect={handlePromotionSelect}
+      />
     </div>
   );
 }
