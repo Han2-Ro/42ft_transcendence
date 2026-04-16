@@ -92,7 +92,12 @@ const disconnectPlayer = (uid: string) => {
 };
 
 io.on("connection", (socket) => {
-  console.log("Client connected: socketid: ", socket.id, "playerid: ", socket.data.user);
+  console.log(
+    "Client connected: socketid: ",
+    socket.id,
+    "playerid: ",
+    socket.data.user,
+  );
   const player = players.get(socket.data.user);
   if (player === undefined) {
     players.set(socket.data.user, {
@@ -144,13 +149,19 @@ io.on("connection", (socket) => {
         });
       }
       console.log(
-        "Player: ", socket.data.user, "stopped searching for opponent for type:", type,
+        "Player: ",
+        socket.data.user,
+        "stopped searching for opponent for type:",
+        type,
       );
       return;
     }
     player.searching.push(type);
     console.log(
-      "Player: ", socket.data.user, "started searching for opponent for type:", type,
+      "Player: ",
+      socket.data.user,
+      "started searching for opponent for type:",
+      type,
     );
     player.sockets.forEach((value: GameSocket) => {
       value.emit("setSearching", player.searching);
