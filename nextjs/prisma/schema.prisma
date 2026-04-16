@@ -27,32 +27,50 @@ model User {
   
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
-  
-  // Relations to Games
-  gamesAsWhite     Game[]   @relation("GamesAsWhite")
-  gamesAsBlack     Game[]   @relation("GamesAsBlack")
+
+  gamesAsWhite     Game[]   @relation("WhitePlayer")
+  gamesAsBlack     Game[]   @relation("BlackPlayer")
+
+  gamesAsBlue     Game_four[]   @relation("BluePlayer")
+  gamesAsYellow     Game_four[]   @relation("YellowPlayer")
+  gamesAsRed     Game_four[]   @relation("RedPlayer")
+  gamesAsGreen     Game_four[]   @relation("GreenPlayer")
 }
 
 model Game {
   id            Int       @id @default(autoincrement())
-  
+
   whitePlayerId Int
-  blackPlayerId Int?
+  blackPlayerId Int
+
+  whitePlayer   User      @relation("WhitePlayer", fields: [whitePlayerId], references: [id])
+  blackPlayer   User     @relation("BlackPlayer", fields: [blackPlayerId], references: [id])
   
-  status        GameStatus @default(WAITING)
-  winner        String?    // 'white', 'black', or 'draw'
-  
+  winner        String?
+  reason        String?
+
   createdAt     DateTime   @default(now())
   updatedAt     DateTime   @updatedAt
   finishedAt    DateTime?
-  
-  // Relations to the Users
-  whitePlayer   User       @relation("GamesAsWhite", fields: [whitePlayerId], references: [id])
-  blackPlayer   User?      @relation("GamesAsBlack", fields: [blackPlayerId], references: [id])
 }
 
-enum GameStatus {
-  WAITING      // Waiting for second player
-  IN_PROGRESS  // Game is active
-  FINISHED     // Game ended
+model Game_four {
+  id            Int       @id @default(autoincrement())
+
+  bluePlayerId Int
+  greenPlayerId Int
+  yellowPlayerId Int
+  redPlayerId Int
+
+  bluePlayer   User      @relation("BluePlayer", fields: [bluePlayerId], references: [id])
+  yellowPlayer   User     @relation("YellowPlayer", fields: [yellowPlayerId], references: [id])
+  redPlayer   User      @relation("RedPlayer", fields: [redPlayerId], references: [id])
+  greenPlayer   User      @relation("GreenPlayer", fields: [greenPlayerId], references: [id])
+
+  winner        String?
+  reason        String?
+
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+  finishedAt    DateTime?
 }
