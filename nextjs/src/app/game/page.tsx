@@ -47,7 +47,7 @@ export default function Page() {
   const [times, setTimes] = useState<number[] | null>(null);
   const [result, setResult] = useState<GameResult | null>(null);
   const [resultReason, setResultReason] = useState<string | null>(null);
-  const [isSearching, setIsSearching] = useState(false);
+  const [searching, setSearching] = useState<Games[]>([]);
   const [serverConnectionStatus, setServerConnectionStatus] =
     useState<ConnectionStatus>("waiting");
   const { setActions, clearActions } = useSidebarActions();
@@ -72,18 +72,13 @@ export default function Page() {
       }
     });
 
-    socket.on("dropCheck", () => {
-      // responds to the checker
-      socket.emit("dropCheck");
-    });
-
     socket.on("gameStart", (data) => {
       setGameId(data.gameId);
       setGameType(data.type);
       setBoardState(data.boardState);
       setColor(data.color);
       setTimes(data.times);
-      setIsSearching(false);
+      setSearching([]);
     });
 
     socket.on("moveMade", (data) => {
@@ -95,17 +90,21 @@ export default function Page() {
       setResult(data.result);
       setResultReason(data.reason);
       setGameId(null);
-      setIsSearching(false);
+      setSearching([]);
+    });
+
+    socket.on("setSearching", (data) => {
+      setSearching(data);
     });
 
     return () => {
       console.log("disconnecting socket");
       socket.off("connect");
       socket.off("connect_error");
-      socket.off("dropCheck");
       socket.off("gameStart");
       socket.off("moveMade");
       socket.off("gameOver");
+      socket.off("setSearching");
       socket.disconnect();
     };
   }, []);
@@ -150,7 +149,15 @@ export default function Page() {
     return () => {
       clearActions();
     };
-  }, [boardState, clearActions, emitPlayerResign, gameId, result, setActions]);
+  }, [
+    boardState,
+    clearActions,
+    emitPlayerResign,
+    gameId,
+    result,
+    setActions,
+    searching,
+  ]);
 
   return (
     <div className="flex flex-col md:flex-row items-center md:justify-around lg:px-10 min-h-full">
@@ -196,11 +203,10 @@ export default function Page() {
 
         {!gameId && !result && (
           <Lobby
-            onFindMatchPressed={(type) => {
-              setIsSearching(true);
-              socket.emit("findMatch", type);
+            onFindMatchTogglePressed={(type) => {
+              socket.emit("findMatchToggle", type);
             }}
-            isSearching={isSearching}
+            searching={searching}
             serverConnectionStatus={serverConnectionStatus}
           />
         )}
