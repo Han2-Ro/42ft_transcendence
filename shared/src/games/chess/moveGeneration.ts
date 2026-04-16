@@ -18,7 +18,7 @@ export function validateMove(
   const moves = generateMoves(
     boardState.board,
     move.from,
-    boardState.enPassantSqare,
+    boardState.enPassantSquare,
   );
   const moveExists = moves.some(
     (m) =>
@@ -42,7 +42,7 @@ export function validateMove(
 }
 
 export function updateBoardState(boardState: BoardState, move: Move) {
-  boardState.enPassantSqare = updateBoard(
+  boardState.enPassantSquare = updateBoard(
     boardState.board,
     move,
     boardState.turn,
@@ -85,7 +85,7 @@ function updateBoard(
       if (move.promotion && piece) piece.type = move.promotion;
     }
     if (move.special == "double_move") {
-      return getEnPassantableSqare(move);
+      return getEnPassantableSquare(move);
     }
     if (move.special == "en_passant") {
       if (turn == "black") {
@@ -98,7 +98,7 @@ function updateBoard(
   return null;
 }
 
-function getEnPassantableSqare(move: Move): number {
+function getEnPassantableSquare(move: Move): number {
   const from2d: Pos2 = { x: -1, y: -1 };
   from2d.x = (move.from % 8) + 1;
   from2d.y = Math.floor(move.from / 8) + 1;
@@ -114,9 +114,9 @@ function getEnPassantableSqare(move: Move): number {
 export function checkMates(
   board: Board,
   turn: PlayerColor,
-  enPassantSqare: number | null,
+  enPassantSquare: number | null,
 ): GameStatus {
-  const moves = generateAllMoves(board, turn, enPassantSqare);
+  const moves = generateAllMoves(board, turn, enPassantSquare);
   if (moves.length == 0) {
     if (checkKingInCheck(board, turn)) {
       let winner: PlayerColor[];
@@ -131,13 +131,13 @@ export function checkMates(
 export function generateAllMoves(
   board: Board,
   color: PlayerColor,
-  enPassantSqare: number | null,
+  enPassantSquare: number | null,
 ): Array<Move> {
   const moves: Move[] = [];
   for (let sq = 0; sq < 64; sq++) {
     const piece = board[sq];
     if (!piece || piece.color !== color) continue;
-    const pieceMoves = generateMoves(board, sq, enPassantSqare);
+    const pieceMoves = generateMoves(board, sq, enPassantSquare);
     moves.push(...pieceMoves);
   }
   return moves;
@@ -146,7 +146,7 @@ export function generateAllMoves(
 export function generateMoves(
   board: Board,
   sq: number,
-  enPassantSqare: number | null,
+  enPassantSquare: number | null,
 ): Array<Move> {
   let moves: Move[] = [];
 
@@ -159,7 +159,7 @@ export function generateMoves(
           sq,
           piece.color,
           piece.hasMoved,
-          enPassantSqare,
+          enPassantSquare,
         )
       : piece.type === "knight"
         ? generateKnightMoves(board, sq, piece.color)
@@ -185,7 +185,7 @@ function generatePawnMoves(
   sq: number,
   color: PlayerColor,
   hasMoved: boolean,
-  enPassantSqare: number | null,
+  enPassantSquare: number | null,
 ): Array<Move> {
   const moves: Move[] = [];
   let dir = 1;
@@ -197,13 +197,13 @@ function generatePawnMoves(
     if (
       newPos != null &&
       newPos2 != null &&
-      checkSqareEmpty(board, newPos) &&
-      checkSqareEmpty(board, newPos2)
+      checkSquareEmpty(board, newPos) &&
+      checkSquareEmpty(board, newPos2)
     )
       moves.push({ from: sq, to: newPos, special: "double_move" });
   //Move
   newPos = generateOffset(sq, { x: 0, y: dir });
-  if (newPos != null && checkSqareEmpty(board, newPos)) {
+  if (newPos != null && checkSquareEmpty(board, newPos)) {
     if (
       (color == "white" && newPos > -1 && newPos < 8) ||
       (color == "black" && newPos > 55 && newPos < 64)
@@ -215,30 +215,30 @@ function generatePawnMoves(
   newPos = generateOffset(sq, { x: 1, y: dir });
   if (
     newPos != null &&
-    ((checkSqare(board, newPos, color) && !checkSqareEmpty(board, newPos)) ||
-      newPos === enPassantSqare)
+    ((checkSquare(board, newPos, color) && !checkSquareEmpty(board, newPos)) ||
+      newPos === enPassantSquare)
   ) {
     if (
       (color == "white" && newPos > -1 && newPos < 8) ||
       (color == "black" && newPos > 55 && newPos < 64)
     )
       moves.push({ from: sq, to: newPos, special: "promotion" });
-    else if (newPos === enPassantSqare)
+    else if (newPos === enPassantSquare)
       moves.push({ from: sq, to: newPos, special: "en_passant" });
     else moves.push({ from: sq, to: newPos, special: null });
   }
   newPos = generateOffset(sq, { x: -1, y: dir });
   if (
     newPos != null &&
-    ((checkSqare(board, newPos, color) && !checkSqareEmpty(board, newPos)) ||
-      newPos === enPassantSqare)
+    ((checkSquare(board, newPos, color) && !checkSquareEmpty(board, newPos)) ||
+      newPos === enPassantSquare)
   ) {
     if (
       (color == "white" && newPos > -1 && newPos < 8) ||
       (color == "black" && newPos > 55 && newPos < 64)
     )
       moves.push({ from: sq, to: newPos, special: "promotion" });
-    else if (newPos === enPassantSqare)
+    else if (newPos === enPassantSquare)
       moves.push({ from: sq, to: newPos, special: "en_passant" });
     else moves.push({ from: sq, to: newPos, special: null });
   }
@@ -264,7 +264,7 @@ function generateKnightMoves(
   const movePos = generateOffsets(sq, moveOffsets);
   for (let i = 0; i < movePos.length; i++) {
     const newPos = movePos[i];
-    if (checkSqare(board, newPos, color))
+    if (checkSquare(board, newPos, color))
       moves.push({ from: sq, to: newPos, special: null });
   }
   return moves;
@@ -326,7 +326,7 @@ function generateKingMoves(
   const movePos = generateOffsets(sq, moveOffsets);
   for (let i = 0; i < movePos.length; i++) {
     const newPos = movePos[i];
-    if (checkSqare(board, newPos, color))
+    if (checkSquare(board, newPos, color))
       moves.push({ from: sq, to: newPos, special: null });
   }
   const piece = board[sq];
@@ -339,7 +339,7 @@ function generateKingMoves(
         leftRook.type == "rook" &&
         leftRook.hasMoved == false &&
         !checkIsAttacked(board, sq, piece.color) &&
-        checkSqaresEmptyAndNotAttacked(board, leftKingMovements, "white")
+        checkSquaresEmptyAndNotAttacked(board, leftKingMovements, "white")
       ) {
         moves.push({ from: sq, to: 58, special: "0-0-0" });
       }
@@ -350,7 +350,7 @@ function generateKingMoves(
         rightRook.type == "rook" &&
         rightRook.hasMoved == false &&
         !checkIsAttacked(board, sq, piece.color) &&
-        checkSqaresEmptyAndNotAttacked(board, rightKingMovements, "white")
+        checkSquaresEmptyAndNotAttacked(board, rightKingMovements, "white")
       ) {
         moves.push({ from: sq, to: 62, special: "0-0" });
       }
@@ -362,7 +362,7 @@ function generateKingMoves(
         leftRook.type == "rook" &&
         leftRook.hasMoved == false &&
         !checkIsAttacked(board, sq, piece.color) &&
-        checkSqaresEmptyAndNotAttacked(board, leftKingMovements, "black")
+        checkSquaresEmptyAndNotAttacked(board, leftKingMovements, "black")
       ) {
         moves.push({ from: sq, to: 2, special: "0-0-0" });
       }
@@ -373,7 +373,7 @@ function generateKingMoves(
         rightRook.type == "rook" &&
         rightRook.hasMoved == false &&
         !checkIsAttacked(board, sq, piece.color) &&
-        checkSqaresEmptyAndNotAttacked(board, rightKingMovements, "black")
+        checkSquaresEmptyAndNotAttacked(board, rightKingMovements, "black")
       ) {
         moves.push({ from: sq, to: 6, special: "0-0" });
       }
@@ -392,11 +392,11 @@ function generateOffsetLine(
   const moves: Move[] = [];
   //let newPos = sq + offset
   let newPos = generateOffset(sq, offset);
-  while (newPos != null && checkSqareEmpty(board, newPos)) {
+  while (newPos != null && checkSquareEmpty(board, newPos)) {
     moves.push({ from: sq, to: newPos, special: null });
     newPos = generateOffset(newPos, offset);
   }
-  if (newPos != null && checkSqare(board, newPos, color)) {
+  if (newPos != null && checkSquare(board, newPos, color)) {
     moves.push({ from: sq, to: newPos, special: null });
   }
   return moves;
@@ -422,7 +422,7 @@ function generateOffsets(pos: number, offsets: Array<Pos2>): Array<number> {
 }
 
 //Checkers
-function checkSqaresEmptyAndNotAttacked(
+function checkSquaresEmptyAndNotAttacked(
   board: Board,
   sqs: Array<number>,
   color: PlayerColor,
@@ -430,7 +430,7 @@ function checkSqaresEmptyAndNotAttacked(
   for (let i = 0; i < sqs.length; i++) {
     if (
       checkIsAttacked(board, sqs[i], color) ||
-      !checkSqareEmpty(board, sqs[i])
+      !checkSquareEmpty(board, sqs[i])
     ) {
       return false;
     }
@@ -493,7 +493,7 @@ function checkIsAttacked(board: Board, pos: number, color: PlayerColor) {
   const pawnPos = generateOffsets(pos, pawnOffsets);
   for (let i = 0; i < pawnPos.length; i++) {
     const newPos = pawnPos[i];
-    if (checkSqarePiece(board, newPos, color, "pawn")) return true;
+    if (checkSquarePiece(board, newPos, color, "pawn")) return true;
   }
   return false;
 }
@@ -525,7 +525,7 @@ function checkBounds(i: number): boolean {
   return false;
 }
 
-function checkSqare(board: Board, sq: number, color: PlayerColor): boolean {
+function checkSquare(board: Board, sq: number, color: PlayerColor): boolean {
   const newPiece = board[sq];
   if (checkBounds(sq) == false) return false;
   if (newPiece == null || (newPiece != null && newPiece.color != color)) {
@@ -534,7 +534,7 @@ function checkSqare(board: Board, sq: number, color: PlayerColor): boolean {
   return false;
 }
 
-function checkSqarePiece(
+function checkSquarePiece(
   board: Board,
   sq: number,
   color: PlayerColor,
@@ -548,7 +548,7 @@ function checkSqarePiece(
   return false;
 }
 
-function checkSqareEmpty(board: Board, sq: number): boolean {
+function checkSquareEmpty(board: Board, sq: number): boolean {
   const newPos = sq;
   const newPiece = board[newPos];
   if (checkBounds(newPos) == false) return false;

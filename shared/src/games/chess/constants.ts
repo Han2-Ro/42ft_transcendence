@@ -47,5 +47,5 @@ export const startingBoardState: BoardState = {
   board: startingBoard,
   turn: "white",
   movesPlayed: 0,
-  enPassantSqare: null,
+  enPassantSquare: null,
 };

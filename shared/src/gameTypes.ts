@@ -41,7 +41,7 @@ export type BoardState = {
   board: Board;
   turn: PlayerColor;
   movesPlayed: number;
-  enPassantSqare: number | null;
+  enPassantSquare: number | null;
 };
 
 export type Move = {
