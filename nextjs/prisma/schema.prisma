@@ -27,50 +27,50 @@ model User {
   
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
-  
-  // Relations to Games
-  gamesAsWhite     Game[]   @relation("GamesAsWhite")
-  gamesAsBlack     Game[]   @relation("GamesAsBlack")
-  moves            Move[]
+
+  gamesAsWhite     Game[]   @relation("WhitePlayer")
+  gamesAsBlack     Game[]   @relation("BlackPlayer")
+
+  gamesAsBlue     GameFour[]   @relation("BluePlayer")
+  gamesAsYellow     GameFour[]   @relation("YellowPlayer")
+  gamesAsRed     GameFour[]   @relation("RedPlayer")
+  gamesAsGreen     GameFour[]   @relation("GreenPlayer")
 }
 
 model Game {
   id            Int       @id @default(autoincrement())
-  
+
   whitePlayerId Int
-  blackPlayerId Int?
+  blackPlayerId Int
+
+  whitePlayer   User      @relation("WhitePlayer", fields: [whitePlayerId], references: [id])
+  blackPlayer   User     @relation("BlackPlayer", fields: [blackPlayerId], references: [id])
   
-  status        GameStatus @default(WAITING)
-  winner        String?    // 'white', 'black', or 'draw'
-  
+  winner        String?
+  reason        String?
+
   createdAt     DateTime   @default(now())
   updatedAt     DateTime   @updatedAt
   finishedAt    DateTime?
-  
-  // Relations to the Users
-  whitePlayer   User       @relation("GamesAsWhite", fields: [whitePlayerId], references: [id])
-  blackPlayer   User?      @relation("GamesAsBlack", fields: [blackPlayerId], references: [id])
-  moves         Move[]
 }
 
-model Move {
-  id           Int      @id @default(autoincrement())
-  
-  gameId       Int
-  playerId     Int
-  
-  moveNotation String   // example "e2e4"
-  moveNumber   Int      // move number 1, 2, 3...
-  
-  createdAt    DateTime @default(now())
-  
-  // Relations to the Game and User
-  game         Game     @relation(fields: [gameId], references: [id], onDelete: Cascade)
-  player       User     @relation(fields: [playerId], references: [id])
-}
+model GameFour {
+  id            Int       @id @default(autoincrement())
 
-enum GameStatus {
-  WAITING      // Waiting for second player
-  IN_PROGRESS  // Game is active
-  FINISHED     // Game ended
+  bluePlayerId Int
+  greenPlayerId Int
+  yellowPlayerId Int
+  redPlayerId Int
+
+  bluePlayer   User      @relation("BluePlayer", fields: [bluePlayerId], references: [id])
+  yellowPlayer   User     @relation("YellowPlayer", fields: [yellowPlayerId], references: [id])
+  redPlayer   User      @relation("RedPlayer", fields: [redPlayerId], references: [id])
+  greenPlayer   User      @relation("GreenPlayer", fields: [greenPlayerId], references: [id])
+
+  winner        String?
+  reason        String?
+
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+  finishedAt    DateTime?
 }
