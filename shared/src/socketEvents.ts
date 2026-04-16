@@ -33,7 +33,5 @@ export interface SToCEvents {
 
   gameOver: (data: { result: Result; reason: string }) => void;
 
-  connection: () => void;
-
   dropCheck: () => void;
 }

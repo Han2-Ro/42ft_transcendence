@@ -14,6 +14,7 @@ export type PieceType =
   | "bishop"
   | "queen"
   | "king";
+export type PromotablePieceType = "queen" | "rook" | "bishop" | "knight";
 
 type Piece = {
   color: PlayerColor;
@@ -46,5 +47,5 @@ export type Move = {
   from: number;
   to: number;
   special: "0-0-0" | "0-0" | "promotion" | null;
-  promotion?: PieceType;
+  promotion?: PromotablePieceType;
 };

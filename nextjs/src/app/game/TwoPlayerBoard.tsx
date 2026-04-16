@@ -1,6 +1,14 @@
-import { useEffect, useState } from "react";
-import { twoPlayer, Move, PieceOrNull, BoardState, PlayerColor } from "shared";
+import { useState } from "react";
+import {
+  twoPlayer,
+  Move,
+  PieceOrNull,
+  BoardState,
+  PlayerColor,
+  PromotablePieceType,
+} from "shared";
 import Image from "next/image";
+import { PromotionDialog } from "./PromotionDialog";
 
 export default function TwoPlayerBoard({
   boardState,
@@ -18,8 +26,22 @@ export default function TwoPlayerBoard({
     null,
   );
   const [movesFromSqare, setMovesFromSqare] = useState<Move[] | null>(null);
+  const [pendingPromotionMove, setPendingPromotionMove] = useState<Move | null>(
+    null,
+  );
+
+  const isPawnPromotionTarget = (move: Move): boolean => {
+    const piece = boardState.board[move.from];
+    if (!piece || piece.type !== "pawn") return false;
+    const targetRank = Math.floor(move.to / 8);
+    return (
+      (piece.color === "white" && targetRank === 0) ||
+      (piece.color === "black" && targetRank === 7)
+    );
+  };
 
   const handleSquareClick = (square: number) => {
+    if (pendingPromotionMove) return;
     if (selectedSquare === null) {
       setSelectedSquare(square);
       const moves = twoPlayer.generateMoves(boardState.board, square);
@@ -38,15 +60,25 @@ export default function TwoPlayerBoard({
       return;
     }
     const move: Move = { ...movesFromSqare[index] };
-    //todo: make some kind of ui element, that makes player choose which piece to promote to
-    if (move.special == "promotion") move.promotion = "queen";
     setSelectedSquare(null);
     setMovesFromSqareInt(null);
     setMovesFromSqare(null);
+    if (move.special === "promotion" || isPawnPromotionTarget(move)) {
+      setPendingPromotionMove({ ...move, special: "promotion" });
+      return;
+    }
     onPlayerMove(move);
   };
 
-  useEffect(() => {}, [movesFromSqareInt]);
+  const handlePromotionSelect = (promotion: PromotablePieceType) => {
+    if (!pendingPromotionMove) return;
+    onPlayerMove({ ...pendingPromotionMove, promotion });
+    setPendingPromotionMove(null);
+  };
+
+  const handlePromotionClose = () => {
+    setPendingPromotionMove(null);
+  };
 
   const formatTime = (time: number): string => {
     const minutes = Math.floor(time / 60);
@@ -70,6 +102,7 @@ export default function TwoPlayerBoard({
           <button
             key={index}
             onClick={() => handleSquareClick(index)}
+            disabled={pendingPromotionMove !== null}
             className="relative"
             style={{
               background:
@@ -105,6 +138,11 @@ export default function TwoPlayerBoard({
           </button>
         ))}
       </div>
+      <PromotionDialog
+        open={pendingPromotionMove !== null}
+        onClose={handlePromotionClose}
+        onSelect={handlePromotionSelect}
+      />
     </div>
   );
 }

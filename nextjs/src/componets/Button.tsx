@@ -5,6 +5,7 @@ interface ButtonProps {
   loading?: boolean;
   className?: string;
   loadingText?: string;
+  arialabel?: string;
 }
 
 export default function Button({
@@ -14,6 +15,7 @@ export default function Button({
   disabled = false,
   className = "",
   loadingText = "Loading...",
+  arialabel,
 }: ButtonProps) {
   const isDisabled = disabled || loading;
 
@@ -21,7 +23,8 @@ export default function Button({
     <button
       onClick={onClick}
       disabled={isDisabled}
-      className={`px-6 py-2 text-sm font-semibold rounded-lg transition-all ${isDisabled ? "bg-blue-300 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-500"} ${className}`}
+      aria-label={arialabel}
+      className={`px-6 py-2 text-sm font-semibold rounded-lg transition-all ${isDisabled ? "bg-accent-primary/10 cursor-not-allowed" : "bg-accent-primary hover:bg-accent-primary/50"} ${className}`}
     >
       {loading ? loadingText : children}
     </button>
