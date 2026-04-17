@@ -4,7 +4,7 @@ packages:
   - tests
   - shared
 allowBuilds:
-  '@prisma/engines': true
+  "@prisma/engines": true
   bcrypt: true
   esbuild: true
   prisma: true

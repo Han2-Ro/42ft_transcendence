@@ -86,10 +86,7 @@ export default function MainMenu({ onClose }: Props) {
         <MenuButton
           label="Settings"
           icon={<GearIcon size={20} />}
-          onClick={() => {
-            console.error("TODO: not implented yet");
-            onClose?.();
-          }}
+          href="/settings"
         />
       </nav>
     </>
