@@ -5,6 +5,7 @@ import { SignJWT } from "jose";
 import { prisma } from "@/lib/prisma";
 import { cookies } from "next/headers";
 import { getSession } from "./session";
+import { use } from "react";
 
 function getJwtSecret() {
   const secret = process.env.JWT_SECRET;
@@ -128,4 +129,83 @@ export async function logout() {
   }
   (await cookies()).delete(cookieOptions);
   //TODO: What else needs to be done on logout?
+}
+
+export async function changePassword(oldPassword: string, newPassword: string) {
+  const session = await getSession();
+  const user = await prisma.user.findUnique({ where: { id: session?.userId } });
+  if (!user) return { error: "User not found" };
+  const userId = user.id;
+  const passwordValid = await bcrypt.compare(oldPassword, user.passwordHash);
+  if (!passwordValid) {
+    return { error: "Invalid password" };
+  }
+  try {
+    await prisma.user.update({
+      where: { id: userId },
+      data: { passwordHash: await bcrypt.hash(newPassword, 12) },
+    });
+    return { success: true };
+  } catch {
+    return { error: "Failed to change password" };
+  }
+}
+
+export async function changeUsername(newUsername: string) {
+  const session = await getSession();
+  const user = await prisma.user.findUnique({ where: { id: session?.userId } });
+  if (!user) return { error: "User not found" };
+  const userId = session?.userId;
+
+  try {
+    await prisma.user.update({
+      where: { id: userId },
+      data: { username: newUsername },
+    });
+    return { success: true };
+  } catch {
+    return { error: "Failed to update username" };
+  }
+}
+
+export async function getGameTwoHistory() {
+  const session = await getSession();
+  if (!session) return { error: "Not logged in." };
+  const userId = session.userId;
+
+  const games = await prisma.game.findMany({
+    where: {
+      OR: [{ whitePlayerId: userId }, { blackPlayerId: userId }],
+    },
+    include: {
+      whitePlayer: { select: { id: true, username: true } },
+      blackPlayer: { select: { id: true, username: true } },
+    },
+    orderBy: { createdAt: "desc" },
+  });
+
+  return games
+    .filter((game) => game.winner !== null)
+    .map((game) => {
+      const playedAsWhite = game.whitePlayerId === userId;
+      const opponent = playedAsWhite ? game.blackPlayer : game.whitePlayer;
+
+      let result: "win" | "lose" | "draw";
+      if (game.winner === "draw") {
+        result = "draw";
+      } else if (
+        (game.winner === "white" && playedAsWhite) ||
+        (game.winner === "black" && !playedAsWhite)
+      ) {
+        result = "win";
+      } else {
+        result = "lose";
+      }
+
+      return {
+        date: game.createdAt,
+        opponent: opponent?.username ?? "Unknown",
+        result,
+      };
+    });
 }

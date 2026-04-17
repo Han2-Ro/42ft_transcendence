@@ -1,6 +1,7 @@
 import { Result as GameResult } from "shared";
+import { getGameTwoHistory } from "@/lib/auth/actions";
 
-const sampleEntries: GameHistoryEntry[] = [
+/* const sampleEntries: GameHistoryEntry[] = [
   { date: new Date("2026-03-19T18:30:00Z"), opponent: "alice", result: "win" },
   { date: new Date("2026-03-18T21:10:00Z"), opponent: "bob", result: "draw" },
   { date: new Date("2026-03-17T16:45:00Z"), opponent: "carla", result: "lose" },
@@ -8,7 +9,7 @@ const sampleEntries: GameHistoryEntry[] = [
   { date: new Date("2026-03-16T20:00:00Z"), opponent: "david", result: "win" },
   { date: new Date("2026-03-15T14:15:00Z"), opponent: "eva", result: "win" },
   { date: new Date("2026-03-14T19:55:00Z"), opponent: "frank", result: "lose" },
-];
+]; */
 
 export type GameHistoryEntry = {
   date: Date;
@@ -16,16 +17,20 @@ export type GameHistoryEntry = {
   result: GameResult;
 };
 
-export default function GameHistory({
+export default async function GameHistory({
   maxEntries = Infinity,
   className,
 }: {
   className?: string;
   maxEntries?: number;
 }) {
-  const entries = sampleEntries.sort(
-    (a, b) => b.date.getTime() - a.date.getTime(),
-  );
+  const data = await getGameTwoHistory();
+
+  if ("error" in data) {
+    return <p className="px-6 py-4">{data.error}</p>;
+  }
+
+  const entries = data;
   return (
     <table className={className}>
       <thead>
