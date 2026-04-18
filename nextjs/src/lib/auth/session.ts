@@ -31,7 +31,7 @@ export const getSession = cache(async (): Promise<User | null> => {
 
   try {
     const { payload } = await jwtVerify(token, getJwtSecret());
-	// TODO: check if user exists so we avoid displaying user which does not exists
+    // TODO: check if user exists so we avoid displaying user which does not exists
     return {
       userId: payload.userId as number,
       username: payload.username as string,
