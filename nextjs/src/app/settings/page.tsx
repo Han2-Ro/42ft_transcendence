@@ -4,7 +4,7 @@ import { useAuthConetxt } from "@/componets/AuthProvider";
 import Button from "@/componets/Button";
 import { Popup } from "@/componets/Popup";
 import { TextInput } from "@/componets/TextInput";
-import { changeUsername } from "@/lib/auth/actions";
+import { changePassword, changeUsername } from "@/lib/auth/actions";
 import { useState } from "react";
 
 export default function Page() {
@@ -41,6 +41,36 @@ export default function Page() {
     }
   };
 
+  const submitNewPassword = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setLoading(true);
+    setError("");
+    try {
+      const formData = new FormData(e.currentTarget);
+      const currentPassword = formData.get("currentPassword") as string;
+      const newPassword = formData.get("newPassword") as string;
+      const confirmNewPassword = formData.get("confirmNewPassword") as string;
+
+      if (newPassword !== confirmNewPassword) {
+        setError("New passwords do not match");
+        return;
+      }
+
+      const result = await changePassword(currentPassword, newPassword);
+      if (!result.success) {
+        setError(result.error);
+        return;
+      }
+
+      setShowPasswordDialog(false);
+    } catch (err) {
+      console.log(err);
+      setError("An error occurred. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <main className=" max-w-lg mx-auto p-2">
       {showUsernameDialog && (
@@ -54,6 +84,11 @@ export default function Page() {
               required
               disabled={loading}
             />
+            {error && (
+              <div className="mb-4 p-2 bg-red-500/20 text-red-500 rounded">
+                {error}
+              </div>
+            )}
             <Button type="submit" disabled={loading} className="mt-8">
               {loading ? "Submitting..." : "Submit"}
             </Button>
@@ -61,8 +96,42 @@ export default function Page() {
         </Popup>
       )}
       {showPasswordDialog && (
-        <Popup onClose={() => setShowPasswordDialog(false)}>
-          <div className="p-2">change password</div>
+        <Popup className="p-8" onClose={() => setShowPasswordDialog(false)}>
+          <h2 className="mb-8 text-3xl">Change Password</h2>
+          <form className="flex flex-col gap-2" onSubmit={submitNewPassword}>
+            <TextInput
+              id="currentPassword"
+              name="currentPassword"
+              label="Current Password"
+              type="password"
+              required
+              disabled={loading}
+            />
+            <TextInput
+              id="newPassword"
+              name="newPassword"
+              label="New Password"
+              type="password"
+              required
+              disabled={loading}
+            />
+            <TextInput
+              id="confirmNewPassword"
+              name="confirmNewPassword"
+              label="Confirm New Password"
+              type="password"
+              required
+              disabled={loading}
+            />
+            {error && (
+              <div className="mb-4 p-2 bg-red-500/20 text-red-500 rounded">
+                {error}
+              </div>
+            )}
+            <Button type="submit" disabled={loading} className="mt-8">
+              {loading ? "Submitting..." : "Submit"}
+            </Button>
+          </form>
         </Popup>
       )}
 
