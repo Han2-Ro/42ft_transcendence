@@ -11,6 +11,7 @@ import { BoardState, PlayerColor, Move, Games } from "shared";
 import { Result as GameResult } from "shared";
 import { useSidebarActions } from "@/componets/sidebar/SidebarActionsProvider";
 import { DeadKing } from "@/componets/icons/DeadKing";
+import { useAuthConetxt } from "@/componets/AuthProvider";
 
 const turnBadgeStyles: Record<PlayerColor, string> = {
   white: "border border-slate-300 bg-slate-100 text-slate-900",
@@ -51,6 +52,8 @@ export default function Page() {
   const [serverConnectionStatus, setServerConnectionStatus] =
     useState<ConnectionStatus>("waiting");
   const { setActions, clearActions } = useSidebarActions();
+
+  const { user } = useAuthConetxt();
 
   useEffect(() => {
     console.log("trying to connect socket");
@@ -107,7 +110,7 @@ export default function Page() {
       socket.off("setSearching");
       socket.disconnect();
     };
-  }, []);
+  }, [user]);
 
   const closeResultScreen = () => {
     setResult(null);

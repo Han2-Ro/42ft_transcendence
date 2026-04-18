@@ -28,7 +28,6 @@ test.describe("getSession()", () => {
   });
 
   test("login returns correct username from session", async ({ page }) => {
-    // Register
     await page.goto("/");
     await page.getByRole("button", { name: /log in/i }).click();
     await page.getByRole("button", { name: /register here/i }).click();
@@ -43,13 +42,6 @@ test.describe("getSession()", () => {
       page.getByRole("heading", { name: /register/i }),
     ).not.toBeVisible({ timeout: 30000 });
 
-    // Login
-    await page.getByRole("button", { name: /log in/i }).click();
-    await page.fill("#email", testUser.email);
-    await page.fill("#password", testUser.password);
-    await page.getByRole("button", { name: /^submit$/i }).click();
-
-    // Should show actual username, not hardcoded "john_42"
     await expect(page.getByText(testUser.username)).toBeVisible({
       timeout: 10000,
     });

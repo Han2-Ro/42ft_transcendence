@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import { useAuthConetxt } from "./AuthProvider";
 import { login, register } from "@/lib/auth/actions";
 import { Popup } from "./Popup";
+import { TextInput } from "./TextInput";
+import Button from "./Button";
 
 type Props = {
   onClose: () => void;
@@ -68,78 +70,57 @@ export const AuthModal = ({ onClose }: Props) => {
 
   return (
     <Popup className="p-8" onClose={onClose}>
-      <h1 className="mb-8 text-3xl">
+      <h2 className="mb-8 text-3xl">
         {mode === "login" ? "Login" : "Register"}
-      </h1>
-      <form onSubmit={handleSubmit} className="flex flex-col">
+      </h2>
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         {error && (
           <div className="mb-4 p-2 bg-red-500/20 text-red-500 rounded">
             {error}
           </div>
         )}
-        <label htmlFor="email" className=" font-bold">
-          Email
-        </label>
-        <input
+        <TextInput
           id="email"
           name="email"
+          label="Email"
           type="email"
-          className="px-2 py-1 border-2 rounded-sm border-gray-500"
           required
           disabled={loading}
         />
         {mode === "register" && (
-          <>
-            <label htmlFor="username" className=" mt-4 font-bold">
-              Username
-            </label>
-            <input
-              id="username"
-              name="username"
-              type="text"
-              className="px-2 py-1 border-2 rounded-sm border-gray-500"
-              required
-              disabled={loading}
-            />
-          </>
+          <TextInput
+            id="username"
+            name="username"
+            label="Username"
+            required
+            disabled={loading}
+          />
         )}
-        <label htmlFor="password" className=" mt-4 font-bold">
-          Password
-        </label>
-        <input
+        <TextInput
           id="password"
           name="password"
+          label="Password"
           type="password"
-          className="px-2 py-1 border border-gray-500 rounded-sm"
           required
           disabled={loading}
         />
         {mode === "register" && (
-          <>
-            <label htmlFor="confirmPassword" className=" mt-4 font-bold">
-              Confirm Password
-            </label>
-            <input
-              id="confirmPassword"
-              name="confirmPassword"
-              type="password"
-              className="px-2 py-1 border border-gray-500 rounded-sm"
-              required
-              disabled={loading}
-            />
-          </>
+          <TextInput
+            id="confirmPassword"
+            name="confirmPassword"
+            label="Confirm Password"
+            type="password"
+            required
+            disabled={loading}
+          />
         )}
-        <button
-          type="submit"
-          disabled={loading}
-          className="mt-8 p-1 bg-accent-primary rounded-lg"
-        >
+        <Button type="submit" disabled={loading} className="mt-8">
           {loading
             ? mode === "login"
               ? "Logging in..."
               : "Registering..."
             : "Submit"}
-        </button>
+        </Button>
         <button
           type="button"
           onClick={() => {
