@@ -120,7 +120,7 @@ export class Room {
     }
     this.checkTimeout(time_passed);
     if (this.checkGameOver() == true) {
-      //Insert call to the database here
+      this.sendResults();
       return true;
     }
     return false;
@@ -146,6 +146,88 @@ export class Room {
       if (this.playerTimes[turnIndex] < 0) {
         this.gameLogic.timeout(this.getColor(turnIndex));
       }
+    }
+  }
+
+  private sendResults() {
+    const secret = process.env.INTERNAL_SECRET;
+    if (!secret) {
+      console.log("Error sending game results to db: INTERNAL_SECRET not set");
+      return;
+    }
+    const nextjsUrl =
+      process.env.INTERNAL_NEXTJS_URL || process.env.SERVICE_URL_NEXTJS;
+    if (!nextjsUrl) {
+      console.log(
+        "Error sending game results to db: INTERNAL_NEXTJS_URL not set",
+      );
+      return;
+    }
+    if (this.gameType == "chess" || this.gameType == "timedChess") {
+      const winner = this.gameLogic.gameStatus.winners
+        ? this.gameLogic.gameStatus.winners[0] === "white"
+          ? "white"
+          : "black"
+        : "draw";
+      const whitePlayerId =
+        this.players[this.assignedColors.indexOf("white")].playerid;
+      const blackPlayerId =
+        this.players[this.assignedColors.indexOf("black")].playerid;
+      console.log("white: ", whitePlayerId, "black: ", blackPlayerId);
+      const reason = this.gameLogic.gameStatus.reason;
+      fetch(`${nextjsUrl}/api/internal/game`, {
+        method: "Post",
+        headers: {
+          "x-internal-secret": secret,
+        },
+        body: JSON.stringify({
+          whitePlayerId: Number(whitePlayerId),
+          blackPlayerId: Number(blackPlayerId),
+          winner,
+          reason,
+        }),
+      }).then(async (response) => {
+        if (!response.ok) {
+          console.log("Error sending game results to db");
+          return;
+        }
+        console.log("database save successfull");
+      });
+    } else {
+      const winner = this.gameLogic.gameStatus.winners
+        ? this.gameLogic.gameStatus.winners[0] === "red" || "yellow"
+          ? "yellow"
+          : "blue"
+        : "draw";
+      const yellowPlayerId =
+        this.players[this.assignedColors.indexOf("yellow")].playerid;
+      const redPlayerId =
+        this.players[this.assignedColors.indexOf("red")].playerid;
+      const bluePlayerId =
+        this.players[this.assignedColors.indexOf("blue")].playerid;
+      const greenPlayerId =
+        this.players[this.assignedColors.indexOf("green")].playerid;
+      const reason = this.gameLogic.gameStatus.reason;
+      fetch(`${nextjsUrl}/api/internal/game-four`, {
+        method: "Post",
+        headers: {
+          "x-internal-secret": secret,
+        },
+        body: JSON.stringify({
+          bluePlayerId: Number(bluePlayerId),
+          greenPlayerId: Number(greenPlayerId),
+          yellowPlayerId: Number(yellowPlayerId),
+          redPlayerId: Number(redPlayerId),
+          winner,
+          reason,
+        }),
+      }).then(async (response) => {
+        if (!response.ok) {
+          console.log("Error sending game results to db: ", response);
+          return;
+        }
+        console.log("database save successfull");
+      });
     }
   }
 
