@@ -33,5 +33,5 @@ export async function registerAndLogin(page: import("@playwright/test").Page) {
   await page.getByRole("button", { name: /^submit$/i }).click();
 
   await expect(heading).not.toBeVisible();
-  await expect(page.getByText(credentials.username)).toBeVisible();
+  await expect(page.getByText(credentials.username).first()).toBeVisible();
 }
