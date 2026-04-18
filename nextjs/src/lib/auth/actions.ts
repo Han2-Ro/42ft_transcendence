@@ -5,7 +5,6 @@ import { SignJWT } from "jose";
 import { prisma } from "@/lib/prisma";
 import { cookies } from "next/headers";
 import { getSession } from "./session";
-import { User } from "@prisma/client";
 
 function getJwtSecret() {
   const secret = process.env.JWT_SECRET;
@@ -15,7 +14,13 @@ function getJwtSecret() {
   return new TextEncoder().encode(secret);
 }
 
-async function createToken(user: User): Promise<string> {
+type JwtUser = {
+  id: number;
+  email: string;
+  username: string;
+};
+
+async function createToken(user: JwtUser): Promise<string> {
   const token = await new SignJWT({
     userId: user.id,
     email: user.email,
