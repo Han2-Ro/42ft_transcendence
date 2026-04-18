@@ -6,6 +6,7 @@ import { useAuthConetxt } from "./AuthProvider";
 import { login, register } from "@/lib/auth/actions";
 import { Popup } from "./Popup";
 import { TextInput } from "./TextInput";
+import Button from "./Button";
 
 type Props = {
   onClose: () => void;
@@ -69,9 +70,9 @@ export const AuthModal = ({ onClose }: Props) => {
 
   return (
     <Popup className="p-8" onClose={onClose}>
-      <h1 className="mb-8 text-3xl">
+      <h2 className="mb-8 text-3xl">
         {mode === "login" ? "Login" : "Register"}
-      </h1>
+      </h2>
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         {error && (
           <div className="mb-4 p-2 bg-red-500/20 text-red-500 rounded">
@@ -113,17 +114,13 @@ export const AuthModal = ({ onClose }: Props) => {
             disabled={loading}
           />
         )}
-        <button
-          type="submit"
-          disabled={loading}
-          className="mt-8 p-1 bg-accent-primary rounded-lg"
-        >
+        <Button type="submit" disabled={loading} className="mt-8">
           {loading
             ? mode === "login"
               ? "Logging in..."
               : "Registering..."
             : "Submit"}
-        </button>
+        </Button>
         <button
           type="button"
           onClick={() => {
