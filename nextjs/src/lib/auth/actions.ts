@@ -281,3 +281,12 @@ export async function getGameFourHistory() {
       };
     });
 }
+
+export async function getLeaderboard() {
+	const topUsers = await prisma.user.findMany({
+		orderBy: { wins: "desc" },
+		select: { username: true, wins: true, losses: true, draws: true }
+	});
+
+	return topUsers;
+}

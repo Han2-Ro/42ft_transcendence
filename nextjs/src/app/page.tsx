@@ -1,8 +1,10 @@
 import LeaderBoard from "@/app/stats/LeaderBoard";
 import Link from "next/link";
 import GameHistory from "./history/GameHistory";
+import { getLeaderboard } from "@/lib/auth/actions";
 
-export default function Home() {
+export default async function Home() {
+  const leaderboardEntries = await getLeaderboard();
   return (
     <main className="p-2 md:p-8 flex flex-col items-center">
       <h1 className="md:mb-8 text-6xl">Chess 42</h1>
@@ -14,7 +16,7 @@ export default function Home() {
               Leaderboard
             </h2>
           </Link>
-          <LeaderBoard maxEntries={3} />
+          <LeaderBoard maxEntries={3} entries={leaderboardEntries} />
         </div>
         <div className="bg-linear-230 from-gray-600/50 to-neutral-800 p-4 rounded-xl">
           <Link href="/history">
