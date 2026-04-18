@@ -25,8 +25,6 @@ type JwtUser = {
 async function createToken(user: JwtUser): Promise<string> {
   const token = await new SignJWT({
     userId: user.id,
-    email: user.email,
-    username: user.username,
   })
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
