@@ -8,6 +8,8 @@ export type GameStartData = {
 
 export type Result = "win" | "lose" | "draw";
 
+export type Reason = "checkmate" | "resignation" | "timeout";
+
 // shared/socketEvents.ts
 export interface CToSEvents {
   findMatchToggle: (type: Games) => void;
