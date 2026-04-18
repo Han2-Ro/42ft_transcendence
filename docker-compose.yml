@@ -24,7 +24,7 @@ services:
       db:
         condition: service_healthy
     healthcheck:
-      test: ["CMD-SHELL", "wget -qO- http://localhost:3000 || exit 1"]
+      test: ["CMD-SHELL", "wget -qO- http://localhost:${PORT:-3000} || exit 1"]
       interval: 15s
       timeout: 5s
       retries: 5
@@ -40,7 +40,7 @@ services:
       - "traefik.http.routers.nextjs.rule=Host(`${DOMAIN:-localhost}`)"
       - "traefik.http.routers.nextjs.entrypoints=websecure"
       - "traefik.http.routers.nextjs.tls=true"
-      - "traefik.http.services.nextjs.loadbalancer.server.port=3000"
+      - "traefik.http.services.nextjs.loadbalancer.server.port=${PORT:-3000}"
 
   gamesserver:
     build:
