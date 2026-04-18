@@ -70,7 +70,7 @@ export default function Page() {
         console.log("You need to log in");
         setServerConnectionStatus("unauthorized");
       } else {
-        console.error("Couldn't connect to game server.");
+        console.error("Couldn't connect to game server:", err.message);
         setServerConnectionStatus("error");
       }
     });

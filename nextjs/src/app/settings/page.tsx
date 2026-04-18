@@ -89,9 +89,17 @@ export default function Page() {
                 {error}
               </div>
             )}
-            <Button type="submit" disabled={loading} className="mt-8">
-              {loading ? "Submitting..." : "Submit"}
-            </Button>
+            <div className="flex flex-row mt-8 gap-4">
+              <Button
+                className="flex-1 bg-background-primary"
+                onClick={() => setShowUsernameDialog(false)}
+              >
+                Cancel
+              </Button>
+              <Button className="flex-1" type="submit" disabled={loading}>
+                {loading ? "Submitting..." : "Submit"}
+              </Button>
+            </div>
           </form>
         </Popup>
       )}
@@ -128,9 +136,17 @@ export default function Page() {
                 {error}
               </div>
             )}
-            <Button type="submit" disabled={loading} className="mt-8">
-              {loading ? "Submitting..." : "Submit"}
-            </Button>
+            <div className="flex flex-row mt-8 gap-4">
+              <Button
+                className="flex-1 bg-background-primary"
+                onClick={() => setShowPasswordDialog(false)}
+              >
+                Cancel
+              </Button>
+              <Button type="submit" disabled={loading} className="flex-1">
+                {loading ? "Submitting..." : "Submit"}
+              </Button>
+            </div>
           </form>
         </Popup>
       )}
@@ -140,11 +156,21 @@ export default function Page() {
       <hr />
       <div className="flex flex-row justify-between items-center p-2 w-full">
         <p>Username: {user ? user.username : "None"}</p>
-        <Button onClick={() => setShowUsernameDialog(true)}>Change</Button>
+        <Button
+          className=" bg-background-secondary"
+          onClick={() => setShowUsernameDialog(true)}
+        >
+          Change
+        </Button>
       </div>
       <div className="flex flex-row justify-between items-center p-2 w-full">
         <p>Password: ****</p>
-        <Button onClick={() => setShowPasswordDialog(true)}>Change</Button>
+        <Button
+          className="bg-background-secondary"
+          onClick={() => setShowPasswordDialog(true)}
+        >
+          Change
+        </Button>
       </div>
     </main>
   );
