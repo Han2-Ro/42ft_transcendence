@@ -5,7 +5,8 @@ import { SignJWT } from "jose";
 import { prisma } from "@/lib/prisma";
 import { cookies } from "next/headers";
 import { getSession } from "./session";
-import { use } from "react";
+
+type ActionResult = { success: true } | { success: false; error: string };
 
 function getJwtSecret() {
   const secret = process.env.JWT_SECRET;
@@ -13,6 +14,38 @@ function getJwtSecret() {
     throw new Error("JWT_SECRET environment variable is not set");
   }
   return new TextEncoder().encode(secret);
+}
+
+type JwtUser = {
+  id: number;
+  email: string;
+  username: string;
+};
+
+async function createToken(user: JwtUser): Promise<string> {
+  const token = await new SignJWT({
+    userId: user.id,
+  })
+    .setProtectedHeader({ alg: "HS256" })
+    .setIssuedAt()
+    .setExpirationTime("24h")
+    .sign(getJwtSecret());
+  return token;
+}
+
+function getCookieOptions() {
+  const cookieOptions = {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict" as const,
+    maxAge: 60 * 60 * 24, // 24h
+    domain: undefined as string | undefined,
+    path: "/",
+  };
+  if (process.env.COOKIE_DOMAIN) {
+    cookieOptions.domain = process.env.COOKIE_DOMAIN;
+  }
+  return cookieOptions;
 }
 
 export type LoginResult =
@@ -40,28 +73,7 @@ export async function login(
     return { requiresTwoFactor: true, userId: user.id };
   }
 
-  const token = await new SignJWT({
-    userId: user.id,
-    email: user.email,
-    username: user.username,
-  })
-    .setProtectedHeader({ alg: "HS256" })
-    .setIssuedAt()
-    .setExpirationTime("24h")
-    .sign(getJwtSecret());
-
-  const cookieOptions = {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "strict" as const,
-    maxAge: 60 * 60 * 24, // 24h
-    domain: undefined as string | undefined,
-    path: "/",
-  };
-  if (process.env.COOKIE_DOMAIN) {
-    cookieOptions.domain = process.env.COOKIE_DOMAIN;
-  }
-  (await cookies()).set("token", token, cookieOptions);
+  (await cookies()).set("token", await createToken(user), getCookieOptions());
 
   return {
     success: true,
@@ -105,6 +117,8 @@ export async function register(
     select: { id: true, email: true, username: true, createdAt: true },
   });
 
+  (await cookies()).set("token", await createToken(user), getCookieOptions());
+
   return { success: true, user };
 }
 
@@ -131,14 +145,17 @@ export async function logout() {
   //TODO: What else needs to be done on logout?
 }
 
-export async function changePassword(oldPassword: string, newPassword: string) {
+export async function changePassword(
+  oldPassword: string,
+  newPassword: string,
+): Promise<ActionResult> {
   const session = await getSession();
   const user = await prisma.user.findUnique({ where: { id: session?.userId } });
-  if (!user) return { error: "User not found" };
+  if (!user) return { success: false, error: "User not found" };
   const userId = user.id;
   const passwordValid = await bcrypt.compare(oldPassword, user.passwordHash);
   if (!passwordValid) {
-    return { error: "Invalid password" };
+    return { success: false, error: "Invalid password" };
   }
   try {
     await prisma.user.update({
@@ -147,14 +164,16 @@ export async function changePassword(oldPassword: string, newPassword: string) {
     });
     return { success: true };
   } catch {
-    return { error: "Failed to change password" };
+    return { success: false, error: "Failed to change password" };
   }
 }
 
-export async function changeUsername(newUsername: string) {
+export async function changeUsername(
+  newUsername: string,
+): Promise<ActionResult> {
   const session = await getSession();
   const user = await prisma.user.findUnique({ where: { id: session?.userId } });
-  if (!user) return { error: "User not found" };
+  if (!user) return { success: false, error: "User not found" };
   const userId = session?.userId;
 
   try {
@@ -164,7 +183,7 @@ export async function changeUsername(newUsername: string) {
     });
     return { success: true };
   } catch {
-    return { error: "Failed to update username" };
+    return { success: false, error: "Failed to update username" };
   }
 }
 

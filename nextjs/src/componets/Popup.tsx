@@ -27,7 +27,7 @@ export const Popup = ({ onClose, className = "", children }: Props) => {
       aria-modal="true"
     >
       <div
-        className={`fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-background-secondary rounded-2xl ${className}`}
+        className={`fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-background-secondary rounded-2xl border border-gray-500 ${className}`}
         onClick={(e) => e.stopPropagation()}
       >
         {children}

@@ -21,7 +21,6 @@ export async function registerAndLogin(page: import("@playwright/test").Page) {
     password: "SecurePass123!",
   };
 
-  // Register
   await openRegisterModal(page);
   await expect(page.getByText("Guest")).toBeVisible();
   const heading = page.getByRole("heading", { name: /register/i });
@@ -32,16 +31,7 @@ export async function registerAndLogin(page: import("@playwright/test").Page) {
   await page.fill("#password", credentials.password);
   await page.fill("#confirmPassword", credentials.password);
   await page.getByRole("button", { name: /^submit$/i }).click();
+
   await expect(heading).not.toBeVisible();
-
-  // Login
-  await openLoginModal(page);
-  await page.fill("#email", credentials.email);
-  await page.fill("#password", credentials.password);
-  const submitButton = await page.getByRole("button", { name: /^submit$/i });
-  await expect(submitButton).toBeVisible();
-  await submitButton.click();
-  await expect(submitButton).not.toBeVisible();
-
   await expect(page.getByText(credentials.username)).toBeVisible();
 }
