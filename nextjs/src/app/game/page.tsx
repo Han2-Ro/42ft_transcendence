@@ -33,7 +33,7 @@ const turnDotStyles: Record<PlayerColor, string> = {
 
 // Connect to the exposed backend port
 const socket: Socket<SToCEvents, CToSEvents> = io(
-  process.env.NEXT_PUBLIC_GAMESERVER_URL || "http://localhost:4000",
+  process.env.NEXT_PUBLIC_GAMESERVER_URL || "https://localhost",
   {
     withCredentials: true,
     autoConnect: false,

@@ -2,7 +2,7 @@ import { defineConfig, devices } from "@playwright/test";
 import dotenv from "dotenv";
 dotenv.config({ path: "../.env" });
 
-const BASE_URL = process.env.BASE_URL || `http://localhost:${process.env.PORT}`;
+const BASE_URL = process.env.BASE_URL || `https://localhost`;
 
 export default defineConfig({
   testDir: ".",
@@ -13,6 +13,7 @@ export default defineConfig({
   reporter: process.env.CI ? [["github"], ["html", { open: "never" }]] : "list",
   use: {
     baseURL: BASE_URL,
+    ignoreHTTPSErrors: true,
     trace: "on-first-retry",
   },
   projects: [

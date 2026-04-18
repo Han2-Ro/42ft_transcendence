@@ -42,7 +42,7 @@ test.describe("getSession()", () => {
       page.getByRole("heading", { name: /register/i }),
     ).not.toBeVisible({ timeout: 30000 });
 
-    await expect(page.getByText(testUser.username)).toBeVisible({
+    await expect(page.getByText(testUser.username).first()).toBeVisible({
       timeout: 10000,
     });
     await expect(page.getByText("john_42")).not.toBeVisible();
