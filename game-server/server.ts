@@ -14,6 +14,7 @@ const io = new Server<CToSEvents, SToCEvents>(4000, {
     origin: (origin, callback) => {
       if (
         !origin ||
+        origin.startsWith("https://localhost") ||
         origin.startsWith("http://localhost:") ||
         origin == process.env.SERVICE_URL_NEXTJS
       ) {
