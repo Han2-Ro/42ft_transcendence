@@ -3,6 +3,7 @@ import "server-only";
 import { cookies } from "next/headers";
 import { cache } from "react";
 import { jwtVerify } from "jose";
+import { prisma } from "@/lib/prisma";
 
 function getJwtSecret() {
   const secret = process.env.JWT_SECRET;
@@ -30,6 +31,7 @@ export const getSession = cache(async (): Promise<User | null> => {
 
   try {
     const { payload } = await jwtVerify(token, getJwtSecret());
+	// TODO: check if user exists so we avoid displaying user which does not exists
     return {
       userId: payload.userId as number,
       username: payload.username as string,

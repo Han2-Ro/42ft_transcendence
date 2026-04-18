@@ -1,4 +1,5 @@
 import { Result as GameResult } from "shared";
+import { Reason as GameReason } from "shared";
 import { getGameTwoHistory } from "@/lib/auth/actions";
 
 /* const sampleEntries: GameHistoryEntry[] = [
@@ -15,6 +16,7 @@ export type GameHistoryEntry = {
   date: Date;
   opponent: string;
   result: GameResult;
+  reason: GameReason;
 };
 
 export default async function GameHistory({
@@ -38,6 +40,7 @@ export default async function GameHistory({
           <th className="px-6 text-start">Date</th>
           <th className="px-6 text-start">Opponent</th>
           <th className="px-6 text-start">Result</th>
+          <th className="px-6 text-start">Reason</th>
         </tr>
       </thead>
       <tbody>
@@ -56,6 +59,7 @@ export default async function GameHistory({
             <td className="px-6 py-4">{entry.date.toDateString()}</td>
             <td className="px-6 py-4">{entry.opponent}</td>
             <td className="px-6 py-4">{entry.result}</td>
+            <td className="px-6 py-4">{entry.reason}</td>
           </tr>
         ))}
       </tbody>

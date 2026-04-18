@@ -206,6 +206,78 @@ export async function getGameTwoHistory() {
         date: game.createdAt,
         opponent: opponent?.username ?? "Unknown",
         result,
+        reason: game.reason,
+      };
+    });
+}
+
+// {date, teammate, opponents(array), result, reason}
+export async function getGameFourHistory() {
+  const session = await getSession();
+  const user = await prisma.user.findUnique({ where: { id: session?.userId } });
+  if (!user) return { error: "Not logged in." };
+  const userId = user.id;
+
+  const gamesFour = await prisma.gameFour.findMany({
+    where: {
+      OR: [
+        { bluePlayerId: userId },
+        { greenPlayerId: userId },
+        { yellowPlayerId: userId },
+        { redPlayerId: userId },
+      ],
+    },
+    include: {
+      bluePlayer: { select: { id: true, username: true } },
+      greenPlayer: { select: { id: true, username: true } },
+      yellowPlayer: { select: { id: true, username: true } },
+      redPlayer: { select: { id: true, username: true } },
+    },
+    orderBy: { createdAt: "desc" },
+  });
+
+  return gamesFour
+    .filter((gameFour) => gameFour.winner !== null)
+    .map((gameFour) => {
+      const playedAsBlue = gameFour.bluePlayerId === userId;
+      const playedAsGreen = gameFour.greenPlayerId === userId;
+      const playedAsYellow = gameFour.yellowPlayerId === userId;
+      const playedAsRed = gameFour.redPlayerId === userId;
+
+      const opponents = [];
+      let teammate: "blue" | "green" | "yellow" | "red";
+      if (playedAsBlue) teammate = "green";
+      else if (playedAsGreen) teammate = "blue";
+      else if (playedAsYellow) teammate = "red";
+      else teammate = "yellow";
+
+      if (playedAsBlue || playedAsGreen) {
+        opponents.push(gameFour.yellowPlayer.username);
+        opponents.push(gameFour.redPlayer.username);
+      } else {
+        opponents.push(gameFour.bluePlayer.username);
+        opponents.push(gameFour.greenPlayer.username);
+      }
+
+      let result: "win" | "lose" | "draw";
+      if (gameFour.winner === "draw") result = "draw";
+      else if (
+        (gameFour.winner === "blue" || gameFour.winner === "green") &&
+        (playedAsBlue || playedAsGreen)
+      )
+        result = "win";
+      else if (
+        (gameFour.winner === "yellow" || gameFour.winner === "red") &&
+        (playedAsYellow || playedAsRed)
+      )
+        result = "win";
+      else result = "lose";
+
+      return {
+        date: gameFour.createdAt,
+        opponents,
+        result,
+        reason: gameFour.reason,
       };
     });
 }
