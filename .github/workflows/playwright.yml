@@ -25,7 +25,7 @@ jobs:
           DATABASE_URL=postgresql://${{ secrets.POSTGRES_USER }}:${{ secrets.POSTGRES_PASSWORD }}@db:5432/transcendence_db
           JWT_SECRET=${{ secrets.JWT_SECRET }}
           INTERNAL_SECRET=your-secure-internal-secret-here
-          SERVICE_URL_NEXTJS=http://localhost:8080
+          SERVICE_URL_NEXTJS=https://localhost
           EOF
 
       - name: Start services
@@ -63,7 +63,7 @@ jobs:
         run: |
           echo "Waiting for app on port 8080..."
           for i in $(seq 1 10); do
-            if curl -sf http://localhost:8080 > /dev/null 2>&1; then
+            if curl -sf https://localhost > /dev/null 2>&1; then
               echo "App is ready."
               exit 0
             fi
