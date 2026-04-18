@@ -35,6 +35,7 @@ async function createToken(user: JwtUser): Promise<string> {
 
 function getCookieOptions() {
   const cookieOptions = {
+    // TODO check if https is needed for this
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "strict" as const,
@@ -302,10 +303,10 @@ export async function getGameFourHistory() {
 }
 
 export async function getLeaderboard() {
-	const topUsers = await prisma.user.findMany({
-		orderBy: { wins: "desc" },
-		select: { username: true, wins: true, losses: true, draws: true }
-	});
+  const topUsers = await prisma.user.findMany({
+    orderBy: { wins: "desc" },
+    select: { username: true, wins: true, losses: true, draws: true },
+  });
 
-	return topUsers;
+  return topUsers;
 }
