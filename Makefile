@@ -23,3 +23,6 @@ logs:
 
 migrate:
 	$(COMPOSE_LOCAL) exec nextjs pnpm prisma migrate dev --name $(name)
+
+copy-migration:
+	$(COMPOSE_LOCAL) cp nextjs:/app/nextjs/prisma/migrations/$(name) ./nextjs/prisma/migrations/

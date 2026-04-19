@@ -1,13 +1,12 @@
 "use server";
 
 import bcrypt from "bcrypt";
-import { SignJWT } from "jose";
 import { prisma } from "@/lib/prisma";
 import { cookies } from "next/headers";
 import { getSession } from "./session";
 import { generateSecret, generateURI, verify } from "otplib";
 import QRCode from "qrcode";
-import { error } from "console";
+import { createToken, getCookieOptions } from "./token";
 
 type ActionResult = { success: true } | { success: false; error: string };
 
@@ -18,7 +17,7 @@ function checkPasswordStrength(password: string) {
   return true;
 }
 
-function getJwtSecret() {
+/* function getJwtSecret() {
   const secret = process.env.JWT_SECRET;
   if (!secret) {
     throw new Error("JWT_SECRET environment variable is not set");
@@ -57,7 +56,7 @@ function getCookieOptions() {
     cookieOptions.domain = process.env.COOKIE_DOMAIN;
   }
   return cookieOptions;
-}
+} */
 
 export type LoginResult =
   | { success: true; user: { id: number; email: string; username: string } }
@@ -72,6 +71,10 @@ export async function login(
 
   if (!user) {
     return { error: "Invalid email or password" };
+  }
+
+  if (!user.passwordHash) {
+    return { error: "No password set" };
   }
 
   const passwordValid = await bcrypt.compare(password, user.passwordHash);
@@ -167,7 +170,12 @@ export async function changePassword(
   const user = await prisma.user.findUnique({ where: { id: session?.userId } });
   if (!user) return { success: false, error: "User not found" };
   const userId = user.id;
-  const passwordValid = await bcrypt.compare(oldPassword, user.passwordHash);
+  let passwordValid;
+  if (!user.passwordHash) {
+    passwordValid = true;
+  } else {
+    passwordValid = await bcrypt.compare(oldPassword, user.passwordHash);
+  }
   if (!passwordValid) {
     return { success: false, error: "Invalid password" };
   }
