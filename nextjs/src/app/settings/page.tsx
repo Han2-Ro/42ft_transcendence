@@ -4,16 +4,16 @@ import { useAuthConetxt } from "@/componets/AuthProvider";
 import Button from "@/componets/Button";
 import { Popup } from "@/componets/Popup";
 import { TextInput } from "@/componets/TextInput";
-import { changePassword, changeUsername } from "@/lib/auth/actions";
+import { changePassword, changeUsername, setup2FA } from "@/lib/auth/actions";
 import { useState } from "react";
+import Config2FA from "./2FAConfig";
 
 export default function Page() {
-  const { user } = useAuthConetxt();
+  const { user, refreshUser } = useAuthConetxt();
   const [showUsernameDialog, setShowUsernameDialog] = useState(false);
   const [showPasswordDialog, setShowPasswordDialog] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const { refreshUser } = useAuthConetxt();
 
   if (!user) {
     return <main>Log in to change settings</main>;
@@ -84,11 +84,6 @@ export default function Page() {
               required
               disabled={loading}
             />
-            {error && (
-              <div className="mb-4 p-2 bg-red-500/20 text-red-500 rounded">
-                {error}
-              </div>
-            )}
             <div className="flex flex-row mt-8 gap-4">
               <Button
                 className="flex-1 bg-background-primary"
@@ -174,6 +169,7 @@ export default function Page() {
           Change
         </Button>
       </div>
+      <Config2FA />
     </main>
   );
 }

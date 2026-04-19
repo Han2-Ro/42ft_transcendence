@@ -9,7 +9,9 @@ import { generateSecret, generateURI, verify } from "otplib";
 import QRCode from "qrcode";
 import { error } from "console";
 
-type ActionResult = { success: true } | { success: false; error: string };
+type ActionResult<T> =
+  | { success: true; data: T }
+  | { success: false; error: string };
 
 function checkPasswordStrength(password: string) {
   if (password.length < 8) return false;
@@ -92,17 +94,12 @@ export async function login(
   };
 }
 
-export type RegisterResult =
-  | {
-      success: true;
-      user: {
-        id: number;
-        email: string;
-        username: string;
-        createdAt: Date;
-      };
-    }
-  | { error: string };
+export type RegisterResult = ActionResult<{
+  id: number;
+  email: string;
+  username: string;
+  createdAt: Date;
+}>;
 
 export async function register(
   email: string,
@@ -111,6 +108,7 @@ export async function register(
 ): Promise<RegisterResult> {
   if (!checkPasswordStrength(password)) {
     return {
+      success: false,
       error:
         "Password must be at least 8 characters and contain one number, uppercase and lowecase letter.",
     };
@@ -121,7 +119,10 @@ export async function register(
   });
 
   if (existingUser) {
-    return { error: "User with this email or username already exists" };
+    return {
+      success: false,
+      error: "User with this email or username already exists",
+    };
   }
 
   const passwordHash = await bcrypt.hash(password, 12);
@@ -133,7 +134,7 @@ export async function register(
 
   (await cookies()).set("token", await createToken(user), getCookieOptions());
 
-  return { success: true, user };
+  return { success: true, data: user };
 }
 
 /**
@@ -156,13 +157,12 @@ export async function logout() {
     cookieOptions.domain = process.env.COOKIE_DOMAIN;
   }
   (await cookies()).delete(cookieOptions);
-  //TODO: What else needs to be done on logout?
 }
 
 export async function changePassword(
   oldPassword: string,
   newPassword: string,
-): Promise<ActionResult> {
+): Promise<ActionResult<undefined>> {
   const session = await getSession();
   const user = await prisma.user.findUnique({ where: { id: session?.userId } });
   if (!user) return { success: false, error: "User not found" };
@@ -180,7 +180,7 @@ export async function changePassword(
       where: { id: userId },
       data: { passwordHash: await bcrypt.hash(newPassword, 12) },
     });
-    return { success: true };
+    return { success: true, data: undefined };
   } catch {
     return { success: false, error: "Failed to change password" };
   }
@@ -188,7 +188,7 @@ export async function changePassword(
 
 export async function changeUsername(
   newUsername: string,
-): Promise<ActionResult> {
+): Promise<ActionResult<undefined>> {
   const session = await getSession();
   const user = await prisma.user.findUnique({ where: { id: session?.userId } });
   if (!user) return { success: false, error: "User not found" };
@@ -199,7 +199,7 @@ export async function changeUsername(
       where: { id: userId },
       data: { username: newUsername },
     });
-    return { success: true };
+    return { success: true, data: undefined };
   } catch {
     return { success: false, error: "Failed to update username" };
   }
@@ -329,10 +329,10 @@ export async function getLeaderboard() {
   return topUsers;
 }
 
-export async function setup2FA() {
+export async function setup2FA(): Promise<ActionResult<string>> {
   const session = await getSession();
   const user = await prisma.user.findUnique({ where: { id: session?.userId } });
-  if (!user) return { error: "User not found" };
+  if (!user) return { success: false, error: "User not found" };
   const userId = user?.id;
   const secret2FA = generateSecret();
   const uri = generateURI({
@@ -346,9 +346,9 @@ export async function setup2FA() {
       where: { id: userId },
       data: { twoFactorSecret: secret2FA },
     });
-    return { qrDataUrl };
+    return { success: true, data: qrDataUrl };
   } catch {
-    return { error: "Failed to generate 2FA secret" };
+    return { success: false, error: "Failed to generate 2FA secret" };
   }
 }
 

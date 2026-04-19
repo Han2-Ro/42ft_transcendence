@@ -5,6 +5,7 @@ type Props = {
   disabled?: boolean;
   required?: boolean;
   type?: React.HTMLInputTypeAttribute;
+  className?: string;
 };
 
 export const TextInput = ({
@@ -14,9 +15,10 @@ export const TextInput = ({
   disabled,
   required,
   type = "text",
+  className = "",
 }: Props) => {
   return (
-    <div className="flex flex-col gap-1">
+    <div className={`flex flex-col gap-1 ${className}`}>
       <label htmlFor={id} className="font-bold">
         {label}
       </label>
