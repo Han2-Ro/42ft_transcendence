@@ -338,7 +338,7 @@ export async function setup2FA() {
   const uri = generateURI({
     secret: secret2FA,
     label: user.email,
-    issuer: "ft_transcendence",
+    issuer: "42Chess",
   });
   const qrDataUrl = await QRCode.toDataURL(uri);
   try {
@@ -402,4 +402,31 @@ export async function login2FA(code: string, userId: number) {
     success: true,
     user: { id: user.id, email: user.email, username: user.username },
   };
+}
+
+export async function disable2FA(code: string) {
+  const session = await getSession();
+  const user = await prisma.user.findUnique({ where: { id: session?.userId } });
+  if (!user) return { error: "User not found" };
+
+  const secret = user.twoFactorSecret;
+  if (!secret) return { error: "No secret found for user" };
+
+  let valid: Awaited<ReturnType<typeof verify>>;
+  try {
+    valid = await verify({ secret, token: code });
+  } catch {
+    return { error: "Invalid code" };
+  }
+  if (!valid?.valid) return { error: "Invalid code" };
+
+  try {
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { twoFactorEnabled: false, twoFactorSecret: null },
+    });
+    return { success: true };
+  } catch {
+    return { error: "Failed to disable 2FA" };
+  }
 }
