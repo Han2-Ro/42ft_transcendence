@@ -352,32 +352,32 @@ export async function setup2FA(): Promise<ActionResult<string>> {
   }
 }
 
-export async function verify2FA(code: string) {
+export async function verify2FA(code: string): ActionResult<undefined> {
   const session = await getSession();
   const user = await prisma.user.findUnique({ where: { id: session?.userId } });
 
-  if (!user) return { error: "User not found" };
+  if (!user) return { success: false, error: "User not found" };
 
   const userId = user.id;
   const secret = user?.twoFactorSecret;
 
-  if (!secret) return { error: "No secret found for user" };
+  if (!secret) return { success: false, error: "No secret found for user" };
 
   let valid: Awaited<ReturnType<typeof verify>>;
   try {
     valid = await verify({ secret, token: code });
   } catch {
-    return { error: "Invalid code" };
+    return { success: false, error: "Invalid code" };
   }
-  if (!valid?.valid) return { error: "Invalid code" };
+  if (!valid?.valid) return { success: false, error: "Invalid code" };
   try {
     await prisma.user.update({
       where: { id: userId },
       data: { twoFactorEnabled: true },
     });
-    return { success: true };
+    return { success: true, data: undefined };
   } catch {
-    return { error: "Failed to enable 2FA" };
+    return { success: false, error: "Failed to enable 2FA" };
   }
 }
 
