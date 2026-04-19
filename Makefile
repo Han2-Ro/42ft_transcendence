@@ -1,23 +1,25 @@
+COMPOSE_LOCAL = docker compose -f docker-compose.yml -f docker-compose.traefik.yml
+
 run:
-	docker compose -f docker-compose.yml -f docker-compose.local.yml up --build -d
+	$(COMPOSE_LOCAL) up --build -d
 
 dev:
-	docker compose up
+	$(COMPOSE_LOCAL) -f docker-compose.override.yml up
 
 dev-build:
-	docker compose up --build
+	$(COMPOSE_LOCAL) -f docker-compose.override.yml up --build
 
 down:
-	docker compose down
+	$(COMPOSE_LOCAL) down
 
 reset:
-	docker compose down -v
+	$(COMPOSE_LOCAL) down -v
 
 build:
-	docker compose build
+	$(COMPOSE_LOCAL) build
 
 logs:
-	docker compose logs -f
+	$(COMPOSE_LOCAL) logs -f
 
 migrate:
-	docker compose exec nextjs pnpm prisma migrate dev --name $(name)
+	$(COMPOSE_LOCAL) exec nextjs pnpm prisma migrate dev --name $(name)

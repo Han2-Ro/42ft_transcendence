@@ -1,0 +1,32 @@
+services:
+  traefik:
+    image: traefik:v3
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    command:
+      - --providers.docker=true
+      - --providers.docker.exposedbydefault=false
+      - --entrypoints.web.address=:80
+      - --entrypoints.web.http.redirections.entrypoint.to=websecure
+      - --entrypoints.web.http.redirections.entrypoint.scheme=https
+      - --entrypoints.websecure.address=:443
+
+  nextjs:
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.nextjs.rule=Host(`${DOMAIN:-localhost}`)"
+      - "traefik.http.routers.nextjs.entrypoints=websecure"
+      - "traefik.http.routers.nextjs.tls=true"
+      - "traefik.http.services.nextjs.loadbalancer.server.port=${PORT:-3000}"
+
+  gamesserver:
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.gamesserver.rule=Host(`${DOMAIN:-localhost}`) && PathPrefix(`/socket.io`)"
+      - "traefik.http.routers.gamesserver.entrypoints=websecure"
+      - "traefik.http.routers.gamesserver.tls=true"
+      - "traefik.http.services.gamesserver.loadbalancer.server.port=4000"

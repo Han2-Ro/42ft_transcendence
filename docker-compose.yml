@@ -1,15 +1,4 @@
 services:
-  traefik:
-    image: traefik:v3
-    restart: unless-stopped
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-    command:
-      - --providers.docker=true
-      - --providers.docker.exposedbydefault=false
-      - --entrypoints.web.address=:80
-      - --entrypoints.websecure.address=:443
-
   nextjs:
     build:
       context: .
@@ -30,12 +19,6 @@ services:
       - JWT_SECRET=${JWT_SECRET:?}
       - INTERNAL_SECRET=${INTERNAL_SECRET:?}
       - COOKIE_DOMAIN=${COOKIE_DOMAIN}
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.nextjs.rule=Host(`${DOMAIN:-localhost}`)"
-      - "traefik.http.routers.nextjs.entrypoints=websecure"
-      - "traefik.http.routers.nextjs.tls=true"
-      - "traefik.http.services.nextjs.loadbalancer.server.port=${PORT:-3000}"
 
   gamesserver:
     build:
@@ -46,12 +29,6 @@ services:
       - SERVICE_URL_NEXTJS=${SERVICE_URL_NEXTJS:-http://localhost:${PORT}}
       - INTERNAL_NEXTJS_URL=${INTERNAL_NEXTJS_URL:-http://nextjs:${PORT}}
       - INTERNAL_SECRET=${INTERNAL_SECRET:?}
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.gamesserver.rule=Host(`${DOMAIN:-localhost}`) && PathPrefix(`/socket.io`)"
-      - "traefik.http.routers.gamesserver.entrypoints=websecure"
-      - "traefik.http.routers.gamesserver.tls=true"
-      - "traefik.http.services.gamesserver.loadbalancer.server.port=4000"
 
   db:
     image: postgres:16-alpine
