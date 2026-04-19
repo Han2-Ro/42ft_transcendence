@@ -5,8 +5,18 @@ import { SignJWT } from "jose";
 import { prisma } from "@/lib/prisma";
 import { cookies } from "next/headers";
 import { getSession } from "./session";
+import { generateSecret, generateURI, verify } from "otplib";
+import QRCode from "qrcode";
+import { error } from "console";
 
 type ActionResult = { success: true } | { success: false; error: string };
+
+function checkPasswordStrength(password: string) {
+  if (password.length < 8) return false;
+  else if (!/[A-Z]/.test(password) || !/[a-z]/.test(password)) return false;
+  else if (!/[0-9]/.test(password)) return false;
+  return true;
+}
 
 function getJwtSecret() {
   const secret = process.env.JWT_SECRET;
@@ -99,8 +109,11 @@ export async function register(
   username: string,
   password: string,
 ): Promise<RegisterResult> {
-  if (password.length < 8) {
-    return { error: "Password must be at least 8 characters" };
+  if (!checkPasswordStrength(password)) {
+    return {
+      error:
+        "Password must be at least 8 characters and contain one number, uppercase and lowecase letter.",
+    };
   }
 
   const existingUser = await prisma.user.findFirst({
@@ -158,6 +171,10 @@ export async function changePassword(
   if (!passwordValid) {
     return { success: false, error: "Invalid password" };
   }
+  if (!checkPasswordStrength(newPassword))
+    return { success: false, error: "Weak password" };
+  if (newPassword === oldPassword)
+    return { success: false, error: "New password can't be same as old one" };
   try {
     await prisma.user.update({
       where: { id: userId },
@@ -295,6 +312,7 @@ export async function getGameFourHistory() {
 
       return {
         date: gameFour.createdAt,
+        teammate,
         opponents,
         result,
         reason: gameFour.reason,
@@ -309,4 +327,79 @@ export async function getLeaderboard() {
   });
 
   return topUsers;
+}
+
+export async function setup2FA() {
+  const session = await getSession();
+  const user = await prisma.user.findUnique({ where: { id: session?.userId } });
+  if (!user) return { error: "User not found" };
+  const userId = user?.id;
+  const secret2FA = generateSecret();
+  const uri = generateURI({
+    secret: secret2FA,
+    label: user.email,
+    issuer: "ft_transcendence",
+  });
+  const qrDataUrl = await QRCode.toDataURL(uri);
+  try {
+    await prisma.user.update({
+      where: { id: userId },
+      data: { twoFactorSecret: secret2FA },
+    });
+    return { qrDataUrl };
+  } catch {
+    return { error: "Failed to generate 2FA secret" };
+  }
+}
+
+export async function verify2FA(code: string) {
+  const session = await getSession();
+  const user = await prisma.user.findUnique({ where: { id: session?.userId } });
+
+  if (!user) return { error: "User not found" };
+
+  const userId = user.id;
+  const secret = user?.twoFactorSecret;
+
+  if (!secret) return { error: "No secret found for user" };
+
+  let valid: Awaited<ReturnType<typeof verify>>;
+  try {
+    valid = await verify({ secret, token: code });
+  } catch {
+    return { error: "Invalid code" };
+  }
+  if (!valid?.valid) return { error: "Invalid code" };
+  try {
+    await prisma.user.update({
+      where: { id: userId },
+      data: { twoFactorEnabled: true },
+    });
+    return { success: true };
+  } catch {
+    return { error: "Failed to enable 2FA" };
+  }
+}
+
+export async function login2FA(code: string, userId: number) {
+  const user = await prisma.user.findUnique({ where: { id: userId } });
+  if (!user) return { error: "Failed to find user" };
+
+  const secret = user.twoFactorSecret;
+  if (!secret) return { error: "No secret found for user" };
+
+  let valid: Awaited<ReturnType<typeof verify>>;
+  try {
+    valid = await verify({ secret, token: code });
+  } catch {
+    return { error: "Invalid code" };
+  }
+  if (!valid?.valid) return { error: "Invalid code" };
+
+  (await cookies()).set("token", await createToken(user), getCookieOptions());
+
+  return {
+    success: true,
+    user: { id: user.id, email: user.email, username: user.username },
+  };
 }
