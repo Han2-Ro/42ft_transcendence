@@ -162,7 +162,7 @@ export async function logout() {
 export async function changePassword(
   oldPassword: string,
   newPassword: string,
-): Promise<ActionResult<undefined>> {
+): Promise<ActionResult<null>> {
   const session = await getSession();
   const user = await prisma.user.findUnique({ where: { id: session?.userId } });
   if (!user) return { success: false, error: "User not found" };
@@ -180,7 +180,7 @@ export async function changePassword(
       where: { id: userId },
       data: { passwordHash: await bcrypt.hash(newPassword, 12) },
     });
-    return { success: true, data: undefined };
+    return { success: true, data: null };
   } catch {
     return { success: false, error: "Failed to change password" };
   }
@@ -188,7 +188,7 @@ export async function changePassword(
 
 export async function changeUsername(
   newUsername: string,
-): Promise<ActionResult<undefined>> {
+): Promise<ActionResult<null>> {
   const session = await getSession();
   const user = await prisma.user.findUnique({ where: { id: session?.userId } });
   if (!user) return { success: false, error: "User not found" };
@@ -199,7 +199,7 @@ export async function changeUsername(
       where: { id: userId },
       data: { username: newUsername },
     });
-    return { success: true, data: undefined };
+    return { success: true, data: null };
   } catch {
     return { success: false, error: "Failed to update username" };
   }
@@ -352,9 +352,7 @@ export async function setup2FA(): Promise<ActionResult<string>> {
   }
 }
 
-export async function verify2FA(
-  code: string,
-): Promise<ActionResult<undefined>> {
+export async function verify2FA(code: string): Promise<ActionResult<null>> {
   const session = await getSession();
   const user = await prisma.user.findUnique({ where: { id: session?.userId } });
 
@@ -377,7 +375,7 @@ export async function verify2FA(
       where: { id: userId },
       data: { twoFactorEnabled: true },
     });
-    return { success: true, data: undefined };
+    return { success: true, data: null };
   } catch {
     return { success: false, error: "Failed to enable 2FA" };
   }
@@ -406,29 +404,29 @@ export async function login2FA(code: string, userId: number) {
   };
 }
 
-export async function disable2FA(code: string) {
+export async function disable2FA(code: string): Promise<ActionResult<null>> {
   const session = await getSession();
   const user = await prisma.user.findUnique({ where: { id: session?.userId } });
-  if (!user) return { error: "User not found" };
+  if (!user) return { success: false, error: "User not found" };
 
   const secret = user.twoFactorSecret;
-  if (!secret) return { error: "No secret found for user" };
+  if (!secret) return { success: false, error: "No secret found for user" };
 
   let valid: Awaited<ReturnType<typeof verify>>;
   try {
     valid = await verify({ secret, token: code });
   } catch {
-    return { error: "Invalid code" };
+    return { success: false, error: "Invalid code" };
   }
-  if (!valid?.valid) return { error: "Invalid code" };
+  if (!valid?.valid) return { success: false, error: "Invalid code" };
 
   try {
     await prisma.user.update({
       where: { id: user.id },
       data: { twoFactorEnabled: false, twoFactorSecret: null },
     });
-    return { success: true };
+    return { success: true, data: null };
   } catch {
-    return { error: "Failed to disable 2FA" };
+    return { success: false, error: "Failed to disable 2FA" };
   }
 }

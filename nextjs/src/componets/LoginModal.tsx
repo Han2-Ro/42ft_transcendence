@@ -52,7 +52,7 @@ export const AuthModal = ({ onClose }: Props) => {
         return;
       }
 
-      if ("requiresTwoFactor" in result) {
+      if ("requiresTwoFactor" in result && result.requiresTwoFactor) {
         setError("2FA not yet implemented");
         return;
       }
