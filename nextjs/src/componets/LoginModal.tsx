@@ -3,63 +3,92 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuthConetxt } from "./AuthProvider";
-import { login, register } from "@/lib/auth/actions";
+import { login, login2FA, register } from "@/lib/auth/actions";
 import { Popup } from "./Popup";
 import { TextInput } from "./TextInput";
 import Button from "./Button";
+import ErrorMessage from "./ErrorMessage";
 
 type Props = {
   onClose: () => void;
 };
 
 export const AuthModal = ({ onClose }: Props) => {
-  const [mode, setMode] = useState<"login" | "register">("login");
+  const [mode, setMode] = useState<"login" | "register" | "2FA">("login");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [userId2FA, setuserId2FA] = useState<number | null>(null);
   const router = useRouter();
   const { refreshUser } = useAuthConetxt();
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    const formData = new FormData(e.currentTarget);
+  const handleRegister = async (formData: FormData) => {
     const email = formData.get("email");
-    const password = formData.get("password");
     const username = formData.get("username");
+    const password = formData.get("password");
     const confirmPassword = formData.get("confirmPassword");
-
-    setError("");
-
     if (mode === "register" && password !== confirmPassword) {
       setError("Passwords do not match");
       return;
     }
+    const result = await register(
+      email as string,
+      username as string,
+      password as string,
+    );
+    if (!result.success) {
+      setError(result.error);
+      return;
+    }
+    onClose();
+    await refreshUser();
+    await router.refresh();
+  };
 
+  const handleLogin = async (formData: FormData) => {
+    const username = formData.get("username");
+    const password = formData.get("password");
+    const result = await login(username as string, password as string);
+    if (!result.success) {
+      setError(result.error);
+      return;
+    }
+    if ("requiresTwoFactor" in result.data && result.data.requiresTwoFactor) {
+      setMode("2FA");
+      setuserId2FA(result.data.userId);
+      return;
+    }
+    onClose();
+    await refreshUser();
+    await router.refresh();
+  };
+
+  const handle2faLogin = async (formData: FormData) => {
+    const verificationCode = formData.get("verificationCode");
+    if (!verificationCode) {
+      setError("2FA Code required");
+      return;
+    }
+    const result = await login2FA(verificationCode as string, userId2FA ?? -1);
+    if (!result.success) {
+      setError(result.error);
+      return;
+    }
+    onClose();
+    await refreshUser();
+    await router.refresh();
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setError("");
     setLoading(true);
 
+    const formData = new FormData(e.currentTarget);
+
     try {
-      const result =
-        mode === "login"
-          ? await login(email as string, password as string)
-          : await register(
-              email as string,
-              username as string,
-              password as string,
-            );
-
-      if ("error" in result) {
-        setError(result.error);
-        return;
-      }
-
-      if ("requiresTwoFactor" in result) {
-        setError("2FA not yet implemented");
-        return;
-      }
-
-      onClose();
-      await refreshUser();
-      await router.refresh();
+      if (mode === "register") handleRegister(formData);
+      else if (mode === "login") handleLogin(formData);
+      else if (mode === "2FA") handle2faLogin(formData);
     } catch (err) {
       console.log(err);
       setError("An error occurred. Please try again.");
@@ -69,29 +98,23 @@ export const AuthModal = ({ onClose }: Props) => {
   };
 
   return (
-    <Popup className="p-8" onClose={onClose}>
+    <Popup className="p-4 w-64 lg:w-96" onClose={onClose}>
       <h2 className="mb-8 text-3xl">
         {mode === "login" ? "Login" : "Register"}
       </h2>
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-        {error && (
-          <div className="mb-4 p-2 bg-red-500/20 text-red-500 rounded">
-            {error}
-          </div>
-        )}
         <TextInput
-          id="email"
-          name="email"
-          label="Email"
-          type="email"
+          id="username"
+          name="username"
+          label={`Username${mode === "register" ? "" : " or Email"}`}
           required
-          disabled={loading}
+          disabled={loading || mode === "2FA"}
         />
         {mode === "register" && (
           <TextInput
-            id="username"
-            name="username"
-            label="Username"
+            id="email"
+            name="email"
+            label="Email"
             required
             disabled={loading}
           />
@@ -102,7 +125,7 @@ export const AuthModal = ({ onClose }: Props) => {
           label="Password"
           type="password"
           required
-          disabled={loading}
+          disabled={loading || mode === "2FA"}
         />
         {mode === "register" && (
           <TextInput
@@ -114,13 +137,34 @@ export const AuthModal = ({ onClose }: Props) => {
             disabled={loading}
           />
         )}
-        <Button type="submit" disabled={loading} className="mt-8">
-          {loading
-            ? mode === "login"
-              ? "Logging in..."
-              : "Registering..."
-            : "Submit"}
-        </Button>
+        {mode === "2FA" && (
+          <TextInput
+            id="verificationCode"
+            name="verificationCode"
+            label="Enter 2FA Code"
+            required
+            autocomplete="off"
+            disabled={loading}
+            className="mt-4"
+          />
+        )}
+        <ErrorMessage errorMsg={error} />
+        <div className="flex flex-row gap-4">
+          <Button
+            className="flex-1 bg-background-primary"
+            type="button"
+            onClick={onClose}
+          >
+            Cancel
+          </Button>
+          <Button type="submit" disabled={loading} className="flex-1">
+            {loading
+              ? mode === "login"
+                ? "Logging in..."
+                : "Registering..."
+              : "Submit"}
+          </Button>
+        </div>
         <button
           type="button"
           onClick={() => {
