@@ -10,7 +10,7 @@ export default async function Home() {
       <h1 className="md:mb-8 text-6xl">Chess 42</h1>
       <p className="text-4xl">Better than chess.com!</p>
       <section className="lg:grid lg:grid-cols-2 py-10 gap-10 w-full">
-        <div className="bg-linear-110 from-gray-600/50 to bg-neutral-800 p-2 mb-8 rounded-xl">
+        <div className="bg-linear-110 from-gray-600/50 to bg-neutral-800 p-2 mb-8 lg:mb-0 rounded-xl">
           <Link href="/stats">
             <h2 className="text-2xl w-full text-center pb-4 pt-2 hover:text-stone-400">
               Leaderboard

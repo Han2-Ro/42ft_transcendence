@@ -62,6 +62,7 @@ io.use((socket, next) => {
     })
     .catch((error: unknown) => {
       console.log("Authentication error:", error);
+      console.log("nextjsUrl", nextjsUrl);
       next(new Error(`Authentication error: ${error}`));
     });
 });

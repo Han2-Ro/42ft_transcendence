@@ -4,16 +4,16 @@ import { useAuthConetxt } from "@/componets/AuthProvider";
 import Button from "@/componets/Button";
 import { Popup } from "@/componets/Popup";
 import { TextInput } from "@/componets/TextInput";
-import { changePassword, changeUsername } from "@/lib/auth/actions";
+import { changePassword, changeUsername, setup2FA } from "@/lib/auth/actions";
 import { useState } from "react";
+import Config2FA from "./2FAConfig";
 
 export default function Page() {
-  const { user } = useAuthConetxt();
+  const { user, refreshUser } = useAuthConetxt();
   const [showUsernameDialog, setShowUsernameDialog] = useState(false);
   const [showPasswordDialog, setShowPasswordDialog] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const { refreshUser } = useAuthConetxt();
 
   if (!user) {
     return <main>Log in to change settings</main>;
@@ -84,14 +84,18 @@ export default function Page() {
               required
               disabled={loading}
             />
-            {error && (
-              <div className="mb-4 p-2 bg-red-500/20 text-red-500 rounded">
-                {error}
-              </div>
-            )}
-            <Button type="submit" disabled={loading} className="mt-8">
-              {loading ? "Submitting..." : "Submit"}
-            </Button>
+            <div className="flex flex-row mt-8 gap-4">
+              <Button
+                className="flex-1 bg-background-primary"
+                type="button"
+                onClick={() => setShowUsernameDialog(false)}
+              >
+                Cancel
+              </Button>
+              <Button className="flex-1" type="submit" disabled={loading}>
+                {loading ? "Submitting..." : "Submit"}
+              </Button>
+            </div>
           </form>
         </Popup>
       )}
@@ -128,9 +132,18 @@ export default function Page() {
                 {error}
               </div>
             )}
-            <Button type="submit" disabled={loading} className="mt-8">
-              {loading ? "Submitting..." : "Submit"}
-            </Button>
+            <div className="flex flex-row mt-8 gap-4">
+              <Button
+                className="flex-1 bg-background-primary"
+                type="button"
+                onClick={() => setShowPasswordDialog(false)}
+              >
+                Cancel
+              </Button>
+              <Button type="submit" disabled={loading} className="flex-1">
+                {loading ? "Submitting..." : "Submit"}
+              </Button>
+            </div>
           </form>
         </Popup>
       )}
@@ -140,12 +153,23 @@ export default function Page() {
       <hr />
       <div className="flex flex-row justify-between items-center p-2 w-full">
         <p>Username: {user ? user.username : "None"}</p>
-        <Button onClick={() => setShowUsernameDialog(true)}>Change</Button>
+        <Button
+          className=" bg-background-secondary"
+          onClick={() => setShowUsernameDialog(true)}
+        >
+          Change
+        </Button>
       </div>
       <div className="flex flex-row justify-between items-center p-2 w-full">
         <p>Password: ****</p>
-        <Button onClick={() => setShowPasswordDialog(true)}>Change</Button>
+        <Button
+          className="bg-background-secondary"
+          onClick={() => setShowPasswordDialog(true)}
+        >
+          Change
+        </Button>
       </div>
+      <Config2FA checked={user.twoFactorEnabled} />
     </main>
   );
 }
