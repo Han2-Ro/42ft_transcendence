@@ -92,6 +92,7 @@ export default function Page() {
             <div className="flex flex-row mt-8 gap-4">
               <Button
                 className="flex-1 bg-background-primary"
+                type="button"
                 onClick={() => setShowUsernameDialog(false)}
               >
                 Cancel
@@ -139,6 +140,7 @@ export default function Page() {
             <div className="flex flex-row mt-8 gap-4">
               <Button
                 className="flex-1 bg-background-primary"
+                type="button"
                 onClick={() => setShowPasswordDialog(false)}
               >
                 Cancel
