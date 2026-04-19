@@ -16,6 +16,7 @@ function getJwtSecret() {
 export type User = {
   userId: number;
   username: string;
+  twoFactorEnabled: boolean;
 };
 
 /**
@@ -42,6 +43,7 @@ export const getSession = cache(async (): Promise<User | null> => {
     return {
       userId: payload.userId as number,
       username: user.username,
+      twoFactorEnabled: user.twoFactorEnabled,
     };
   } catch {
     return null;
