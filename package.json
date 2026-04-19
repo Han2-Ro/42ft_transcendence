@@ -8,7 +8,6 @@
     "dev:db": "docker compose up -d db && POSTGRES_ADDRESS=localhost pnpm --parallel --stream run dev",
     "start": "pnpm --parallel --stream run start",
     "build": "pnpm --recursive run build",
-    "up": "docker compose up --build",
     "lint": "pnpm eslint",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
