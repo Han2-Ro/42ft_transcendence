@@ -61,36 +61,51 @@ function getCookieOptions() {
   return cookieOptions;
 }
 
-export type LoginResult =
-  | { success: true; user: { id: number; email: string; username: string } }
+export type LoginResult = ActionResult<
+  | {
+      requiresTwoFactor: false;
+      userId: number;
+      email: string;
+      username: string;
+    }
   | { requiresTwoFactor: true; userId: number }
-  | { error: string };
+>;
 
 export async function login(
-  email: string,
+  username: string,
   password: string,
 ): Promise<LoginResult> {
-  const user = await prisma.user.findUnique({ where: { email } });
-
+  let user = await prisma.user.findUnique({ where: { username: username } });
   if (!user) {
-    return { error: "Invalid email or password" };
+    user = await prisma.user.findUnique({ where: { email: username } });
+  }
+  if (!user) {
+    return { success: false, error: "Invalid username or password" };
   }
 
   const passwordValid = await bcrypt.compare(password, user.passwordHash);
 
   if (!passwordValid) {
-    return { error: "Invalid email or password" };
+    return { success: false, error: "Invalid username or password" };
   }
 
   if (user.twoFactorEnabled) {
-    return { requiresTwoFactor: true, userId: user.id };
+    return {
+      success: true,
+      data: { requiresTwoFactor: true, userId: user.id },
+    };
   }
 
   (await cookies()).set("token", await createToken(user), getCookieOptions());
 
   return {
     success: true,
-    user: { id: user.id, email: user.email, username: user.username },
+    data: {
+      requiresTwoFactor: false,
+      userId: user.id,
+      email: user.email,
+      username: user.username,
+    },
   };
 }
 
@@ -381,26 +396,29 @@ export async function verify2FA(code: string): Promise<ActionResult<null>> {
   }
 }
 
-export async function login2FA(code: string, userId: number) {
+export async function login2FA(
+  code: string,
+  userId: number,
+): Promise<ActionResult<{ userId: number; email: string; username: string }>> {
   const user = await prisma.user.findUnique({ where: { id: userId } });
-  if (!user) return { error: "Failed to find user" };
+  if (!user) return { success: false, error: "Failed to find user" };
 
   const secret = user.twoFactorSecret;
-  if (!secret) return { error: "No secret found for user" };
+  if (!secret) return { success: false, error: "No secret found for user" };
 
   let valid: Awaited<ReturnType<typeof verify>>;
   try {
     valid = await verify({ secret, token: code });
   } catch {
-    return { error: "Invalid code" };
+    return { success: false, error: "Invalid code" };
   }
-  if (!valid?.valid) return { error: "Invalid code" };
+  if (!valid?.valid) return { success: false, error: "Invalid code" };
 
   (await cookies()).set("token", await createToken(user), getCookieOptions());
 
   return {
     success: true,
-    user: { id: user.id, email: user.email, username: user.username },
+    data: { userId: user.id, email: user.email, username: user.username },
   };
 }
 
