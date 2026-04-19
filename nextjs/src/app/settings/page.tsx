@@ -169,7 +169,7 @@ export default function Page() {
           Change
         </Button>
       </div>
-      <Config2FA />
+      <Config2FA checked={user.twoFactorEnabled} />
     </main>
   );
 }
