@@ -110,7 +110,8 @@ export default function Config2FA() {
           type="checkbox"
           checked={checked2FA}
           onChange={toggle2FA}
-        ></input>
+          className="mr-18 w-5 h-5 accent-accent-primary"
+        />
       </div>
     </>
   );

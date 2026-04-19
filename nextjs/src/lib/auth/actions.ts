@@ -352,7 +352,9 @@ export async function setup2FA(): Promise<ActionResult<string>> {
   }
 }
 
-export async function verify2FA(code: string): ActionResult<undefined> {
+export async function verify2FA(
+  code: string,
+): Promise<ActionResult<undefined>> {
   const session = await getSession();
   const user = await prisma.user.findUnique({ where: { id: session?.userId } });
 
