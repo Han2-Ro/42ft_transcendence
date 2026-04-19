@@ -43,7 +43,7 @@ export const getSession = cache(async (): Promise<User | null> => {
     return {
       userId: payload.userId as number,
       username: user.username,
-	  twoFactorEnabled: user.twoFactorEnabled,
+      twoFactorEnabled: user.twoFactorEnabled,
     };
   } catch {
     return null;
