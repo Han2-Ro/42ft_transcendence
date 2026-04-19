@@ -67,3 +67,8 @@ export async function GET(req: NextRequest) {
   response.cookies.set("token", await createToken(user), getCookieOptions());
   return response;
 }
+
+
+//TODO make linking to the 42 account instead of registering it with 42
+// make additional field in DB for fortytwo email, id and login, user can not touch those.
+// when user tries to login with 42 then that info is checked and linked to the account.
