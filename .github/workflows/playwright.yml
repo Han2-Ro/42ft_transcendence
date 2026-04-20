@@ -48,7 +48,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.cache/ms-playwright
-          key: ${{ runner.os }}-playwright-${{ hashFiles('tests/pnpm-lock.yaml') }}
+          key: ${{ runner.os }}-playwright-v2-${{ hashFiles('pnpm-lock.yaml', 'tests/package.json') }}
 
       - name: Install dependencies
         run: pnpm install
@@ -56,7 +56,7 @@ jobs:
 
       - name: Install Playwright browsers
         if: steps.cache-playwright.outputs.cache-hit != 'true'
-        run: pnpm exec playwright install --with-deps chromium
+        run: pnpm exec playwright install --with-deps chromium firefox webkit
         working-directory: tests
 
       - name: Wait for Next.js to be ready
@@ -75,7 +75,7 @@ jobs:
           exit 1
 
       - name: Run Playwright tests
-        run: pnpm test || (docker compose logs && exit 1)
+        run: pnpm test:all || (docker compose logs && exit 1)
         working-directory: tests
 
       - name: Upload Playwright report
