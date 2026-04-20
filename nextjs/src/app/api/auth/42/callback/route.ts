@@ -21,7 +21,10 @@ export async function GET(req: NextRequest) {
 
   const tokenData = await tokenRes.json();
   if (!tokenRes.ok)
-    return NextResponse.json({ error: "Token exchange failed" }, { status: 400 });
+    return NextResponse.json(
+      { error: "Token exchange failed" },
+      { status: 400 },
+    );
 
   const userRes = await fetch("https://api.intra.42.fr/v2/me", {
     headers: { Authorization: `Bearer ${tokenData.access_token}` },
@@ -43,7 +46,9 @@ export async function GET(req: NextRequest) {
         },
       });
     } catch {
-      return NextResponse.redirect(new URL("/?error=42_already_linked", baseUrl));
+      return NextResponse.redirect(
+        new URL("/?error=42_already_linked", baseUrl),
+      );
     }
     return NextResponse.redirect(new URL("/", baseUrl));
   }
@@ -55,8 +60,11 @@ export async function GET(req: NextRequest) {
 
   if (!user)
     return NextResponse.json(
-      { error: "No account linked to this 42 profile. Please log in and link your account first." },
-      { status: 401 }
+      {
+        error:
+          "No account linked to this 42 profile. Please log in and link your account first.",
+      },
+      { status: 401 },
     );
 
   const response = NextResponse.redirect(new URL("/", baseUrl));

@@ -467,4 +467,3 @@ export async function unlinkFortyTwo(): Promise<ActionResult<null>> {
     return { success: false, error: "Failed to unlink 42 account" };
   }
 }
-

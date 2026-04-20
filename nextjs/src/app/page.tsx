@@ -14,7 +14,9 @@ export default async function Home({
     <main className="p-2 md:p-8 flex flex-col items-center">
       <h1 className="md:mb-8 text-6xl">Chess 42</h1>
       {error === "42_already_linked" && (
-        <p className="text-red-500 mb-4">This 42 account is already linked to another 42Chess account.</p>
+        <p className="text-red-500 mb-4">
+          This 42 account is already linked to another 42Chess account.
+        </p>
       )}
       <p className="text-4xl">Better than chess.com!</p>
       <section className="lg:grid lg:grid-cols-2 py-10 gap-10 w-full">

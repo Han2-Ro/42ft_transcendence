@@ -182,7 +182,9 @@ export const AuthModal = ({ onClose }: Props) => {
           <Button
             type="button"
             className="mt-2 w-full bg-background-secondary"
-            onClick={() => (window.location.href = "https://localhost/api/auth/42")}
+            onClick={() =>
+              (window.location.href = "https://localhost/api/auth/42")
+            }
             disabled={loading}
           >
             Login with 42

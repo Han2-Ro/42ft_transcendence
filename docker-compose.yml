@@ -24,7 +24,6 @@ services:
       - FORTYTWO_REDIRECT_URI=${FORTYTWO_REDIRECT_URI}
       - MAX_USERS=${MAX_USERS}
 
-
   gamesserver:
     build:
       context: .
