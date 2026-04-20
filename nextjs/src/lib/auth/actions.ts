@@ -120,6 +120,11 @@ export async function register(
   username: string,
   password: string,
 ): Promise<RegisterResult> {
+  const userCount = await prisma.user.count();
+  const maxUsers = parseInt(process.env.MAX_USERS ?? "0");
+  if (maxUsers != 0 && userCount >= maxUsers) {
+    return { success: false, error: "Registrations are closed" };
+  }
   if (!checkPasswordStrength(password)) {
     return {
       success: false,
