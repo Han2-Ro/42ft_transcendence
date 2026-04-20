@@ -75,7 +75,7 @@ jobs:
           exit 1
 
       - name: Run Playwright tests
-        run: pnpm test || (docker compose logs && exit 1)
+        run: pnpm test:all || (docker compose logs && exit 1)
         working-directory: tests
 
       - name: Upload Playwright report
