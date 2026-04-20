@@ -17,6 +17,7 @@ export type User = {
   userId: number;
   username: string;
   twoFactorEnabled: boolean;
+  fortyTwoLogin: string | null,
 };
 
 /**
@@ -43,6 +44,7 @@ export const getSession = cache(async (): Promise<User | null> => {
       userId: payload.userId as number,
       username: user.username,
       twoFactorEnabled: user.twoFactorEnabled,
+	  fortyTwoLogin: user.fortyTwoLogin,
     };
   } catch {
     return null;

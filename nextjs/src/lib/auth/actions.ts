@@ -453,3 +453,18 @@ export async function disable2FA(code: string): Promise<ActionResult<null>> {
     return { success: false, error: "Failed to disable 2FA" };
   }
 }
+
+export async function unlinkFortyTwo(): Promise<ActionResult<null>> {
+  const session = await getSession();
+  if (!session) return { success: false, error: "Not logged in" };
+  try {
+    await prisma.user.update({
+      where: { id: session.userId },
+      data: { fortyTwoId: null, fortyTwoEmail: null, fortyTwoLogin: null },
+    });
+    return { success: true, data: null };
+  } catch {
+    return { success: false, error: "Failed to unlink 42 account" };
+  }
+}
+
