@@ -48,7 +48,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.cache/ms-playwright
-          key: ${{ runner.os }}-playwright-${{ hashFiles('tests/pnpm-lock.yaml') }}
+          key: ${{ runner.os }}-playwright-v2-${{ hashFiles('pnpm-lock.yaml', 'tests/package.json') }}
 
       - name: Install dependencies
         run: pnpm install
