@@ -6,6 +6,8 @@ import {
   BoardState,
   PlayerColor,
   PromotablePieceType,
+  BoardStateChess,
+  MoveChess,
 } from "shared";
 import Image from "next/image";
 import { PromotionDialog } from "./PromotionDialog";
@@ -30,8 +32,8 @@ export default function FourPlayerBoard({
   playerColor,
   times,
 }: {
-  boardState: BoardState;
-  onPlayerMove: (move: Move) => void;
+  boardState: BoardStateChess;
+  onPlayerMove: (move: MoveChess) => void;
   playerColor: PlayerColor;
   times: number[];
 }) {
@@ -39,8 +41,8 @@ export default function FourPlayerBoard({
   const [movesFromSquareInt, setMovesFromSquareInt] = useState<number[] | null>(
     null,
   );
-  const [movesFromSquare, setMovesFromSquare] = useState<Move[] | null>(null);
-  const [pendingPromotionMove, setPendingPromotionMove] = useState<Move | null>(
+  const [movesFromSquare, setMovesFromSquare] = useState<MoveChess[] | null>(null);
+  const [pendingPromotionMove, setPendingPromotionMove] = useState<MoveChess | null>(
     null,
   );
 

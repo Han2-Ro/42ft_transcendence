@@ -6,6 +6,8 @@ import {
   BoardState,
   PlayerColor,
   PromotablePieceType,
+  BoardStateChess,
+  MoveChess,
 } from "shared";
 import Image from "next/image";
 import { PromotionDialog } from "./PromotionDialog";
@@ -16,7 +18,7 @@ export default function TwoPlayerBoard({
   playerColor,
   times,
 }: {
-  boardState: BoardState;
+  boardState: BoardStateChess;
   onPlayerMove: (move: Move) => void;
   playerColor: PlayerColor;
   times: number[];
@@ -25,12 +27,12 @@ export default function TwoPlayerBoard({
   const [movesFromSquareInt, setMovesFromSquareInt] = useState<number[] | null>(
     null,
   );
-  const [movesFromSquare, setMovesFromSquare] = useState<Move[] | null>(null);
-  const [pendingPromotionMove, setPendingPromotionMove] = useState<Move | null>(
+  const [movesFromSquare, setMovesFromSquare] = useState<MoveChess[] | null>(null);
+  const [pendingPromotionMove, setPendingPromotionMove] = useState<MoveChess | null>(
     null,
   );
 
-  const isPawnPromotionTarget = (move: Move): boolean => {
+  const isPawnPromotionTarget = (move: MoveChess): boolean => {
     const piece = boardState.board[move.from];
     if (!piece || piece.type !== "pawn") return false;
     const targetRank = Math.floor(move.to / 8);

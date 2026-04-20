@@ -1,19 +1,21 @@
 import {
+  BoardStateCon4,
   PlayerColor,
   GameStatus,
   Move,
-  fourPlayer,
+  Con4,
+  MoveCon4,
   MoveChess,
-  BoardStateChess,
+  PlayerColorCon4,
 } from "shared";
-
 import { startingBoardState } from "./constants.js";
+
 import { Game } from "../game.js";
 
-export class FourPlayerChess extends Game {
-  boardState: BoardStateChess;
+export class ConnectFour extends Game {
+  boardState: BoardStateCon4;
   gameStatus: GameStatus;
-  constructor(state?: BoardStateChess) {
+  constructor(state?: BoardStateCon4) {
     super();
     if (state !== undefined) this.boardState = state;
     else this.boardState = structuredClone(startingBoardState);
@@ -24,38 +26,34 @@ export class FourPlayerChess extends Game {
     return (<MoveChess>move).from !== undefined;
   }
 
-  playMove(move: Move, played_by: PlayerColor): boolean {
-    if (this.isMoveChess(move)) {
-      if (fourPlayer.validateMove(move, this.boardState, played_by) == true) {
-        fourPlayer.updateBoardState(this.boardState, move);
-        this.gameStatus = fourPlayer.checkMates(
-          this.boardState.board,
-          this.boardState.turn,
-        );
+  playMove(move: Move, played_by: PlayerColorCon4): boolean {
+    if (!this.isMoveChess(move)) {
+      if (Con4.validateMove(move, this.boardState, played_by)) {
+        this.gameStatus = Con4.updateBoardState(this.boardState, move);
         return true;
       }
     }
     return false;
   }
+
   playResign(played_by: PlayerColor): void {
     let winners: PlayerColor[];
-    if (played_by == "red" || played_by == "yellow")
-      winners = ["blue", "green"];
-    else winners = ["red", "yellow"];
+    if (played_by == "red") winners = ["yellow"];
+    else winners = ["red"];
     this.gameStatus = { isOver: true, winners: winners, reason: "resignation" };
   }
 
   disconnect(player: PlayerColor): void {
     let winners: PlayerColor[];
-    if (player == "red" || player == "yellow") winners = ["blue", "green"];
-    else winners = ["red", "yellow"];
+    if (player == "red") winners = ["yellow"];
+    else winners = ["red"];
     this.gameStatus = { isOver: true, winners: winners, reason: "disconnect" };
   }
 
   timeout(player: PlayerColor): void {
     let winners: PlayerColor[];
-    if (player == "red" || player == "yellow") winners = ["blue", "green"];
-    else winners = ["red", "yellow"];
+    if (player == "red") winners = ["yellow"];
+    else winners = ["red"];
     this.gameStatus = { isOver: true, winners: winners, reason: "timeout" };
   }
 }

@@ -4,6 +4,7 @@ import { Game } from "../games/game.js";
 import { Chess } from "../games/chess/chess.js";
 import { FourPlayerChess } from "../games/4pChess/4pChess.js";
 import { GameSocket, Player } from "../../server.js";
+import { ConnectFour } from "../games/connectFour/connectFour.js";
 
 export type GameStatus =
   | "checkmate"
@@ -32,7 +33,7 @@ export class Room {
     this.gameType = type;
     if (type == "chess" || type == "timedChess") {
       this.gameLogic = new Chess();
-      this.assignedColors = this.generateRandomColors2p();
+      this.assignedColors = this.generateRandomColors2pBW();
       this.order = ["white", "black"];
       if (type == "timedChess") {
         this.timed = true;
@@ -41,7 +42,7 @@ export class Room {
         this.timed = false;
         this.playerTimes = [-1, -1];
       }
-    } else {
+    } else if (type == "4pChess" || type == "4pTimedChess") {
       this.gameLogic = new FourPlayerChess();
       this.assignedColors = this.generateRandomColors4p();
       this.order = ["red", "blue", "yellow", "green"];
@@ -52,7 +53,19 @@ export class Room {
         this.timed = false;
         this.playerTimes = [-1, -1, -1, -1];
       }
+    } else {
+      this.gameLogic = new ConnectFour();
+      this.assignedColors = this.generateRandomColors2pRY();
+      this.order = ["yellow", "red"];
+      if (type == "timedConnect4") {
+        this.timed = true;
+        this.playerTimes = [600, 600];
+      } else {
+        this.timed = false;
+        this.playerTimes = [-1, -1];
+      }
     }
+
     this.players.forEach((value: Player, index: number) => {
       value.sockets.forEach((value: GameSocket) => {
         value.emit("gameStart", {
@@ -273,7 +286,12 @@ export class Room {
     }
     return array;
   }
-  private generateRandomColors2p(): PlayerColor[] {
+  private generateRandomColors2pBW(): PlayerColor[] {
+    const colors: PlayerColor[] = ["white", "black"];
+    return this.shuffleArray(colors);
+  }
+
+  private generateRandomColors2pRY(): PlayerColor[] {
     const colors: PlayerColor[] = ["white", "black"];
     return this.shuffleArray(colors);
   }
