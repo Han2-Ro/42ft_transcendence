@@ -168,31 +168,10 @@ export default function Page() {
           color={color ?? "white"}
           onPlayerMove={gameId && !result ? emitPlayerMove : () => {}}
           times={times ?? [-1]}
+          isInGame={Boolean(gameId && !result)}
         />
       </main>
       <aside className="w-full md:w-[360px] flex flex-col items-center gap-6 px-4 py-6">
-        {gameId && !result && (
-          //<div className="w-full rounded-3xl border border-slate-200 bg-slate-50/90 p-5 shadow-sm shadow-slate-200/50">
-          <div className="mt-4 flex flex-col gap-3">
-            <div className="inline-flex items-center gap-3 rounded-full bg-white px-4 py-3 text-sm font-medium shadow-sm ring-1 ring-slate-200">
-              <span
-                className={`inline-flex h-3.5 w-3.5 rounded-full ${turnDotStyles[boardState.turn]}`}
-              />
-              <span
-                className={`rounded-full px-3 py-1 ${turnBadgeStyles[boardState.turn]}`}
-              >
-                {boardState.turn} to move
-              </span>
-            </div>
-            <p className="text-sm text-slate-600">
-              {boardState.turn === color
-                ? "It’s your turn."
-                : "Waiting for opponent..."}
-            </p>
-          </div>
-          //</div>
-        )}
-
         {result && (
           <EndScreen
             result={result}

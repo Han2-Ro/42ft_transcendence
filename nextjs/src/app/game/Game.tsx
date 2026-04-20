@@ -8,6 +8,7 @@ interface GameProps {
   color: PlayerColor;
   times: number[];
   onPlayerMove: (move: Move) => void;
+  isInGame: boolean;
 }
 
 export default function Game({
@@ -16,6 +17,7 @@ export default function Game({
   color,
   onPlayerMove,
   times,
+  isInGame,
 }: GameProps) {
   return (
     <div className="text-center flex flex-col justify-center">
@@ -28,6 +30,7 @@ export default function Game({
           onPlayerMove={onPlayerMove}
           playerColor={color}
           times={times}
+          isInGame={isInGame}
         />
       ) : (
         <FourPlayerBoard

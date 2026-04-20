@@ -9,17 +9,20 @@ import {
 } from "shared";
 import Image from "next/image";
 import { PromotionDialog } from "./PromotionDialog";
+import { PlayerCard } from "./PlayerCard";
 
 export default function TwoPlayerBoard({
   boardState,
   onPlayerMove,
   playerColor,
   times,
+  isInGame = true,
 }: {
   boardState: BoardState;
   onPlayerMove: (move: Move) => void;
   playerColor: PlayerColor;
   times: number[];
+  isInGame?: boolean;
 }) {
   const [selectedSquare, setSelectedSquare] = useState<number | null>(null);
   const [movesFromSquareInt, setMovesFromSquareInt] = useState<number[] | null>(
@@ -91,57 +94,70 @@ export default function TwoPlayerBoard({
   };
 
   return (
-    <div className="flex flex-col justify-center items-center h-full gap-4">
-      {times[0] !== -1 && (
-        <div className="text-lg font-semibold">
-          <div>
-            Times: white: {formatTime(times[0])}, black: {formatTime(times[1])}
-          </div>
-        </div>
-      )}
-      <div
-        className={`w-[min(100vw,50vh)] h-[min(100vw,50vh)] md:w-[min(50vw,70vh)] md:h-[min(50vw,70vh)] grid grid-rows-8 grid-cols-8 ${playerColor === "black" ? "rotate-180" : ""}`}
-      >
-        {boardState.board.map((sq: PieceOrNull, index: number) => (
-          <button
-            key={index}
-            onClick={() => handleSquareClick(index)}
-            disabled={pendingPromotionMove !== null}
-            className="relative"
-            style={{
-              background:
-                (index + Math.floor(index / 8)) % 2 === 1
-                  ? selectedSquare === index
-                    ? "#4b4b4bff"
-                    : "#202020ff"
-                  : selectedSquare === index
-                    ? "#aaaaaaff"
-                    : "#eee",
-            }}
-          >
-            {sq && (
-              <Image
-                width="45"
-                height="45"
-                src={`/chess/${sq.color}/${sq.type}.svg`}
-                alt={sq.color + sq.type}
-                className={`w-full h-full ${playerColor === "black" ? "rotate-180" : ""}`}
-              />
-            )}
-            {movesFromSquareInt &&
-              movesFromSquareInt.length > 0 &&
-              movesFromSquareInt.includes(index) && (
+    <div className="flex items-center justify-center gap-4">
+      <div className={`${playerColor === "black" ? "rotate-180" : ""}`}>
+        <div
+          className="w-[min(100vw,50vh)] h-[min(100vw,50vh)] md:w-[min(50vw,70vh)] md:h-[min(50vw,70vh)] grid grid-rows-8 grid-cols-8"
+        >
+          {boardState.board.map((sq: PieceOrNull, index: number) => (
+            <button
+              key={index}
+              onClick={() => handleSquareClick(index)}
+              disabled={pendingPromotionMove !== null}
+              className="relative"
+              style={{
+                background:
+                  (index + Math.floor(index / 8)) % 2 === 1
+                    ? selectedSquare === index
+                      ? "#4b4b4bff"
+                      : "#202020ff"
+                    : selectedSquare === index
+                      ? "#aaaaaaff"
+                      : "#eee",
+              }}
+            >
+              {sq && (
                 <Image
-                  width="100"
-                  height="100"
-                  src={`/chess/circle.svg`}
-                  alt={"Position that the selected Piece can move to."}
-                  className="w-full h-full absolute top-0 left-0"
+                  width="45"
+                  height="45"
+                  src={`/chess/${sq.color}/${sq.type}.svg`}
+                  alt={sq.color + sq.type}
+                  className={`w-full h-full ${playerColor === "black" ? "rotate-180" : ""}`}
                 />
               )}
-          </button>
-        ))}
+              {movesFromSquareInt &&
+                movesFromSquareInt.length > 0 &&
+                movesFromSquareInt.includes(index) && (
+                  <Image
+                    width="100"
+                    height="100"
+                    src={`/chess/circle.svg`}
+                    alt={"Position that the selected Piece can move to."}
+                    className="w-full h-full absolute top-0 left-0"
+                  />
+                )}
+            </button>
+          ))}
+        </div>
       </div>
+      {isInGame && (
+        <div className="flex flex-col gap-4">
+          <PlayerCard
+            name={playerColor === "white" ? "Black Player" : "White Player"}
+            color={playerColor === "white" ? "black" : "white"}
+            isTurn={boardState.turn === (playerColor === "white" ? "black" : "white")}
+            time={times[playerColor === "white" ? 1 : 0]}
+            isTimed={times[playerColor === "white" ? 1 : 0] !== -1}
+          />
+          <PlayerCard
+            name={playerColor === "white" ? "White Player" : "Black Player"}
+            color={playerColor}
+            isTurn={boardState.turn === playerColor}
+            time={times[playerColor === "white" ? 0 : 1]}
+            isTimed={times[playerColor === "white" ? 0 : 1] !== -1}
+          />
+        </div>
+      )}
       <PromotionDialog
         open={pendingPromotionMove !== null}
         onClose={handlePromotionClose}

@@ -224,7 +224,7 @@ export default function FourPlayerBoard({
                     name={`${assignments.bottomRight} Player`}
                     color={assignments.bottomRight}
                     isTurn={boardState.turn === assignments.bottomRight}
-                    isYou={playerColor === assignments.bottomRight}
+                    isYou={true}
                     time={times[colorToIndex[assignments.bottomRight as "red" | "blue" | "yellow" | "green"]]}
                     isTimed={times[0] !== -1}
                   />
