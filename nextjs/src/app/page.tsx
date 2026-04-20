@@ -3,11 +3,19 @@ import Link from "next/link";
 import GameHistory from "./history/GameHistory";
 import { getLeaderboard } from "@/lib/auth/actions";
 
-export default async function Home() {
+export default async function Home({
+  searchParams,
+}: {
+  searchParams: Promise<{ error?: string }>;
+}) {
   const leaderboardEntries = await getLeaderboard();
+  const { error } = await searchParams;
   return (
     <main className="p-2 md:p-8 flex flex-col items-center">
       <h1 className="md:mb-8 text-6xl">Chess 42</h1>
+      {error === "42_already_linked" && (
+        <p className="text-red-500 mb-4">This 42 account is already linked to another 42Chess account.</p>
+      )}
       <p className="text-4xl">Better than chess.com!</p>
       <section className="lg:grid lg:grid-cols-2 py-10 gap-10 w-full">
         <div className="bg-linear-110 from-gray-600/50 to bg-neutral-800 p-2 mb-8 lg:mb-0 rounded-xl">

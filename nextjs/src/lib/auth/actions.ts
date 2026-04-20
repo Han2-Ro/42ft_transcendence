@@ -82,10 +82,6 @@ export async function login(
     return { success: false, error: "Invalid username or password" };
   }
 
-  if (!user.passwordHash) {
-    return { error: "No password set" };
-  }
-
   const passwordValid = await bcrypt.compare(password, user.passwordHash);
 
   if (!passwordValid) {
@@ -185,12 +181,8 @@ export async function changePassword(
   const user = await prisma.user.findUnique({ where: { id: session?.userId } });
   if (!user) return { success: false, error: "User not found" };
   const userId = user.id;
-  let passwordValid;
-  if (!user.passwordHash) {
-    passwordValid = true;
-  } else {
-    passwordValid = await bcrypt.compare(oldPassword, user.passwordHash);
-  }
+  const passwordValid = await bcrypt.compare(oldPassword, user.passwordHash);
+
   if (!passwordValid) {
     return { success: false, error: "Invalid password" };
   }
