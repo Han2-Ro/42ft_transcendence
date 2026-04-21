@@ -25,11 +25,11 @@ jobs:
           DATABASE_URL=postgresql://${{ secrets.POSTGRES_USER }}:${{ secrets.POSTGRES_PASSWORD }}@db:5432/transcendence_db
           JWT_SECRET=${{ secrets.JWT_SECRET }}
           INTERNAL_SECRET=your-secure-internal-secret-here
-          SERVICE_URL_NEXTJS=http://localhost:8080
+          SERVICE_URL_NEXTJS=https://localhost
           EOF
 
       - name: Start services
-        run: docker compose up --build -d || (docker compose logs && exit 1)
+        run: make run || (docker compose logs && exit 1)
 
       - name: Install pnpm
         uses: pnpm/action-setup@v4
@@ -48,7 +48,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.cache/ms-playwright
-          key: ${{ runner.os }}-playwright-${{ hashFiles('tests/pnpm-lock.yaml') }}
+          key: ${{ runner.os }}-playwright-v2-${{ hashFiles('pnpm-lock.yaml', 'tests/package.json') }}
 
       - name: Install dependencies
         run: pnpm install
@@ -56,14 +56,14 @@ jobs:
 
       - name: Install Playwright browsers
         if: steps.cache-playwright.outputs.cache-hit != 'true'
-        run: pnpm exec playwright install --with-deps chromium
+        run: pnpm exec playwright install --with-deps chromium firefox webkit
         working-directory: tests
 
       - name: Wait for Next.js to be ready
         run: |
           echo "Waiting for app on port 8080..."
           for i in $(seq 1 10); do
-            if curl -sf http://localhost:8080 > /dev/null 2>&1; then
+            if curl -sfk https://localhost > /dev/null 2>&1; then
               echo "App is ready."
               exit 0
             fi
@@ -75,7 +75,7 @@ jobs:
           exit 1
 
       - name: Run Playwright tests
-        run: pnpm test || (docker compose logs && exit 1)
+        run: pnpm test:all || (docker compose logs && exit 1)
         working-directory: tests
 
       - name: Upload Playwright report

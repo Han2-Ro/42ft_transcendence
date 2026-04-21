@@ -14,6 +14,7 @@ const io = new Server<CToSEvents, SToCEvents>(4000, {
     origin: (origin, callback) => {
       if (
         !origin ||
+        origin.startsWith("https://localhost") ||
         origin.startsWith("http://localhost:") ||
         origin == process.env.SERVICE_URL_NEXTJS
       ) {
@@ -61,13 +62,14 @@ io.use((socket, next) => {
     })
     .catch((error: unknown) => {
       console.log("Authentication error:", error);
+      console.log("nextjsUrl", nextjsUrl);
       next(new Error(`Authentication error: ${error}`));
     });
 });
 
 export type Player = {
   sockets: GameSocket[];
-  //uid: string
+  playerid: number;
   status: "lobby" | "in_game";
   game_id: string | null;
   searching: Games[];
@@ -102,6 +104,7 @@ io.on("connection", (socket) => {
   if (player === undefined) {
     players.set(socket.data.user, {
       sockets: [socket],
+      playerid: socket.data.user,
       status: "lobby",
       game_id: null,
       searching: [],

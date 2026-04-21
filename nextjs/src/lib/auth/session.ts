@@ -3,6 +3,7 @@ import "server-only";
 import { cookies } from "next/headers";
 import { cache } from "react";
 import { jwtVerify } from "jose";
+import { prisma } from "@/lib/prisma";
 
 function getJwtSecret() {
   const secret = process.env.JWT_SECRET;
@@ -15,6 +16,8 @@ function getJwtSecret() {
 export type User = {
   userId: number;
   username: string;
+  twoFactorEnabled: boolean;
+  fortyTwoLogin: string | null;
 };
 
 /**
@@ -30,9 +33,18 @@ export const getSession = cache(async (): Promise<User | null> => {
 
   try {
     const { payload } = await jwtVerify(token, getJwtSecret());
+    const user = await prisma.user.findUnique({
+      where: { id: payload.userId as number },
+    });
+    if (!user) {
+      return null;
+    }
+    console.log("db", user?.username);
     return {
       userId: payload.userId as number,
-      username: payload.username as string,
+      username: user.username,
+      twoFactorEnabled: user.twoFactorEnabled,
+      fortyTwoLogin: user.fortyTwoLogin,
     };
   } catch {
     return null;

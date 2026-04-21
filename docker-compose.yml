@@ -1,7 +1,5 @@
 services:
   nextjs:
-    expose:
-      - "3000"
     build:
       context: .
       dockerfile: nextjs/Dockerfile
@@ -10,7 +8,7 @@ services:
       db:
         condition: service_healthy
     healthcheck:
-      test: ["CMD-SHELL", "wget -qO- http://localhost:3000 || exit 1"]
+      test: ["CMD-SHELL", "wget -qO- http://localhost:${PORT:-3000} || exit 1"]
       interval: 15s
       timeout: 5s
       retries: 5
@@ -21,13 +19,15 @@ services:
       - JWT_SECRET=${JWT_SECRET:?}
       - INTERNAL_SECRET=${INTERNAL_SECRET:?}
       - COOKIE_DOMAIN=${COOKIE_DOMAIN}
+      - FORTYTWO_CLIENT_ID=${FORTYTWO_CLIENT_ID}
+      - FORTYTWO_CLIENT_SECRET=${FORTYTWO_CLIENT_SECRET}
+      - FORTYTWO_REDIRECT_URI=${FORTYTWO_REDIRECT_URI}
+      - MAX_USERS=${MAX_USERS}
 
   gamesserver:
     build:
       context: .
       dockerfile: game-server/Dockerfile
-    expose:
-      - "4000"
     restart: unless-stopped
     environment:
       - SERVICE_URL_NEXTJS=${SERVICE_URL_NEXTJS:-http://localhost:${PORT}}

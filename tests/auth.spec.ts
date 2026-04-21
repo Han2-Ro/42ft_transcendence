@@ -34,20 +34,20 @@ test.describe.serial("auth UI flows", () => {
   test("login via modal", async ({ page }) => {
     await openLoginModal(page);
 
-    await page.fill("#email", feUser.email);
+    await page.fill("#username", feUser.email);
     await page.fill("#password", feUser.password);
     const submitButton = await page.getByRole("button", { name: /^submit$/i });
     await expect(submitButton).toBeVisible();
     await submitButton.click();
     await expect(submitButton).not.toBeVisible();
 
-    await expect(page.getByText(feUser.username)).toBeVisible();
+    await expect(page.getByText(feUser.username).first()).toBeVisible();
   });
 
   test("logout", async ({ page }) => {
     // Log in first
     await openLoginModal(page);
-    await page.fill("#email", feUser.email);
+    await page.fill("#username", feUser.email);
     await page.fill("#password", feUser.password);
     await page.getByRole("button", { name: /^submit$/i }).click();
     await expect(page.getByText(feUser.username)).toBeVisible();
@@ -103,19 +103,19 @@ test.describe.serial("auth UI flows", () => {
 
   test("login: wrong password", async ({ page }) => {
     await openLoginModal(page);
-    await page.fill("#email", feUser.email);
+    await page.fill("#username", feUser.email);
     await page.fill("#password", "WrongPassword99!");
     await page.getByRole("button", { name: /^submit$/i }).click();
-    await expect(page.getByText("Invalid email or password")).toBeVisible();
+    await expect(page.getByText("Invalid username or password")).toBeVisible();
     await expect(page.getByRole("heading", { name: /login/i })).toBeVisible();
   });
 
   test("login: unknown email", async ({ page }) => {
     await openLoginModal(page);
-    await page.fill("#email", "nobody@example.com");
+    await page.fill("#username", "nobody@example.com");
     await page.fill("#password", feUser.password);
     await page.getByRole("button", { name: /^submit$/i }).click();
-    await expect(page.getByText("Invalid email or password")).toBeVisible();
+    await expect(page.getByText("Invalid username or password")).toBeVisible();
     await expect(page.getByRole("heading", { name: /login/i })).toBeVisible();
   });
 });

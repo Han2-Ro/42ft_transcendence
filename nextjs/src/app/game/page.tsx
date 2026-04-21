@@ -11,6 +11,7 @@ import { BoardState, PlayerColor, Move, Games } from "shared";
 import { Result as GameResult } from "shared";
 import { useSidebarActions } from "@/componets/sidebar/SidebarActionsProvider";
 import { DeadKing } from "@/componets/icons/DeadKing";
+import { useAuthConetxt } from "@/componets/AuthProvider";
 
 const turnBadgeStyles: Record<PlayerColor, string> = {
   white: "border border-slate-300 bg-slate-100 text-slate-900",
@@ -32,7 +33,7 @@ const turnDotStyles: Record<PlayerColor, string> = {
 
 // Connect to the exposed backend port
 const socket: Socket<SToCEvents, CToSEvents> = io(
-  process.env.NEXT_PUBLIC_GAMESERVER_URL || "http://localhost:4000",
+  process.env.NEXT_PUBLIC_GAMESERVER_URL || "https://localhost",
   {
     withCredentials: true,
     autoConnect: false,
@@ -52,6 +53,8 @@ export default function Page() {
     useState<ConnectionStatus>("waiting");
   const { setActions, clearActions } = useSidebarActions();
 
+  const { user } = useAuthConetxt();
+
   useEffect(() => {
     console.log("trying to connect socket");
     socket.connect();
@@ -67,7 +70,7 @@ export default function Page() {
         console.log("You need to log in");
         setServerConnectionStatus("unauthorized");
       } else {
-        console.error("Couldn't connect to game server.");
+        console.error("Couldn't connect to game server:", err.message);
         setServerConnectionStatus("error");
       }
     });
@@ -107,7 +110,7 @@ export default function Page() {
       socket.off("setSearching");
       socket.disconnect();
     };
-  }, []);
+  }, [user]);
 
   const closeResultScreen = () => {
     setResult(null);

@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 
-const sampleEntries: LeaderBoardEntry[] = [
+/* const sampleEntries: LeaderBoardEntry[] = [
   { username: "hannes", wins: 18, losses: 7, draws: 3 },
   { username: "alice", wins: 24, losses: 4, draws: 2 },
   { username: "bob", wins: 12, losses: 10, draws: 6 },
@@ -10,7 +10,7 @@ const sampleEntries: LeaderBoardEntry[] = [
   { username: "david", wins: 9, losses: 11, draws: 8 },
   { username: "david", wins: 1, losses: 1, draws: 1 },
   { username: "Really_Long_Username1234567", wins: 20, losses: 1, draws: 1 },
-];
+]; */
 
 export type LeaderBoardEntry = {
   username: string;
@@ -34,10 +34,11 @@ function getWinRatio(entry: LeaderBoardEntry): number {
 
 export default function LeaderBoard({
   maxEntries = Infinity,
+  entries,
 }: {
   maxEntries?: number;
+  entries: LeaderBoardEntry[];
 }) {
-  const entries = sampleEntries;
   const [sortKey, setSortKey] = useState<SortKey>("wins");
   const [sortDirection, setSortDirection] = useState<SortDirection>("desc");
 
