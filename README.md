@@ -1,30 +1,54 @@
+_This project has been created as part of the 42 curriculum by fstark, jlomic, aprevrha, hrother._
+
 # ft_transcendence
 
-A 42 school project
+## Description
 
-## Prerequisites
+42Chess: A full-stack web application for real-time online chess.
+Goal: provide a complete platform for live play across classic and multiplayer formats.
+
+Architecture:
+
+- **Next.js** for frontend and non-realtime backend logic
+- **Socket.IO game server** for realtime game state and communication
+
+Game modes:
+
+- Chess
+- Timed Chess
+- 4-Player Chess
+- Timed 4-Player Chess
+
+## Instructions
+
+### Prerequisites
 
 - Docker
 - pnpm
 
-## Getting Started
+### Getting Started
 
-Run the development server:
+Copy `.env.example` to `.env`. Optionally change the values as desired.
+
+To run it in production run
+
+```bash
+make run
+```
+
+Now you can open [https://localhost](https://localhost) in your browser.
+
+To run the development server (with hot reload):
 
 ```bash
 pnpm install # run this at root of git directory to install dependecies
 pnpm run dev
 ```
 
-Note: this does not start a database
+Note: this does not start a database.
+You can start a postgres db seperatly yourself or use `pnpm run dev:db`
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-To run it in production, create a `.env` file from `.env.example` and the run
-
-```bash
-make run
-```
 
 ### make scripts
 
@@ -56,7 +80,8 @@ make run
 | Complete Web based Game       | 2      |
 | Remote players                | 2      |
 | Multiplayer                   | 2      |
-| TOTAL                         | 15     |
+| Add another Game              | 2      |
+| TOTAL                         | 17     |
 
 ## Project Structure
 
@@ -65,14 +90,6 @@ make run
   - **nextjs/public/** - static assets
 - **game-server/** - Real-time game server using Socket.IO
 - **tests/** - [playwright tests](#tests)
-
-## The Stack
-
-- **[Next.js](https://nextjs.org/docs)** - React framework for frontend and backend
-- **Docker** - Containerization
-- **TypeScript** - Type-safe development
-- **[Tailwind CSS](https://tailwindcss.com/docs/installation)** - Styling
-- **Socket.IO** - Real-time bidirectional communication for game logic
 
 ## Tests
 
@@ -84,3 +101,54 @@ There are end-to-end tests with playwright in `./tests/`:
 - For timed-mode E2E tests, set `GAME_TIMED_MODE_SECONDS` (e.g. `8`) before `make run` to avoid long waits
 
 It will be much apreciated if you write tests for everything you implement!
+
+## Resources
+
+### Documentation
+
+- **[Next.js](https://nextjs.org/docs)** - React framework for frontend and backend
+- **[Docker](https://docs.docker.com/)** - Containerization
+- **[TypeScript](https://www.typescriptlang.org/docs/)** - Type-safe development
+- **[Tailwind CSS](https://tailwindcss.com/docs)** - Styling
+- **[Socket.IO](https://socket.io/docs/v4/)** - Real-time bidirectional communication for game logic
+- **[Playwright](https://playwright.dev/docs/intro)** - Automated end-to-end tests
+
+### Articles
+
+- [Choosing the Right Architecture for Socket Communication in Next.js: A Comprehensive Guide](https://www.wisp.blog/blog/choosing-the-right-architecture-for-socket-communication-in-nextjs-a-comprehensive-guide)
+- [How to use WebSockets with Next.js](https://www.keithbartholomew.com/blog/posts/2023-12-20-how-to-use-websockets-with-nextjs/)
+
+### AI
+
+Models and Software used:
+
+- Gemini
+- Claude
+- VSCode Copilot Chat
+- Pi Agent
+
+We used AI to
+
+- brainstoarm ideas
+- research
+- write playwright testcases
+- do tedious refactors
+- prototype
+
+## The Team
+
+### fstark
+
+Assigned roles:
+
+### jlomic
+
+Assigned roles:
+
+### aprevrha
+
+Assigned roles:
+
+### hrother
+
+Assigned roles:
