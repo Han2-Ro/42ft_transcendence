@@ -33,16 +33,6 @@ export default function TwoPlayerBoard({
     null,
   );
 
-  const isPawnPromotionTarget = (move: Move): boolean => {
-    const piece = boardState.board[move.from];
-    if (!piece || piece.type !== "pawn") return false;
-    const targetRank = Math.floor(move.to / 8);
-    return (
-      (piece.color === "white" && targetRank === 0) ||
-      (piece.color === "black" && targetRank === 7)
-    );
-  };
-
   const handleSquareClick = (square: number) => {
     if (pendingPromotionMove) return;
 
@@ -54,7 +44,7 @@ export default function TwoPlayerBoard({
         setSelectedSquare(null);
         setMovesFromSquareInt(null);
         setMovesFromSquare(null);
-        if (move.special === "promotion" || isPawnPromotionTarget(move)) {
+        if (move.special === "promotion") {
           setPendingPromotionMove({ ...move, special: "promotion" });
           return;
         }
