@@ -9,6 +9,7 @@ interface GameProps {
   color: PlayerColor;
   times: number[];
   onPlayerMove: (move: Move) => void;
+  isInGame: boolean;
 }
 
 function isBoardChess(boardState: BoardState): boardState is BoardStateChess {
@@ -21,18 +22,17 @@ export default function Game({
   color,
   onPlayerMove,
   times,
+  isInGame,
 }: GameProps) {
   return (
     <div className="text-center flex flex-col justify-center">
-      <div className="mb-4">
-        <h2 className="text-2xl font-semibold">Game in progress</h2>
-      </div>
       {(gameType === "chess" || gameType === "timedChess") && isBoardChess(boardState) ? (
         <TwoPlayerBoard
           boardState={boardState as BoardStateChess}
           onPlayerMove={onPlayerMove}
           playerColor={color}
           times={times}
+          isInGame={isInGame}
         />
       ) : (gameType === "4pChess" || gameType === "4pTimedChess") && isBoardChess(boardState) ? (
         <FourPlayerBoard
@@ -49,7 +49,6 @@ export default function Game({
           times={times}
         />
       )}
-      <p className="mt-4">You are playing as {color}</p>
     </div>
   );
 }

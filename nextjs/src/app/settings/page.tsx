@@ -4,7 +4,12 @@ import { useAuthConetxt } from "@/componets/AuthProvider";
 import Button from "@/componets/Button";
 import { Popup } from "@/componets/Popup";
 import { TextInput } from "@/componets/TextInput";
-import { changePassword, changeUsername, setup2FA } from "@/lib/auth/actions";
+import {
+  changePassword,
+  changeUsername,
+  setup2FA,
+  unlinkFortyTwo,
+} from "@/lib/auth/actions";
 import { useState } from "react";
 import Config2FA from "./2FAConfig";
 
@@ -167,6 +172,19 @@ export default function Page() {
           onClick={() => setShowPasswordDialog(true)}
         >
           Change
+        </Button>
+      </div>
+      <div className="flex flex-row justify-between items-center p-2 w-full">
+        <p>42 Account: {user.fortyTwoLogin ?? "Not linked"}</p>
+        <Button
+          className="bg-background-secondary"
+          onClick={() =>
+            user.fortyTwoLogin
+              ? unlinkFortyTwo().then(() => refreshUser())
+              : (window.location.href = "https://localhost/api/auth/42")
+          }
+        >
+          {user.fortyTwoLogin ? "Unlink" : "Link"}
         </Button>
       </div>
       <Config2FA checked={user.twoFactorEnabled} />

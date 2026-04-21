@@ -1,13 +1,12 @@
 "use server";
 
 import bcrypt from "bcrypt";
-import { SignJWT } from "jose";
 import { prisma } from "@/lib/prisma";
 import { cookies } from "next/headers";
 import { getSession } from "./session";
 import { generateSecret, generateURI, verify } from "otplib";
 import QRCode from "qrcode";
-import { error } from "console";
+import { createToken, getCookieOptions } from "./token";
 
 type ActionResult<T> =
   | { success: true; data: T }
@@ -20,7 +19,7 @@ function checkPasswordStrength(password: string) {
   return true;
 }
 
-function getJwtSecret() {
+/* function getJwtSecret() {
   const secret = process.env.JWT_SECRET;
   if (!secret) {
     throw new Error("JWT_SECRET environment variable is not set");
@@ -59,7 +58,7 @@ function getCookieOptions() {
     cookieOptions.domain = process.env.COOKIE_DOMAIN;
   }
   return cookieOptions;
-}
+} */
 
 export type LoginResult = ActionResult<
   | {
@@ -121,6 +120,11 @@ export async function register(
   username: string,
   password: string,
 ): Promise<RegisterResult> {
+  const userCount = await prisma.user.count();
+  const maxUsers = parseInt(process.env.MAX_USERS ?? "0");
+  if (maxUsers != 0 && userCount >= maxUsers) {
+    return { success: false, error: "Registrations are closed" };
+  }
   if (!checkPasswordStrength(password)) {
     return {
       success: false,
@@ -183,6 +187,7 @@ export async function changePassword(
   if (!user) return { success: false, error: "User not found" };
   const userId = user.id;
   const passwordValid = await bcrypt.compare(oldPassword, user.passwordHash);
+
   if (!passwordValid) {
     return { success: false, error: "Invalid password" };
   }
@@ -446,5 +451,19 @@ export async function disable2FA(code: string): Promise<ActionResult<null>> {
     return { success: true, data: null };
   } catch {
     return { success: false, error: "Failed to disable 2FA" };
+  }
+}
+
+export async function unlinkFortyTwo(): Promise<ActionResult<null>> {
+  const session = await getSession();
+  if (!session) return { success: false, error: "Not logged in" };
+  try {
+    await prisma.user.update({
+      where: { id: session.userId },
+      data: { fortyTwoId: null, fortyTwoEmail: null, fortyTwoLogin: null },
+    });
+    return { success: true, data: null };
+  } catch {
+    return { success: false, error: "Failed to unlink 42 account" };
   }
 }

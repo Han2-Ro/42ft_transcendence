@@ -19,7 +19,12 @@ model User {
   passwordHash     String
   twoFactorSecret  String?
   twoFactorEnabled Boolean  @default(false)
-  
+
+  // Forty two creds
+  fortyTwoId       String?  @unique
+  fortyTwoEmail    String?
+  fortyTwoLogin    String?
+
   // Stats
   wins             Int      @default(0)
   losses           Int      @default(0)
