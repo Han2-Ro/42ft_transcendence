@@ -12,6 +12,8 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "test": "pnpm --filter tests run test",
+    "test:mobile": "pnpm --filter tests run test:mobile",
+    "test:all": "pnpm --filter tests run test:all",
     "test:ui": "pnpm --filter tests run test:ui"
   },
   "devDependencies": {

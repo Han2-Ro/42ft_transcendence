@@ -1,4 +1,4 @@
-import { Board, BoardState } from "../../gameTypes";
+import { Board, BoardState, BoardStateChess } from "../../gameTypes";
 
 /**
  * The standard chess starting board configuration.
@@ -43,7 +43,7 @@ export const startingBoard: Board = [
   { color: "white", type: "rook", hasMoved: false },
 ];
 
-export const startingBoardState: BoardState = {
+export const startingBoardState: BoardStateChess = {
   board: startingBoard,
   turn: "white",
   movesPlayed: 0,

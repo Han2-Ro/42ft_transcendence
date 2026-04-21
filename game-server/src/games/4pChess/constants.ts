@@ -1,4 +1,4 @@
-import { Board, BoardState } from "shared";
+import { Board, BoardStateChess } from "shared";
 
 export const startingBoard: Board = [
   //row 1
@@ -85,7 +85,7 @@ export const startingBoard: Board = [
   { color: "red", type: "rook", hasMoved: false },
 ];
 
-export const startingBoardState: BoardState = {
+export const startingBoardState: BoardStateChess = {
   board: startingBoard,
   turn: "red",
   movesPlayed: 0,

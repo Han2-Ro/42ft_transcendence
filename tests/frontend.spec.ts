@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { registerAndLogin } from "./utils";
+import { clickMenuAction, registerAndLogin } from "./utils";
 
 test("home page loads", async ({ page }) => {
   await page.goto("/");
@@ -40,15 +40,13 @@ test("find match and resign", async ({ browser }) => {
   );
 
   await Promise.all([
-    expect(
-      page1.getByRole("heading", { name: /game in progress/i }),
-    ).toBeVisible(),
-    expect(
-      page2.getByRole("heading", { name: /game in progress/i }),
-    ).toBeVisible(),
+    expect(page1.getByText(/white player/i)).toBeVisible(),
+    expect(page1.getByText(/black player/i)).toBeVisible(),
+    expect(page2.getByText(/white player/i)).toBeVisible(),
+    expect(page2.getByText(/black player/i)).toBeVisible(),
   ]);
 
-  await page1.getByRole("button", { name: /resign/i }).click();
+  await clickMenuAction(page1, /resign/i);
   await Promise.all([
     expect(page1.getByText(/Result: lose/i)).toBeVisible(),
     expect(page1.getByText(/Reason: Resignation/i)).toBeVisible(),
