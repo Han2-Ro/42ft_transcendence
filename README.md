@@ -83,12 +83,15 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 | Add another Game              | 2      |
 | TOTAL                         | 17     |
 
-## Project Structure
+## Folder Structure
 
 - **nextjs/** - Next.js frontend and backend API
   - **nextjs/src/app/** - file-system based App Router
   - **nextjs/public/** - static assets
 - **game-server/** - Real-time game server using Socket.IO
+- **shared/** - shared logic package that is used in the game-server and nextjs frontend:
+  - shared types
+  - game logic (both frontend and game-server validate moves using the same functions)
 - **tests/** - [playwright tests](#tests)
 
 ## Tests
@@ -101,6 +104,28 @@ There are end-to-end tests with playwright in `./tests/`:
 - For timed-mode E2E tests, set `GAME_TIMED_MODE_SECONDS` (e.g. `8`) before `make run` to avoid long waits
 
 It will be much apreciated if you write tests for everything you implement!
+
+## Team Information
+
+### fstark
+
+Assigned roles: Developer
+
+### jlomic
+
+Assigned roles: Project Manager, Developer
+
+### aprevrha
+
+Assigned roles: Product Owner, Developer
+
+### hrother
+
+Assigned roles: Techincal Lead/Architect, Developer
+
+## Project Management
+
+## Technical Stack:
 
 ## Resources
 
@@ -134,21 +159,3 @@ We used AI to
 - write playwright testcases
 - do tedious refactors
 - prototype
-
-## The Team
-
-### fstark
-
-Assigned roles:
-
-### jlomic
-
-Assigned roles:
-
-### aprevrha
-
-Assigned roles:
-
-### hrother
-
-Assigned roles:
