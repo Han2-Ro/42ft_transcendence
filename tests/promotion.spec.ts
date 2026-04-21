@@ -48,26 +48,72 @@ async function pieceAltAt(page: Page, square: number): Promise<string | null> {
   return alts[0] ?? null;
 }
 
+async function selfColorFromPlayerCardNames(page: Page) {
+  const names = await page
+    .locator("text=/^(White|Black) Player$/")
+    .allTextContents();
+  const selfName = names[1]?.toLowerCase();
+  if (selfName?.includes("white")) return "white";
+  if (selfName?.includes("black")) return "black";
+  return null;
+}
+
 async function resolvePlayerPages(page1: Page, page2: Page) {
-  const page1Color = (
-    await page1
-      .getByText(/you are playing as (white|black)/i)
-      .first()
-      .textContent()
-  )?.toLowerCase();
-  const page2Color = (
-    await page2
-      .getByText(/you are playing as (white|black)/i)
-      .first()
-      .textContent()
-  )?.toLowerCase();
-  const page1IsWhite = page1Color?.includes("white") ?? false;
-  const page2IsWhite = page2Color?.includes("white") ?? false;
+  const page1SelfCard = page1.getByTestId("player-card-self");
+  const page2SelfCard = page2.getByTestId("player-card-self");
+
+  const hasCardHooks =
+    (await page1SelfCard.count()) > 0 && (await page2SelfCard.count()) > 0;
+
+  if (hasCardHooks) {
+    const page1Color = await page1SelfCard.getAttribute("data-player-color");
+    const page2Color = await page2SelfCard.getAttribute("data-player-color");
+
+    const page1IsWhite = page1Color === "white";
+    const page2IsWhite = page2Color === "white";
+
+    expect(page1IsWhite || page2IsWhite).toBeTruthy();
+    expect(page1IsWhite && page2IsWhite).toBeFalsy();
+
+    return page1IsWhite
+      ? { whitePage: page1, blackPage: page2 }
+      : { whitePage: page2, blackPage: page1 };
+  }
+
+  const page1Color = await selfColorFromPlayerCardNames(page1);
+  const page2Color = await selfColorFromPlayerCardNames(page2);
+
+  const page1IsWhite = page1Color === "white";
+  const page2IsWhite = page2Color === "white";
+
   expect(page1IsWhite || page2IsWhite).toBeTruthy();
   expect(page1IsWhite && page2IsWhite).toBeFalsy();
+
   return page1IsWhite
     ? { whitePage: page1, blackPage: page2 }
     : { whitePage: page2, blackPage: page1 };
+}
+
+async function expectTurn(page: Page, expectedTurn: "white" | "black") {
+  const selfCard = page.getByTestId("player-card-self");
+  const opponentCard = page.getByTestId("player-card-opponent");
+
+  const hasCardHooks =
+    (await selfCard.count()) > 0 && (await opponentCard.count()) > 0;
+  if (!hasCardHooks) return;
+
+  const selfColor = await selfCard.getAttribute("data-player-color");
+  expect(selfColor === "white" || selfColor === "black").toBeTruthy();
+
+  const isSelfTurn = selfColor === expectedTurn;
+  await expect(selfCard).toHaveAttribute(
+    "data-is-turn",
+    isSelfTurn ? "true" : "false",
+  );
+  await expect(opponentCard).toHaveAttribute(
+    "data-is-turn",
+    isSelfTurn ? "false" : "true",
+  );
 }
 
 test("promotion requires explicit selection and uses chosen piece", async ({
@@ -87,6 +133,7 @@ test("promotion requires explicit selection and uses chosen piece", async ({
     await registerAndLogin(page2);
 
     await Promise.all([page1.goto("/game"), page2.goto("/game")]);
+
     await Promise.all(
       [page1, page2].map((page) =>
         page
@@ -94,12 +141,10 @@ test("promotion requires explicit selection and uses chosen piece", async ({
           .click(),
       ),
     );
-
     await Promise.all([
       expect(page1.getByRole("button", { name: /resign/i })).toBeVisible(),
       expect(page2.getByRole("button", { name: /resign/i })).toBeVisible(),
     ]);
-
     const { whitePage, blackPage } = await resolvePlayerPages(page1, page2);
 
     // Force a fast cooperative line into promotion:
@@ -108,63 +153,55 @@ test("promotion requires explicit selection and uses chosen piece", async ({
     // 3. a5-a6, ...g7-g6
     // 4. a6xb7, ...g6-g5
     // 5. b7xa8=?
-    // await expectTurn(whitePage, "white");
+    await expectTurn(whitePage, "white");
     await move(whitePage, 48, 32);
     await Promise.all([
       moveApplied(whitePage, 48, 32, "whitepawn"),
       moveApplied(blackPage, 48, 32, "whitepawn"),
     ]);
-
-    // await expectTurn(blackPage, "black");
+    await expectTurn(blackPage, "black");
     await move(blackPage, 15, 23);
     await Promise.all([
       moveApplied(whitePage, 15, 23, "blackpawn"),
       moveApplied(blackPage, 15, 23, "blackpawn"),
     ]);
-
-    // await expectTurn(whitePage, "white");
+    await expectTurn(whitePage, "white");
     await move(whitePage, 32, 24);
     await Promise.all([
       moveApplied(whitePage, 32, 24, "whitepawn"),
       moveApplied(blackPage, 32, 24, "whitepawn"),
     ]);
-
-    // await expectTurn(blackPage, "black");
+    await expectTurn(blackPage, "black");
     await move(blackPage, 23, 31);
     await Promise.all([
       moveApplied(whitePage, 23, 31, "blackpawn"),
       moveApplied(blackPage, 23, 31, "blackpawn"),
     ]);
-
-    // await expectTurn(whitePage, "white");
+    await expectTurn(whitePage, "white");
     await move(whitePage, 24, 16);
     await Promise.all([
       moveApplied(whitePage, 24, 16, "whitepawn"),
       moveApplied(blackPage, 24, 16, "whitepawn"),
     ]);
-
-    // await expectTurn(blackPage, "black");
+    await expectTurn(blackPage, "black");
     await move(blackPage, 14, 22);
     await Promise.all([
       moveApplied(whitePage, 14, 22, "blackpawn"),
       moveApplied(blackPage, 14, 22, "blackpawn"),
     ]);
-
-    // await expectTurn(whitePage, "white");
+    await expectTurn(whitePage, "white");
     await move(whitePage, 16, 9);
     await Promise.all([
       moveApplied(whitePage, 16, 9, "whitepawn"),
       moveApplied(blackPage, 16, 9, "whitepawn"),
     ]);
-
-    // await expectTurn(blackPage, "black");
+    await expectTurn(blackPage, "black");
     await move(blackPage, 22, 30);
     await Promise.all([
       moveApplied(whitePage, 22, 30, "blackpawn"),
       moveApplied(blackPage, 22, 30, "blackpawn"),
     ]);
-
-    // await expectTurn(whitePage, "white");
+    await expectTurn(whitePage, "white");
     const promoteToKnight = whitePage.getByRole("button", {
       name: /promote to knight/i,
     });
@@ -204,6 +241,6 @@ test("promotion requires explicit selection and uses chosen piece", async ({
       blackBoard.locator("button").nth(0).locator("img"),
     ).toHaveAttribute("alt", "whiteknight");
   } finally {
-    await Promise.all(contexts.map((ctx) => ctx.close()));
+    await Promise.all(contexts.map((ctx) => ctx.close().catch(() => {})));
   }
 });

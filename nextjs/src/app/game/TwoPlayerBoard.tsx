@@ -138,6 +138,7 @@ export default function TwoPlayerBoard({
       {isInGame && (
         <div className="flex flex-col gap-4">
           <PlayerCard
+            testId="player-card-opponent"
             name={playerColor === "white" ? "Black Player" : "White Player"}
             color={playerColor === "white" ? "black" : "white"}
             isTurn={
@@ -147,6 +148,7 @@ export default function TwoPlayerBoard({
             isTimed={times[playerColor === "white" ? 1 : 0] !== -1}
           />
           <PlayerCard
+            testId="player-card-self"
             name={playerColor === "white" ? "White Player" : "Black Player"}
             color={playerColor}
             isTurn={boardState.turn === playerColor}
