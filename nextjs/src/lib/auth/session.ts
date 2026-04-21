@@ -17,6 +17,7 @@ export type User = {
   userId: number;
   username: string;
   twoFactorEnabled: boolean;
+  fortyTwoLogin: string | null;
 };
 
 /**
@@ -32,7 +33,6 @@ export const getSession = cache(async (): Promise<User | null> => {
 
   try {
     const { payload } = await jwtVerify(token, getJwtSecret());
-    // TODO: check if user exists so we avoid displaying user which does not exists
     const user = await prisma.user.findUnique({
       where: { id: payload.userId as number },
     });
@@ -44,6 +44,7 @@ export const getSession = cache(async (): Promise<User | null> => {
       userId: payload.userId as number,
       username: user.username,
       twoFactorEnabled: user.twoFactorEnabled,
+      fortyTwoLogin: user.fortyTwoLogin,
     };
   } catch {
     return null;
