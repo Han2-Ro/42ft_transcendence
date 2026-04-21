@@ -1,4 +1,11 @@
-import { BoardState, PlayerColor, Move, Games, BoardStateChess, BoardStateCon4 } from "shared";
+import {
+  BoardState,
+  PlayerColor,
+  Move,
+  Games,
+  BoardStateChess,
+  BoardStateCon4,
+} from "shared";
 import TwoPlayerBoard from "./TwoPlayerBoard";
 import FourPlayerBoard from "./FourPlayerBoard";
 import ConnectFourBoard from "./ConnectFourBoard";
@@ -26,7 +33,8 @@ export default function Game({
 }: GameProps) {
   return (
     <div className="text-center flex flex-col justify-center">
-      {(gameType === "chess" || gameType === "timedChess") && isBoardChess(boardState) ? (
+      {(gameType === "chess" || gameType === "timedChess") &&
+      isBoardChess(boardState) ? (
         <TwoPlayerBoard
           boardState={boardState as BoardStateChess}
           onPlayerMove={onPlayerMove}
@@ -34,7 +42,8 @@ export default function Game({
           times={times}
           isInGame={isInGame}
         />
-      ) : (gameType === "4pChess" || gameType === "4pTimedChess") && isBoardChess(boardState) ? (
+      ) : (gameType === "4pChess" || gameType === "4pTimedChess") &&
+        isBoardChess(boardState) ? (
         <FourPlayerBoard
           boardState={boardState as BoardStateChess}
           onPlayerMove={onPlayerMove}

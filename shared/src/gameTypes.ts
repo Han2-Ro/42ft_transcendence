@@ -6,7 +6,13 @@ export type PlayerColor =
   | "yellow"
   | "blue";
 
-export type Games = "chess" | "timedChess" | "4pChess" | "4pTimedChess" | "connect4" | "timedConnect4";
+export type Games =
+  | "chess"
+  | "timedChess"
+  | "4pChess"
+  | "4pTimedChess"
+  | "connect4"
+  | "timedConnect4";
 export type PieceType =
   | "pawn"
   | "rook"
@@ -46,9 +52,9 @@ export type BoardStateChess = {
 
 export type PlayerColorCon4 = "red" | "yellow";
 
-export type square = PlayerColorCon4 | "empty"
+export type Square = PlayerColorCon4 | "empty";
 
-export type BoardCon4 = square[];
+export type BoardCon4 = Square[];
 
 export type BoardStateCon4 = {
   board: BoardCon4;
@@ -63,5 +69,5 @@ export type MoveChess = {
 };
 
 export type MoveCon4 = number;
-export type Move = MoveChess | MoveCon4
-export type BoardState = BoardStateCon4 | BoardStateChess
+export type Move = MoveChess | MoveCon4;
+export type BoardState = BoardStateCon4 | BoardStateChess;

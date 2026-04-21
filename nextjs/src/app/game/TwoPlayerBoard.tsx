@@ -30,10 +30,11 @@ export default function TwoPlayerBoard({
   const [movesFromSquareInt, setMovesFromSquareInt] = useState<number[] | null>(
     null,
   );
-  const [movesFromSquare, setMovesFromSquare] = useState<MoveChess[] | null>(null);
-  const [pendingPromotionMove, setPendingPromotionMove] = useState<MoveChess | null>(
+  const [movesFromSquare, setMovesFromSquare] = useState<MoveChess[] | null>(
     null,
   );
+  const [pendingPromotionMove, setPendingPromotionMove] =
+    useState<MoveChess | null>(null);
 
   const isPawnPromotionTarget = (move: MoveChess): boolean => {
     const piece = boardState.board[move.from];

@@ -240,7 +240,10 @@ export class Room {
         }
         console.log("database save successfull");
       });
-    } else if (this.gameType == "connect4" || this.gameType == "timedConnect4") {
+    } else if (
+      this.gameType == "connect4" ||
+      this.gameType == "timedConnect4"
+    ) {
       const winner = this.gameLogic.gameStatus.winners
         ? this.gameLogic.gameStatus.winners[0] === "yellow"
           ? "yellow"
@@ -269,7 +272,7 @@ export class Room {
         }
         console.log("database save successfull");
       });
-	}
+    }
   }
 
   private checkGameOver(): boolean {

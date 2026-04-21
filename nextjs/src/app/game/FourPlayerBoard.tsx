@@ -84,10 +84,11 @@ export default function FourPlayerBoard({
   const [movesFromSquareInt, setMovesFromSquareInt] = useState<number[] | null>(
     null,
   );
-  const [movesFromSquare, setMovesFromSquare] = useState<MoveChess[] | null>(null);
-  const [pendingPromotionMove, setPendingPromotionMove] = useState<MoveChess | null>(
+  const [movesFromSquare, setMovesFromSquare] = useState<MoveChess[] | null>(
     null,
   );
+  const [pendingPromotionMove, setPendingPromotionMove] =
+    useState<MoveChess | null>(null);
 
   const handleSquareClick = (square: number) => {
     if (pendingPromotionMove) return;

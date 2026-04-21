@@ -59,7 +59,7 @@ export default function Lobby({
         find 4 player chess match (10 minutes)
       </Button>
 
-		<Button
+      <Button
         onClick={() => onFindMatchTogglePressed("connect4")}
         loadingNoDisabled={searching.includes("connect4")}
         disabled={serverConnectionStatus != "connected"}
@@ -67,10 +67,9 @@ export default function Lobby({
         loadingText="Finding game…"
       >
         find connect 4 match (no time limit)
-      
-	  </Button>
-	  
-		<Button
+      </Button>
+
+      <Button
         onClick={() => onFindMatchTogglePressed("timedConnect4")}
         loadingNoDisabled={searching.includes("timedConnect4")}
         disabled={serverConnectionStatus != "connected"}
@@ -79,7 +78,6 @@ export default function Lobby({
       >
         find connect 4 match (10 minutes)
       </Button>
-	  
 
       <div className="text-lg">
         {serverConnectionStatus === "unauthorized" && (

@@ -19,7 +19,7 @@ export function validateMove(
 }
 
 export function generateMoves(board: BoardCon4): Array<number> {
-  let moves: number[] = [];
+  const moves: number[] = [];
   for (let i = 0; i < 7; i++) {
     if (board[i] === "empty") {
       moves.push(i);
@@ -42,8 +42,8 @@ function generateOffsetLine(
   board: BoardCon4,
   sq: number,
   offset: Pos2,
-): Array<Number> {
-  const line: Number[] = [];
+): Array<number> {
+  const line: number[] = [];
   //let newPos = sq + offset
   let newPos = generateOffset(sq, offset);
   while (newPos != null && board[newPos] === board[sq]) {
@@ -72,7 +72,7 @@ export function updateBoardState(
   move: MoveCon4,
 ): GameStatus {
   let status: GameStatus = { isOver: false, winners: null, reason: "" };
-  let down = [];
+  const down = [];
   down.push(...generateOffsetLineEmpty(boardState.board, move, { x: 0, y: 1 }));
   const maxDown = down.length !== 0 ? Math.max(...down.map(Number)) : null;
   if (maxDown !== null) {
@@ -81,23 +81,23 @@ export function updateBoardState(
   }
   const moves = generateMoves(boardState.board);
   if (moves.length === 0 && status.isOver == false)
-	status = { isOver: true, winners: null, reason: "No squares left"}
+    status = { isOver: true, winners: null, reason: "No squares left" };
   if (boardState.turn == "red") boardState.turn = "yellow";
   else boardState.turn = "red";
   return status;
 }
 
 function checkConnections(board: BoardCon4, sq: number): GameStatus {
-  let diagonalDe = [];
+  const diagonalDe = [];
   diagonalDe.push(...generateOffsetLine(board, sq, { x: 1, y: -1 }));
   diagonalDe.push(...generateOffsetLine(board, sq, { x: -1, y: 1 }));
-  let diagonalAs = [];
+  const diagonalAs = [];
   diagonalAs.push(...generateOffsetLine(board, sq, { x: -1, y: -1 }));
   diagonalAs.push(...generateOffsetLine(board, sq, { x: 1, y: 1 }));
-  let horizontal = [];
+  const horizontal = [];
   horizontal.push(...generateOffsetLine(board, sq, { x: 0, y: -1 }));
   horizontal.push(...generateOffsetLine(board, sq, { x: 0, y: 1 }));
-  let vertival = [];
+  const vertival = [];
   vertival.push(...generateOffsetLine(board, sq, { x: -1, y: 0 }));
   vertival.push(...generateOffsetLine(board, sq, { x: 1, y: 0 }));
   if (
