@@ -1,16 +1,16 @@
 import {
   Board,
-  BoardState,
+  BoardStateChess,
   PlayerColor,
   GameStatus,
-  Move,
   PieceOrNull,
   Pos2,
+  MoveChess,
 } from "../../gameTypes.js";
 
 export function validateMove(
-  move: Move,
-  boardState: BoardState,
+  move: MoveChess,
+  boardState: BoardStateChess,
   played_by: PlayerColor,
 ): boolean {
   const piece = boardState.board[move.from];
@@ -36,7 +36,7 @@ export function validateMove(
   return false;
 }
 
-export function updateBoardState(boardState: BoardState, move: Move) {
+export function updateBoardState(boardState: BoardStateChess, move: MoveChess) {
   updateBoard(boardState.board, move, boardState.turn);
   switch (boardState.turn) {
     case "red":
@@ -54,7 +54,7 @@ export function updateBoardState(boardState: BoardState, move: Move) {
   }
 }
 
-function updateBoard(board: Board, move: Move, turn: PlayerColor) {
+function updateBoard(board: Board, move: MoveChess, turn: PlayerColor) {
   const piece = board[move.from];
   if (piece) piece.hasMoved = true;
   board[move.to] = board[move.from];
@@ -122,8 +122,8 @@ export function checkMates(board: Board, turn: PlayerColor): GameStatus {
 export function generateAllMoves(
   board: Board,
   PlayerColor: PlayerColor,
-): Array<Move> {
-  const moves: Move[] = [];
+): Array<MoveChess> {
+  const moves: MoveChess[] = [];
   for (let sq = 0; sq < 160; sq++) {
     const piece = board[sq];
     if (!piece || piece.color !== PlayerColor) continue;
@@ -133,8 +133,8 @@ export function generateAllMoves(
   return moves;
 }
 
-export function generateMoves(board: Board, sq: number): Array<Move> {
-  let moves: Move[] = [];
+export function generateMoves(board: Board, sq: number): Array<MoveChess> {
+  let moves: MoveChess[] = [];
 
   const piece: PieceOrNull = board[sq];
   if (!piece) return moves;
@@ -187,8 +187,8 @@ function generatePawnMoves(
   sq: number,
   PlayerColor: PlayerColor,
   hasMoved: boolean,
-): Array<Move> {
-  const moves: Move[] = [];
+): Array<MoveChess> {
+  const moves: MoveChess[] = [];
   let dirx = 0;
   let diry = 0;
   if (PlayerColor == "red") dirx = -1;
@@ -245,8 +245,8 @@ function generateKnightMoves(
   board: Board,
   sq: number,
   PlayerColor: PlayerColor,
-): Array<Move> {
-  const moves: Move[] = [];
+): Array<MoveChess> {
+  const moves: MoveChess[] = [];
   const moveOffsets: Array<Pos2> = [
     { x: 1, y: 2 },
     { x: -1, y: 2 },
@@ -270,8 +270,8 @@ function generateBishopMoves(
   board: Board,
   sq: number,
   PlayerColor: PlayerColor,
-): Array<Move> {
-  const moves: Move[] = [];
+): Array<MoveChess> {
+  const moves: MoveChess[] = [];
   moves.push(...generateOffsetLine(board, sq, PlayerColor, { x: 1, y: 1 }));
   moves.push(...generateOffsetLine(board, sq, PlayerColor, { x: 1, y: -1 }));
   moves.push(...generateOffsetLine(board, sq, PlayerColor, { x: -1, y: 1 }));
@@ -283,8 +283,8 @@ function generateRookMoves(
   board: Board,
   sq: number,
   PlayerColor: PlayerColor,
-): Array<Move> {
-  const moves: Move[] = [];
+): Array<MoveChess> {
+  const moves: MoveChess[] = [];
   moves.push(...generateOffsetLine(board, sq, PlayerColor, { x: 1, y: 0 }));
   moves.push(...generateOffsetLine(board, sq, PlayerColor, { x: -1, y: 0 }));
   moves.push(...generateOffsetLine(board, sq, PlayerColor, { x: 0, y: 1 }));
@@ -296,8 +296,8 @@ function generateQueenMoves(
   board: Board,
   sq: number,
   PlayerColor: PlayerColor,
-): Array<Move> {
-  const moves: Move[] = [];
+): Array<MoveChess> {
+  const moves: MoveChess[] = [];
   moves.push(...generateBishopMoves(board, sq, PlayerColor));
   moves.push(...generateRookMoves(board, sq, PlayerColor));
   return moves;
@@ -307,8 +307,8 @@ function generateKingMoves(
   board: Board,
   sq: number,
   PlayerColor: PlayerColor,
-): Array<Move> {
-  const moves: Move[] = [];
+): Array<MoveChess> {
+  const moves: MoveChess[] = [];
   const moveOffsets: Array<Pos2> = [
     { x: 1, y: 0 },
     { x: 0, y: 1 },
@@ -445,8 +445,8 @@ function generateOffsetLine(
   sq: number,
   PlayerColor: PlayerColor,
   offset: Pos2,
-): Array<Move> {
-  const moves: Move[] = [];
+): Array<MoveChess> {
+  const moves: MoveChess[] = [];
   let newPos = generateOffset(sq, offset);
   while (newPos != null && checkSquareEmpty(board, newPos)) {
     moves.push({ from: sq, to: newPos, special: null });
@@ -647,7 +647,7 @@ function checkIsAttacked(board: Board, pos: number, PlayerColor: PlayerColor) {
 
 function checkKingInCheckAfterMove(
   board: Board,
-  move: Move,
+  move: MoveChess,
   PlayerColor: PlayerColor,
 ): boolean {
   const boardCopy = structuredClone(board);

@@ -181,7 +181,10 @@ io.on("connection", (socket) => {
     if (
       ((type === "4pChess" || type === "4pTimedChess") &&
         searchingPlayers.length === 4) ||
-      ((type === "chess" || type === "timedChess") &&
+      ((type === "chess" ||
+        type === "timedChess" ||
+        type === "connect4" ||
+        type === "timedConnect4") &&
         searchingPlayers.length === 2)
     ) {
       const gameId = crypto.randomUUID();
@@ -261,7 +264,9 @@ async function serverLoop() {
     }
 
     // Yield back to the event loop
-    await new Promise((resolve) => setImmediate(resolve));
+    await new Promise((resolve) =>
+      setTimeout(resolve, Math.max(0, DT * 1000 - frameTime * 1000)),
+    );
   }
 }
 
