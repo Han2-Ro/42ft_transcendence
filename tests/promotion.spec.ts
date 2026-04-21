@@ -142,8 +142,8 @@ test("promotion requires explicit selection and uses chosen piece", async ({
       ),
     );
     await Promise.all([
-      expect(page1.getByRole("button", { name: /resign/i })).toBeVisible(),
-      expect(page2.getByRole("button", { name: /resign/i })).toBeVisible(),
+      expect(page1.getByTestId("player-card-self")).toBeVisible(),
+      expect(page2.getByTestId("player-card-self")).toBeVisible(),
     ]);
     const { whitePage, blackPage } = await resolvePlayerPages(page1, page2);
 
