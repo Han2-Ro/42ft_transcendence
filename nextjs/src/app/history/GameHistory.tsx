@@ -1,7 +1,4 @@
-import type {
-  getGameFourHistory,
-  getGameTwoHistory,
-} from "@/lib/auth/actions";
+import type { getGameFourHistory, getGameTwoHistory } from "@/lib/auth/actions";
 
 /* const sampleEntries: GameHistoryEntry[] = [
   { date: new Date("2026-03-19T18:30:00Z"), opponent: "alice", result: "win" },
