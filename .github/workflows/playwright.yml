@@ -67,7 +67,7 @@ jobs:
         run: |
           echo "Waiting for app on port 8080..."
           for i in $(seq 1 10); do
-            if curl -sfk $SERVICE_URL_NEXTJS > /dev/null 2>&1; then
+            if curl -sfk https://localhost > /dev/null 2>&1; then
               echo "App is ready."
               exit 0
             fi
