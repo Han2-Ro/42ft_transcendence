@@ -1,9 +1,4 @@
-import {
-  Move,
-  PlayerColor,
-  BoardStateCon4,
-  Square,
-} from "shared";
+import { Move, PlayerColor, BoardStateCon4, Square } from "shared";
 import Image from "next/image";
 
 export default function ConnectFourBoard({
@@ -50,7 +45,7 @@ export default function ConnectFourBoard({
         ))}
         {boardState.board.map((sq: Square, index) => (
           <Image
-		  	key={index}
+            key={index}
             width="45"
             height="45"
             src={`/con4/${sq}.svg`}
