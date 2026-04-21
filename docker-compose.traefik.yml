@@ -18,7 +18,7 @@ services:
   nextjs:
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.nextjs.rule=Host(`${DOMAIN:-localhost}`)"
+      - "traefik.http.routers.nextjs.rule=PathPrefix(`/`)"
       - "traefik.http.routers.nextjs.entrypoints=websecure"
       - "traefik.http.routers.nextjs.tls=true"
       - "traefik.http.services.nextjs.loadbalancer.server.port=${PORT:-3000}"
@@ -26,7 +26,7 @@ services:
   gamesserver:
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.gamesserver.rule=Host(`${DOMAIN:-localhost}`) && PathPrefix(`/socket.io`)"
+      - "traefik.http.routers.gamesserver.rule=PathPrefix(`/socket.io`)"
       - "traefik.http.routers.gamesserver.entrypoints=websecure"
       - "traefik.http.routers.gamesserver.tls=true"
       - "traefik.http.services.gamesserver.loadbalancer.server.port=4000"

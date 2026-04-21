@@ -26,3 +26,6 @@ migrate:
 
 copy-migration:
 	$(COMPOSE_LOCAL) cp nextjs:/app/nextjs/prisma/migrations/$(name) ./nextjs/prisma/migrations/
+
+populate:
+	bash populate.sh
