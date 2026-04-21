@@ -7,6 +7,7 @@ type PlayerCardProps = {
   isYou?: boolean;
   time?: number;
   isTimed?: boolean;
+  testId?: string;
 };
 
 const formatTime = (time: number) => {
@@ -49,9 +50,13 @@ export function PlayerCard({
   isYou,
   time,
   isTimed,
+  testId,
 }: PlayerCardProps) {
   return (
     <div
+      data-testid={testId}
+      data-player-color={color}
+      data-is-turn={isTurn ? "true" : "false"}
       className={`w-full h-full rounded-[0.2rem] p-3 text-white shadow-xl transition-all ${colorClass[color]} ${isTurn ? `ring-4 ${ringClass[color]} ${shadowClass[color]}` : "shadow-slate-950/30"} border`}
     >
       <div className="flex h-full flex-col justify-between">

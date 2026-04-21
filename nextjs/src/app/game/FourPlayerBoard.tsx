@@ -92,32 +92,39 @@ export default function FourPlayerBoard({
 
   const handleSquareClick = (square: number) => {
     if (pendingPromotionMove) return;
-    if (selectedSquare === null) {
-      setSelectedSquare(square);
-      const moves = fourPlayer.generateMoves(boardState.board, square);
-      const movesNumbers = moves.map((move) => move.to);
-      setMovesFromSquare(moves);
-      setMovesFromSquareInt(movesNumbers);
-      return;
+
+    // Check if there is a move to make (the player clicked on a square in movesFromSqaureInt)
+    if (movesFromSquare && movesFromSquareInt) {
+      const index = movesFromSquareInt.indexOf(square);
+      if (index >= 0) {
+        const move: Move = { ...movesFromSquare[index] };
+        setSelectedSquare(null);
+        setMovesFromSquareInt(null);
+        setMovesFromSquare(null);
+        if (move.special === "promotion") {
+          setPendingPromotionMove({ ...move, special: "promotion" });
+          return;
+        }
+        onPlayerMove(move);
+        return;
+      }
     }
 
-    if (!movesFromSquareInt || !movesFromSquare) return;
-    const index = movesFromSquareInt.indexOf(square);
-    if (index == -1) {
+    // If selectedSquare is clicked again, unselect it
+    if (square == selectedSquare) {
       setSelectedSquare(null);
       setMovesFromSquareInt(null);
       setMovesFromSquare(null);
       return;
     }
-    const move: Move = { ...movesFromSquare[index] };
-    setSelectedSquare(null);
-    setMovesFromSquareInt(null);
-    setMovesFromSquare(null);
-    if (move.special === "promotion") {
-      setPendingPromotionMove(move);
-      return;
-    }
-    onPlayerMove(move);
+
+    // Otherwise select new square
+    setSelectedSquare(square);
+    const moves = fourPlayer.generateMoves(boardState.board, square);
+    const movesNumbers = moves.map((move) => move.to);
+    setMovesFromSquare(moves);
+    setMovesFromSquareInt(movesNumbers);
+    return;
   };
 
   const handlePromotionSelect = (promotion: PromotablePieceType) => {

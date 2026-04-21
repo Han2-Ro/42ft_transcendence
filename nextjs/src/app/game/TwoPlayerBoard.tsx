@@ -36,48 +36,45 @@ export default function TwoPlayerBoard({
   const [pendingPromotionMove, setPendingPromotionMove] =
     useState<MoveChess | null>(null);
 
-  const isPawnPromotionTarget = (move: MoveChess): boolean => {
-    const piece = boardState.board[move.from];
-    if (!piece || piece.type !== "pawn") return false;
-    const targetRank = Math.floor(move.to / 8);
-    return (
-      (piece.color === "white" && targetRank === 0) ||
-      (piece.color === "black" && targetRank === 7)
-    );
-  };
-
   const handleSquareClick = (square: number) => {
     if (pendingPromotionMove) return;
-    if (selectedSquare === null) {
-      setSelectedSquare(square);
-      const moves = twoPlayer.generateMoves(
-        boardState.board,
-        square,
-        boardState.enPassantSquare,
-      );
-      const movesNumbers = moves.map((move) => move.to);
-      setMovesFromSquare(moves);
-      setMovesFromSquareInt(movesNumbers);
-      return;
+
+    // Check if there is a move to make (the player clicked on a square in movesFromSqaureInt)
+    if (movesFromSquare && movesFromSquareInt) {
+      const index = movesFromSquareInt.indexOf(square);
+      if (index >= 0) {
+        const move: Move = { ...movesFromSquare[index] };
+        setSelectedSquare(null);
+        setMovesFromSquareInt(null);
+        setMovesFromSquare(null);
+        if (move.special === "promotion") {
+          setPendingPromotionMove({ ...move, special: "promotion" });
+          return;
+        }
+        onPlayerMove(move);
+        return;
+      }
     }
 
-    if (!movesFromSquareInt || !movesFromSquare) return;
-    const index = movesFromSquareInt.indexOf(square);
-    if (index == -1) {
+    // If selectedSquare is clicked again, unselect it
+    if (square == selectedSquare) {
       setSelectedSquare(null);
       setMovesFromSquareInt(null);
       setMovesFromSquare(null);
       return;
     }
-    const move: Move = { ...movesFromSquare[index] };
-    setSelectedSquare(null);
-    setMovesFromSquareInt(null);
-    setMovesFromSquare(null);
-    if (move.special === "promotion" || isPawnPromotionTarget(move)) {
-      setPendingPromotionMove({ ...move, special: "promotion" });
-      return;
-    }
-    onPlayerMove(move);
+
+    // Otherwise select new square
+    setSelectedSquare(square);
+    const moves = twoPlayer.generateMoves(
+      boardState.board,
+      square,
+      boardState.enPassantSquare,
+    );
+    const movesNumbers = moves.map((move) => move.to);
+    setMovesFromSquare(moves);
+    setMovesFromSquareInt(movesNumbers);
+    return;
   };
 
   const handlePromotionSelect = (promotion: PromotablePieceType) => {
@@ -144,6 +141,7 @@ export default function TwoPlayerBoard({
       {isInGame && (
         <div className="flex flex-col gap-4">
           <PlayerCard
+            testId="player-card-opponent"
             name={playerColor === "white" ? "Black Player" : "White Player"}
             color={playerColor === "white" ? "black" : "white"}
             isTurn={
@@ -153,6 +151,7 @@ export default function TwoPlayerBoard({
             isTimed={times[playerColor === "white" ? 1 : 0] !== -1}
           />
           <PlayerCard
+            testId="player-card-self"
             name={playerColor === "white" ? "White Player" : "Black Player"}
             color={playerColor}
             isTurn={boardState.turn === playerColor}
