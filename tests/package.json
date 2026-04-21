@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "test": "playwright test --project=chromium",
+    "test:mobile": "playwright test --project=mobile-chromium",
     "test:all": "playwright test",
     "test:ui": "playwright test --ui",
     "test:report": "playwright show-report"

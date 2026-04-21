@@ -29,5 +29,13 @@ export default defineConfig({
       name: "webkit",
       use: { ...devices["Desktop Safari"] },
     },
+    {
+      name: "mobile-chromium",
+      use: { ...devices["Pixel 7"] },
+    },
+    {
+      name: "mobile-webkit",
+      use: { ...devices["iPhone 14"] },
+    },
   ],
 });
