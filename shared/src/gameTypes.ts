@@ -62,7 +62,6 @@ export type MoveChess = {
   promotion?: PromotablePieceType;
 };
 
-export type MoveCon4 = 1 | 2 | 3 | 4 | 5 | 6 | 7;
-
+export type MoveCon4 = number;
 export type Move = MoveChess | MoveCon4
 export type BoardState = BoardStateCon4 | BoardStateChess

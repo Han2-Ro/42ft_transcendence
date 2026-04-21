@@ -186,7 +186,6 @@ export class Room {
         this.players[this.assignedColors.indexOf("white")].playerid;
       const blackPlayerId =
         this.players[this.assignedColors.indexOf("black")].playerid;
-      console.log("white: ", whitePlayerId, "black: ", blackPlayerId);
       const reason = this.gameLogic.gameStatus.reason;
       fetch(`${nextjsUrl}/api/internal/game`, {
         method: "Post",
@@ -206,7 +205,7 @@ export class Room {
         }
         console.log("database save successfull");
       });
-    } else {
+    } else if (this.gameType == "4pTimedChess" || this.gameType == "4pChess") {
       const winner = this.gameLogic.gameStatus.winners
         ? this.gameLogic.gameStatus.winners[0] === "red" || "yellow"
           ? "yellow"
@@ -241,7 +240,36 @@ export class Room {
         }
         console.log("database save successfull");
       });
-    }
+    } else if (this.gameType == "connect4" || this.gameType == "timedConnect4") {
+      const winner = this.gameLogic.gameStatus.winners
+        ? this.gameLogic.gameStatus.winners[0] === "yellow"
+          ? "yellow"
+          : "red"
+        : "draw";
+      const yellowPlayerId =
+        this.players[this.assignedColors.indexOf("yellow")].playerid;
+      const redPlayerId =
+        this.players[this.assignedColors.indexOf("red")].playerid;
+      const reason = this.gameLogic.gameStatus.reason;
+      fetch(`${nextjsUrl}/api/internal/game`, {
+        method: "Post",
+        headers: {
+          "x-internal-secret": secret,
+        },
+        body: JSON.stringify({
+          yellowPlayerId: Number(yellowPlayerId),
+          redPlayerId: Number(redPlayerId),
+          winner,
+          reason,
+        }),
+      }).then(async (response) => {
+        if (!response.ok) {
+          console.log("Error sending game results to db");
+          return;
+        }
+        console.log("database save successfull");
+      });
+	}
   }
 
   private checkGameOver(): boolean {
@@ -292,7 +320,7 @@ export class Room {
   }
 
   private generateRandomColors2pRY(): PlayerColor[] {
-    const colors: PlayerColor[] = ["white", "black"];
+    const colors: PlayerColor[] = ["yellow", "red"];
     return this.shuffleArray(colors);
   }
 
