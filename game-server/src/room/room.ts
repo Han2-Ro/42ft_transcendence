@@ -74,7 +74,7 @@ export class Room {
           color: this.assignedColors[index],
           boardState: this.gameLogic.boardState,
           times: this.getTimes(),
-		  playerIDs: this.getPlayerIDs(),
+          playerIDs: this.getPlayerIDs(),
         });
       });
     });
@@ -99,7 +99,7 @@ export class Room {
       color: this.assignedColors[playerIndex],
       boardState: this.gameLogic.boardState,
       times: this.getTimes(),
-	  playerIDs: this.getPlayerIDs(),
+      playerIDs: this.getPlayerIDs(),
     });
   }
 

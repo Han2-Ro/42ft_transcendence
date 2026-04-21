@@ -82,7 +82,7 @@ export default function Page() {
       setBoardState(data.boardState);
       setColor(data.color);
       setTimes(data.times);
-	  setPlayerIDs(data.playerIDs)
+      setPlayerIDs(data.playerIDs);
       setSearching([]);
     });
 
