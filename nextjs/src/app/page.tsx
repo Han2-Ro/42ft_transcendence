@@ -1,7 +1,7 @@
 import LeaderBoard from "@/app/stats/LeaderBoard";
 import Link from "next/link";
 import GameHistory from "./history/GameHistory";
-import { getLeaderboard } from "@/lib/auth/actions";
+import { getGameTwoHistory, getLeaderboard } from "@/lib/auth/actions";
 
 export default async function Home({
   searchParams,
@@ -9,6 +9,7 @@ export default async function Home({
   searchParams: Promise<{ error?: string }>;
 }) {
   const leaderboardEntries = await getLeaderboard();
+  const gameHistoryEntries = await getGameTwoHistory();
   const { error } = await searchParams;
   return (
     <main className="p-2 md:p-8 flex flex-col items-center">
@@ -34,7 +35,11 @@ export default async function Home({
               Your Recent Games
             </h2>
           </Link>
-          <GameHistory className="w-full" maxEntries={3} />
+          <GameHistory
+            className="w-full"
+            maxEntries={3}
+            data={gameHistoryEntries}
+          />
         </div>
       </section>
     </main>

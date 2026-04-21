@@ -1,6 +1,7 @@
-import { Result as GameResult } from "shared";
-import { Reason as GameReason } from "shared";
-import { getGameTwoHistory } from "@/lib/auth/actions";
+import type {
+  getGameFourHistory,
+  getGameTwoHistory,
+} from "@/lib/auth/actions";
 
 /* const sampleEntries: GameHistoryEntry[] = [
   { date: new Date("2026-03-19T18:30:00Z"), opponent: "alice", result: "win" },
@@ -12,33 +13,39 @@ import { getGameTwoHistory } from "@/lib/auth/actions";
   { date: new Date("2026-03-14T19:55:00Z"), opponent: "frank", result: "lose" },
 ]; */
 
-export type GameHistoryEntry = {
-  date: Date;
-  opponent: string;
-  result: GameResult;
-  reason: GameReason;
-};
+export type GameHistoryData =
+  | Awaited<ReturnType<typeof getGameTwoHistory>>
+  | Awaited<ReturnType<typeof getGameFourHistory>>;
 
-export default async function GameHistory({
+export default function GameHistory({
   maxEntries = Infinity,
   className,
+  data,
 }: {
   className?: string;
   maxEntries?: number;
+  data: GameHistoryData;
 }) {
-  const data = await getGameTwoHistory();
-
   if ("error" in data) {
     return <p className="px-6 py-4">{data.error}</p>;
   }
 
   const entries = data;
+  const showTeamColumns = entries.length > 0 && "opponents" in entries[0];
+
   return (
     <table className={className}>
       <thead>
         <tr>
           <th className="px-6 text-start">Date</th>
-          <th className="px-6 text-start">Opponent</th>
+          {showTeamColumns ? (
+            <>
+              <th className="px-6 text-start">Teammate</th>
+              <th className="px-6 text-start">Opponents</th>
+            </>
+          ) : (
+            <th className="px-6 text-start">Opponent</th>
+          )}
           <th className="px-6 text-start">Result</th>
           <th className="px-6 text-start">Reason</th>
         </tr>
@@ -57,7 +64,14 @@ export default async function GameHistory({
             key={index}
           >
             <td className="px-6 py-4">{entry.date.toDateString()}</td>
-            <td className="px-6 py-4">{entry.opponent}</td>
+            {"opponents" in entry ? (
+              <>
+                <td className="px-6 py-4">{entry.teammate}</td>
+                <td className="px-6 py-4">{entry.opponents.join(", ")}</td>
+              </>
+            ) : (
+              <td className="px-6 py-4">{entry.opponent}</td>
+            )}
             <td className="px-6 py-4">{entry.result}</td>
             <td className="px-6 py-4">{entry.reason}</td>
           </tr>
