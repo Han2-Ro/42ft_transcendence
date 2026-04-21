@@ -96,9 +96,7 @@ export default function TwoPlayerBoard({
   return (
     <div className="flex items-center justify-center gap-4">
       <div className={`${playerColor === "black" ? "rotate-180" : ""}`}>
-        <div
-          className="w-[min(100vw,50vh)] h-[min(100vw,50vh)] md:w-[min(50vw,70vh)] md:h-[min(50vw,70vh)] grid grid-rows-8 grid-cols-8"
-        >
+        <div className="w-[min(100vw,50vh)] h-[min(100vw,50vh)] md:w-[min(50vw,70vh)] md:h-[min(50vw,70vh)] grid grid-rows-8 grid-cols-8">
           {boardState.board.map((sq: PieceOrNull, index: number) => (
             <button
               key={index}
@@ -145,7 +143,9 @@ export default function TwoPlayerBoard({
           <PlayerCard
             name={playerColor === "white" ? "Black Player" : "White Player"}
             color={playerColor === "white" ? "black" : "white"}
-            isTurn={boardState.turn === (playerColor === "white" ? "black" : "white")}
+            isTurn={
+              boardState.turn === (playerColor === "white" ? "black" : "white")
+            }
             time={times[playerColor === "white" ? 1 : 0]}
             isTimed={times[playerColor === "white" ? 1 : 0] !== -1}
           />

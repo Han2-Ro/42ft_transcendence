@@ -42,16 +42,31 @@ const shadowClass: Record<PlayerColor, string> = {
   black: "shadow-[0_0_32px_rgba(71,85,105,0.40)]",
 };
 
-export function PlayerCard({ name, color, isTurn, isYou, time, isTimed }: PlayerCardProps) {
+export function PlayerCard({
+  name,
+  color,
+  isTurn,
+  isYou,
+  time,
+  isTimed,
+}: PlayerCardProps) {
   return (
     <div
       className={`w-full h-full rounded-[0.2rem] p-3 text-white shadow-xl transition-all ${colorClass[color]} ${isTurn ? `ring-4 ${ringClass[color]} ${shadowClass[color]}` : "shadow-slate-950/30"} border`}
     >
       <div className="flex h-full flex-col justify-between">
-        <div className="text-[10px] uppercase tracking-[0.18em] text-slate-300">{color}</div>
-        <div className={`text-sm font-semibold leading-tight ${isYou ? 'font-bold' : ''}`}>{name}</div>
+        <div className="text-[10px] uppercase tracking-[0.18em] text-slate-300">
+          {color}
+        </div>
+        <div
+          className={`text-sm font-semibold leading-tight ${isYou ? "font-bold" : ""}`}
+        >
+          {name}
+        </div>
         {isTimed ? (
-          <div className="text-base font-mono text-white">{time != null ? formatTime(time) : "--:--"}</div>
+          <div className="text-base font-mono text-white">
+            {time != null ? formatTime(time) : "--:--"}
+          </div>
         ) : null}
       </div>
     </div>

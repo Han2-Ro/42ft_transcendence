@@ -25,14 +25,47 @@ const pieceRotation: Record<string, string> = {
   green: "-rotate-90",
 };
 
-const cornerAssignments: Record<"red" | "blue" | "yellow" | "green", { topLeft: PlayerColor; topRight: PlayerColor; bottomLeft: PlayerColor; bottomRight: PlayerColor }> = {
-  red: { topLeft: 'yellow', topRight: 'green', bottomLeft: 'blue', bottomRight: 'red' },
-  blue: { topLeft: 'green', topRight: 'red', bottomLeft: 'yellow', bottomRight: 'blue' },
-  yellow: { topLeft: 'red', topRight: 'blue', bottomLeft: 'green', bottomRight: 'yellow' },
-  green: { topLeft: 'blue', topRight: 'yellow', bottomLeft: 'red', bottomRight: 'green' },
+const cornerAssignments: Record<
+  "red" | "blue" | "yellow" | "green",
+  {
+    topLeft: PlayerColor;
+    topRight: PlayerColor;
+    bottomLeft: PlayerColor;
+    bottomRight: PlayerColor;
+  }
+> = {
+  red: {
+    topLeft: "yellow",
+    topRight: "green",
+    bottomLeft: "blue",
+    bottomRight: "red",
+  },
+  blue: {
+    topLeft: "green",
+    topRight: "red",
+    bottomLeft: "yellow",
+    bottomRight: "blue",
+  },
+  yellow: {
+    topLeft: "red",
+    topRight: "blue",
+    bottomLeft: "green",
+    bottomRight: "yellow",
+  },
+  green: {
+    topLeft: "blue",
+    topRight: "yellow",
+    bottomLeft: "red",
+    bottomRight: "green",
+  },
 };
 
-const colorToIndex: Record<"red" | "blue" | "yellow" | "green", number> = { red: 0, blue: 1, yellow: 2, green: 3 };
+const colorToIndex: Record<"red" | "blue" | "yellow" | "green", number> = {
+  red: 0,
+  blue: 1,
+  yellow: 2,
+  green: 3,
+};
 
 export default function FourPlayerBoard({
   boardState,
@@ -175,57 +208,120 @@ export default function FourPlayerBoard({
         </div>
         <div className="absolute inset-0 pointer-events-none">
           {(() => {
-            const assignments = cornerAssignments[playerColor as "red" | "blue" | "yellow" | "green"];
-            const margin = '0.35rem';
-            const size = 'calc(100% * 3 / 14 - 0.7rem)';
+            const assignments =
+              cornerAssignments[
+                playerColor as "red" | "blue" | "yellow" | "green"
+              ];
+            const margin = "0.35rem";
+            const size = "calc(100% * 3 / 14 - 0.7rem)";
             return (
               <>
                 <div
                   className="absolute flex items-center justify-center pointer-events-auto"
-                  style={{ top: margin, left: margin, width: size, height: size }}
+                  style={{
+                    top: margin,
+                    left: margin,
+                    width: size,
+                    height: size,
+                  }}
                 >
                   <PlayerCard
                     name={`${assignments.topLeft} Player`}
                     color={assignments.topLeft}
                     isTurn={boardState.turn === assignments.topLeft}
-                    time={times[colorToIndex[assignments.topLeft as "red" | "blue" | "yellow" | "green"]]}
+                    time={
+                      times[
+                        colorToIndex[
+                          assignments.topLeft as
+                            | "red"
+                            | "blue"
+                            | "yellow"
+                            | "green"
+                        ]
+                      ]
+                    }
                     isTimed={times[0] !== -1}
                   />
                 </div>
                 <div
                   className="absolute flex items-center justify-center pointer-events-auto"
-                  style={{ top: margin, right: margin, width: size, height: size }}
+                  style={{
+                    top: margin,
+                    right: margin,
+                    width: size,
+                    height: size,
+                  }}
                 >
                   <PlayerCard
                     name={`${assignments.topRight} Player`}
                     color={assignments.topRight}
                     isTurn={boardState.turn === assignments.topRight}
-                    time={times[colorToIndex[assignments.topRight as "red" | "blue" | "yellow" | "green"]]}
+                    time={
+                      times[
+                        colorToIndex[
+                          assignments.topRight as
+                            | "red"
+                            | "blue"
+                            | "yellow"
+                            | "green"
+                        ]
+                      ]
+                    }
                     isTimed={times[0] !== -1}
                   />
                 </div>
                 <div
                   className="absolute flex items-center justify-center pointer-events-auto"
-                  style={{ bottom: margin, left: margin, width: size, height: size }}
+                  style={{
+                    bottom: margin,
+                    left: margin,
+                    width: size,
+                    height: size,
+                  }}
                 >
                   <PlayerCard
                     name={`${assignments.bottomLeft} Player`}
                     color={assignments.bottomLeft}
                     isTurn={boardState.turn === assignments.bottomLeft}
-                    time={times[colorToIndex[assignments.bottomLeft as "red" | "blue" | "yellow" | "green"]]}
+                    time={
+                      times[
+                        colorToIndex[
+                          assignments.bottomLeft as
+                            | "red"
+                            | "blue"
+                            | "yellow"
+                            | "green"
+                        ]
+                      ]
+                    }
                     isTimed={times[0] !== -1}
                   />
                 </div>
                 <div
                   className="absolute flex items-center justify-center pointer-events-auto"
-                  style={{ bottom: margin, right: margin, width: size, height: size }}
+                  style={{
+                    bottom: margin,
+                    right: margin,
+                    width: size,
+                    height: size,
+                  }}
                 >
                   <PlayerCard
                     name={`${assignments.bottomRight} Player`}
                     color={assignments.bottomRight}
                     isTurn={boardState.turn === assignments.bottomRight}
                     isYou={true}
-                    time={times[colorToIndex[assignments.bottomRight as "red" | "blue" | "yellow" | "green"]]}
+                    time={
+                      times[
+                        colorToIndex[
+                          assignments.bottomRight as
+                            | "red"
+                            | "blue"
+                            | "yellow"
+                            | "green"
+                        ]
+                      ]
+                    }
                     isTimed={times[0] !== -1}
                   />
                 </div>
