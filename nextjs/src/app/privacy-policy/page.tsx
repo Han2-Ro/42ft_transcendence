@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 export default function Page() {
   return (
@@ -10,7 +10,8 @@ export default function Page() {
 
       <h2>Introduction</h2>
       <p>
-        42Chess (&quot;we,&quot; &quot;us,&quot; or &quot;our&quot;) operates {window.location.hostname}
+        42Chess (&quot;we,&quot; &quot;us,&quot; or &quot;our&quot;) operates{" "}
+        URL
         (the &quot;Service&quot;). This Privacy Policy explains how we collect,
         use, disclose, and safeguard your information when you visit our
         Service. Please read this privacy policy carefully. If you do not agree
@@ -116,8 +117,8 @@ export default function Page() {
         </li>
       </ul>
       <p>
-        If you wish to exercise any of these rights, please contact us at SUPPORT@42CHESS.MAIL.
-        We will respond to your request within 30 days.
+        If you wish to exercise any of these rights, please contact us at
+        SUPPORT@42CHESS.MAIL. We will respond to your request within 30 days.
       </p>
 
       <h2>Changes to This Privacy Policy</h2>
@@ -137,7 +138,7 @@ export default function Page() {
         If you have any questions about this Privacy Policy, please contact us:
       </p>
       <ul>
-        <li>By email: SUPPORT@42CHESS.MAIL</li>
+        <li>By email: support@42chess.mail</li>
       </ul>
     </main>
   );
