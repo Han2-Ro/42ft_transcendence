@@ -48,6 +48,7 @@ export default function Page() {
   const [color, setColor] = useState<PlayerColor>("white");
   const [boardState, setBoardState] = useState<BoardState>(startingBoardState);
   const [times, setTimes] = useState<number[] | null>(null);
+  const [playerIDs, setPlayerIDs] = useState<number[] | null>(null);
   const [result, setResult] = useState<GameResult | null>(null);
   const [resultReason, setResultReason] = useState<string | null>(null);
   const [searching, setSearching] = useState<Games[]>([]);
@@ -71,6 +72,11 @@ export default function Page() {
       if (err.message === "Unauthorized") {
         console.log("You need to log in");
         setServerConnectionStatus("unauthorized");
+      } else if (
+        err.message === "Authentication error: Error: To many sockets"
+      ) {
+        console.log("You are connected to the game server to many times");
+        setServerConnectionStatus("TooManySocketsConnected");
       } else {
         console.error("Couldn't connect to game server:", err.message);
         setServerConnectionStatus("error");
@@ -83,6 +89,7 @@ export default function Page() {
       setBoardState(data.boardState);
       setColor(data.color);
       setTimes(data.times);
+      setPlayerIDs(data.playerIDs);
       setSearching([]);
     });
 
