@@ -37,6 +37,7 @@ services:
       - SERVICE_URL_NEXTJS=${SERVICE_URL_NEXTJS:-http://localhost:${PORT}}
       - INTERNAL_NEXTJS_URL=${INTERNAL_NEXTJS_URL:-http://nextjs:${PORT}}
       - INTERNAL_SECRET=${INTERNAL_SECRET:?}
+      - GAME_TIMED_MODE_SECONDS=${GAME_TIMED_MODE_SECONDS:-600}
     env_file:
       - .env
 
