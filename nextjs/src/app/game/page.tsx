@@ -30,12 +30,14 @@ const turnDotStyles: Record<PlayerColor, string> = {
   green: "bg-emerald-500",
   blue: "bg-sky-500",
 };
+console.log("node nev", process.env.NODE_ENV);
 
 // Connect to the exposed backend port
 const socket: Socket<SToCEvents, CToSEvents> = io(
-  typeof window !== "undefined"
-    ? `https://${window.location.hostname}`
-    : "https://localhost",
+  process.env.NODE_ENV === "development" ? 
+      process.env.NEXT_PUBLIC_GAMESERVER_URL
+  :
+  `https://${window.location.hostname}`,
   {
     withCredentials: true,
     autoConnect: false,
