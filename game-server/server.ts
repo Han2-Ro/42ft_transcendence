@@ -36,7 +36,7 @@ io.use((socket, next) => {
 
   if (!token) {
     console.log("Authentication error: Token required");
-    return next(new Error("Unauthorized"));
+    return next(new Error("Authentication error: Unauthorized"));
   }
 
   const nextjsUrl =
@@ -57,6 +57,19 @@ io.use((socket, next) => {
       }
       const session = (await response.json()) as { userId: number };
       socket.data.user = String(session.userId);
+      const player = players.get(socket.data.user);
+      if (player === undefined) {
+        players.set(socket.data.user, {
+          sockets: [socket],
+          playerid: socket.data.user,
+          status: "lobby",
+          game_id: null,
+          searching: [],
+        });
+      } else {
+        if (player.sockets.length > 5) throw new Error("To many sockets");
+        player.sockets.push(socket);
+      }
       next();
     })
     .catch((error: unknown) => {
@@ -100,16 +113,7 @@ io.on("connection", (socket) => {
     socket.data.user,
   );
   const player = players.get(socket.data.user);
-  if (player === undefined) {
-    players.set(socket.data.user, {
-      sockets: [socket],
-      playerid: socket.data.user,
-      status: "lobby",
-      game_id: null,
-      searching: [],
-    });
-  } else {
-    player.sockets.push(socket);
+  if (player !== undefined) {
     if (player.status === "in_game") {
       const gameId = player.game_id;
       if (gameId !== null) {
