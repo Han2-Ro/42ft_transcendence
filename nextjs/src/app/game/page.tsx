@@ -71,6 +71,11 @@ export default function Page() {
       if (err.message === "Unauthorized") {
         console.log("You need to log in");
         setServerConnectionStatus("unauthorized");
+      } else if (
+        err.message === "Authentication error: Error: To many sockets"
+      ) {
+        console.log("You are connected to the game server to many times");
+        setServerConnectionStatus("TooManySocketsConnected");
       } else {
         console.error("Couldn't connect to game server:", err.message);
         setServerConnectionStatus("error");
