@@ -6,6 +6,7 @@ export type ConnectionStatus =
   | "connected"
   | "unauthorized"
   | "error"
+  | "TooManySocketsConnected"
   | "waiting";
 
 export default function Lobby({
@@ -82,6 +83,9 @@ export default function Lobby({
       <div className="text-lg">
         {serverConnectionStatus === "unauthorized" && (
           <p className=" text-red-500">You need to log in!</p>
+        )}
+        {serverConnectionStatus === "TooManySocketsConnected" && (
+          <p className=" text-red-500">User already connected to many times</p>
         )}
         {serverConnectionStatus === "waiting" && <p>Loading...</p>}
         {serverConnectionStatus === "error" && (
