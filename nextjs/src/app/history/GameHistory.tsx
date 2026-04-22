@@ -1,3 +1,4 @@
+import ErrorMessage from "@/componets/ErrorMessage";
 import type { getGameFourHistory, getGameTwoHistory } from "@/lib/auth/actions";
 
 /* const sampleEntries: GameHistoryEntry[] = [
@@ -24,7 +25,7 @@ export default function GameHistory({
   data: GameHistoryData;
 }) {
   if ("error" in data) {
-    return <p className="px-6 py-4">{data.error}</p>;
+    return <ErrorMessage errorMsg={data.error} />;
   }
 
   const entries = data;
