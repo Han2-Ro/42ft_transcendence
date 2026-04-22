@@ -484,3 +484,20 @@ export async function getUsername(id: number) {
 
   return { username: user.username };
 }
+
+export function xpToLevel(xp: number): number {
+  return Math.floor(Math.sqrt(xp));
+}
+
+export async function getLevel(): Promise<number | null> {
+  const session = await getSession();
+  if (!session) return null;
+
+  const user = await prisma.user.findUnique({
+    where: { id: session.userId },
+    select: { xp: true },
+  });
+
+  if (!user) return null;
+  return xpToLevel(user.xp);
+}
