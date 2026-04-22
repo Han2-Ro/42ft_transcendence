@@ -237,7 +237,8 @@ export async function getGameTwoHistory() {
 // {date, teammate, opponents(array), result, reason}
 export async function getGameFourHistory() {
   const session = await getSession();
-  const user = await prisma.user.findUnique({ where: { id: session?.userId } });
+  if (!session) return { error: "Not logged in." };
+  const user = await prisma.user.findUnique({ where: { id: session.userId } });
   if (!user) return { error: "Not logged in." };
   const userId = user.id;
 
