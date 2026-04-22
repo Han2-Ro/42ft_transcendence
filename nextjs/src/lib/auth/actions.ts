@@ -428,3 +428,46 @@ export async function unlinkFortyTwo(): Promise<ActionResult<null>> {
     return { success: false, error: "Failed to unlink 42 account" };
   }
 }
+
+export async function connectGameHistory() {
+  const session = await getSession();
+  if (!session) return { error: "Not logged in." };
+  const userId = session.userId;
+
+  const connectGames = await prisma.connectGame.findMany({
+    where: {
+      OR: [{ connectYellowPlayerId: userId }, { connectRedPlayerId: userId }],
+    },
+    include: {
+      connectYellowPlayer: { select: { id: true, username: true } },
+      connectRedPlayer: { select: { id: true, username: true } },
+    },
+    orderBy: { createdAt: "desc" },
+  });
+
+  return connectGames
+    .filter((connectGame) => connectGame.winner !== null)
+    .map((connectGame) => {
+      const playedAsYellow = connectGame.connectYellowPlayerId === userId;
+      const opponent = playedAsYellow ? connectGame.connectRedPlayer : connectGame.connectYellowPlayer;
+
+      let result: "win" | "lose" | "draw";
+      if (connectGame.winner === "draw") {
+        result = "draw";
+      } else if (
+        (connectGame.winner === "yellow" && playedAsYellow) ||
+        (connectGame.winner === "red" && !playedAsYellow)
+      ) {
+        result = "win";
+      } else {
+        result = "lose";
+      }
+
+      return {
+        date: connectGame.createdAt,
+        opponent: opponent?.username ?? "Unknown",
+        result,
+        reason: connectGame.reason,
+      };
+    });
+}

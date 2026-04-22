@@ -3,6 +3,7 @@ import Link from "next/link";
 import GameHistory from "./history/GameHistory";
 import { getGameTwoHistory, getLeaderboard } from "@/lib/auth/actions";
 import { ChevronRight } from "@/componets/icons/ChevronRight";
+import ErrorMessage from "@/componets/ErrorMessage";
 
 export default async function Home({
   searchParams,
@@ -16,9 +17,10 @@ export default async function Home({
     <main className="p-2 md:p-8 flex flex-col items-center">
       <h1 className="md:mb-8 text-6xl">Chess 42</h1>
       {error === "42_already_linked" && (
-        <p className="text-red-500 mb-4">
-          This 42 account is already linked to another 42Chess account.
-        </p>
+        <ErrorMessage errorMsg="This 42 account is already linked to another 42Chess account."></ErrorMessage>
+      )}
+	  {error === "42_no_acc_linked" && (
+        <ErrorMessage errorMsg="No 42chess account is linked to this 42account."></ErrorMessage>
       )}
       <p className="text-4xl">Better than chess.com!</p>
       <section className="lg:grid lg:grid-cols-2 py-10 gap-10 w-full">

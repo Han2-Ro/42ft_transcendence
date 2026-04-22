@@ -60,15 +60,11 @@ export async function GET(req: NextRequest) {
     where: { fortyTwoId: String(userData.id) },
   });
 
-  if (!user)
-    return NextResponse.json(
-      {
-        error:
-          "No account linked to this 42 profile. Please log in and link your account first.",
-      },
-      { status: 401 },
-    );
-
+  if (!user) {
+	return NextResponse.redirect(
+        new URL("/?error=42_no_acc_linked", baseUrl),
+      );
+  }
   const response = NextResponse.redirect(new URL("/", baseUrl));
   response.cookies.set("token", await createToken(user), getCookieOptions());
   return response;
