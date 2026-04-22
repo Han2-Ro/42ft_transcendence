@@ -92,48 +92,120 @@ It will be much apreciated if you write tests for everything you implement!
 
 ### fstark
 
-Assigned roles: Developer
+Assigned roles: Developer  
+Responsibilities:
+
+> TODO
 
 ### jlomic
 
-Assigned roles: Project Manager, Developer
+Assigned roles: Project Manager, Developer  
+Responsibilities:
+
+> TODO
 
 ### aprevrha
 
-Assigned roles: Product Owner, Developer
+Assigned roles: Product Owner, Developer  
+Responsibilities:
+
+> TODO
 
 ### hrother
 
-Assigned roles: Techincal Lead/Architect, Developer
+Assigned roles: Technical Lead/Architect, Developer  
+Responsibilities:
+
+> TODO
 
 ## Project Management
 
-We used GitHub issues to have an overview of all tasks. Team members mostly picked tasked themself based on personal preferance and knowledge. We communicated over discord and also worked a lot on together on campus for better and faster communication.
+- **Work organization:** We used issue-based planning and distributed tasks by ownership area (game logic, frontend, auth/backend, infra/testing), while still pairing on complex parts.
+- **Task distribution:** Team members mostly picked issues based on expertise and current workload; ownership was adjusted when blockers appeared.
+- **Meetings/sync:** Regular short syncs on Discord and in-person collaboration on campus for faster decisions and debugging.
+- **Project management tools:** GitHub Issues + Git history/PR workflow for tracking implementation and review.
+- **Communication channels:** Discord and direct on-campus communication.
+- **Code reviews:** we required review and approval for each pull-request by another teammeber. This helped with catching mistakes early and keeping a better [Bus Factor](https://en.wikipedia.org/wiki/Bus_factor).
 
 ## Technical Stack
 
+### Frontend
+
+- **Next.js 16 (App Router) + React 19 + TypeScript**
+- **Tailwind CSS 4** for styling
+- **socket.io-client** for realtime game communication
+
+**Why:** Next.js gave us one framework for UI plus server-side/backend routes, which reduced complexity and fit the Full-Stack module requirement.
+
+### Backend
+
+- **Next.js server actions + route handlers** for auth, profile/settings, stats/history APIs
+- **Dedicated Node.js Socket.IO game server** for realtime multiplayer state
+- **Shared TypeScript package (`shared/`)** for game rules and event contracts used by both frontend and server
+
+**Why:** Splitting classic backend tasks and realtime state made the architecture easier to reason about and scale independently.
+
+### Database
+
+- **PostgreSQL 16** with **Prisma ORM**
+
+**Why:** Relational modeling matches users, matches, and stats well; Prisma gives type-safe queries and faster schema iteration for a TypeScript codebase.
+
+### Other significant technologies
+
+- **Docker / Docker Compose / Traefik** for reproducible local/prod-like setup and HTTPS routing
+- **JOSE + bcrypt + otplib + qrcode** for secure auth, password hashing, and 2FA setup/verification
+- **Playwright** for end-to-end browser testing
+- **GitHub Actions** for lint/format/test automation
+
 ## Database Schema
+
+> TODO
 
 ## Features List
 
+> TODO
+
 ## Modules
 
-| Modul                         | Points |
-| ----------------------------- | ------ |
-| Full Stack Framework          | 2      |
-| real-time feature (websocket) | 2      |
-| ORM                           | 1      |
-| additional Browsers           | 1      |
-| game statistics & history     | 1      |
-| OAth 2.0 (42 intra)           | 1      |
-| 2FA                           | 1      |
-| Complete Web based Game       | 2      |
-| Remote players                | 2      |
-| Multiplayer                   | 2      |
-| Add another Game              | 2      |
-| TOTAL                         | 17     |
+### Points overview
+
+| Module                        | Type  | Points |
+| ----------------------------- | ----- | ------ |
+| Full Stack Framework          | Major | 2      |
+| Real-time feature (WebSocket) | Major | 2      |
+| ORM                           | Minor | 1      |
+| Additional Browsers           | Minor | 1      |
+| Game statistics & history     | Minor | 1      |
+| OAuth 2.0 (42 intra)          | Minor | 1      |
+| 2FA                           | Minor | 1      |
+| Complete Web-based Game       | Major | 2      |
+| Remote players                | Major | 2      |
+| Multiplayer                   | Major | 2      |
+| Add another game              | Major | 2      |
+| **TOTAL**                     |       | **17** |
+
+### Module implementation details
+
+> TODO
 
 ## Individual Contributions
+
+### fstark
+
+> TODO
+
+### jlomic
+
+> TODO
+
+### aprevrha
+
+> TODO
+
+### hrother
+
+> TODO
 
 ## Resources
 
