@@ -7,6 +7,7 @@ import { getSession } from "./session";
 import { generateSecret, generateURI, verify } from "otplib";
 import QRCode from "qrcode";
 import { createToken, getCookieOptions } from "./token";
+import { error } from "console";
 
 type ActionResult<T> =
   | { success: true; data: T }
@@ -472,4 +473,14 @@ export async function connectGameHistory() {
         reason: connectGame.reason,
       };
     });
+}
+
+export async function getUsername(id: number) {
+  const session = await getSession();
+  if (!session) return { error: "Not logged in." };
+
+  const user = await prisma.user.findUnique({ where: { id: id } });
+  if (!user) return { error: "Unknown" };
+
+  return { username: user.username };
 }
