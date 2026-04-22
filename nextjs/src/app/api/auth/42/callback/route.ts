@@ -61,9 +61,7 @@ export async function GET(req: NextRequest) {
   });
 
   if (!user) {
-	return NextResponse.redirect(
-        new URL("/?error=42_no_acc_linked", baseUrl),
-      );
+    return NextResponse.redirect(new URL("/?error=42_no_acc_linked", baseUrl));
   }
   const response = NextResponse.redirect(new URL("/", baseUrl));
   response.cookies.set("token", await createToken(user), getCookieOptions());

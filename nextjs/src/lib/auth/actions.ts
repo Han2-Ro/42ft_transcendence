@@ -449,7 +449,9 @@ export async function connectGameHistory() {
     .filter((connectGame) => connectGame.winner !== null)
     .map((connectGame) => {
       const playedAsYellow = connectGame.connectYellowPlayerId === userId;
-      const opponent = playedAsYellow ? connectGame.connectRedPlayer : connectGame.connectYellowPlayer;
+      const opponent = playedAsYellow
+        ? connectGame.connectRedPlayer
+        : connectGame.connectYellowPlayer;
 
       let result: "win" | "lose" | "draw";
       if (connectGame.winner === "draw") {

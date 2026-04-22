@@ -19,7 +19,7 @@ export default async function Home({
       {error === "42_already_linked" && (
         <ErrorMessage errorMsg="This 42 account is already linked to another 42Chess account."></ErrorMessage>
       )}
-	  {error === "42_no_acc_linked" && (
+      {error === "42_no_acc_linked" && (
         <ErrorMessage errorMsg="No 42chess account is linked to this 42account."></ErrorMessage>
       )}
       <p className="text-4xl">Better than chess.com!</p>
