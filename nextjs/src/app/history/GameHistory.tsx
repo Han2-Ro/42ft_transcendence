@@ -31,6 +31,10 @@ export default function GameHistory({
   const entries = data;
   const showTeamColumns = entries.length > 0 && "opponents" in entries[0];
 
+  if (entries.length === 0) {
+    return <ErrorMessage errorMsg="No games played yet."></ErrorMessage>;
+  }
+
   return (
     <table className={className}>
       <thead>
