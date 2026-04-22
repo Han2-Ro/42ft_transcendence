@@ -22,7 +22,11 @@ services:
       - FORTYTWO_CLIENT_ID=${FORTYTWO_CLIENT_ID}
       - FORTYTWO_CLIENT_SECRET=${FORTYTWO_CLIENT_SECRET}
       - FORTYTWO_REDIRECT_URI=${FORTYTWO_REDIRECT_URI}
+      - NEXT_PUBLIC_GAMESERVER_URL=${NEXT_PUBLIC_GAMESERVER_URL}
+      - SERVICE_URL_NEXTJS=${SERVICE_URL_NEXTJS:-http://localhost:${PORT}}
       - MAX_USERS=${MAX_USERS}
+    env_file:
+      - .env
 
   gamesserver:
     build:
@@ -33,6 +37,8 @@ services:
       - SERVICE_URL_NEXTJS=${SERVICE_URL_NEXTJS:-http://localhost:${PORT}}
       - INTERNAL_NEXTJS_URL=${INTERNAL_NEXTJS_URL:-http://nextjs:${PORT}}
       - INTERNAL_SECRET=${INTERNAL_SECRET:?}
+    env_file:
+      - .env
 
   db:
     image: postgres:16-alpine
@@ -52,6 +58,8 @@ services:
       - POSTGRES_USER=${POSTGRES_USER:?}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:?}
       - POSTGRES_DB=${POSTGRES_DB:?}
+    env_file:
+      - .env
 
 volumes:
   postgres_data:

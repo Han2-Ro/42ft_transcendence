@@ -4,6 +4,8 @@ import { createToken, getCookieOptions } from "@/lib/auth/token";
 import { getSession } from "@/lib/auth/session";
 
 export async function GET(req: NextRequest) {
+  const host = req.headers.get("host");
+  const redirectUri = `https://${host}/api/auth/42/callback`;
   const code = req.nextUrl.searchParams.get("code");
   if (!code) return NextResponse.json({ error: "No code" }, { status: 400 });
 
@@ -15,7 +17,7 @@ export async function GET(req: NextRequest) {
       client_id: process.env.FORTYTWO_CLIENT_ID,
       client_secret: process.env.FORTYTWO_CLIENT_SECRET,
       code,
-      redirect_uri: process.env.FORTYTWO_REDIRECT_URI,
+      redirect_uri: redirectUri,
     }),
   });
 
@@ -31,7 +33,7 @@ export async function GET(req: NextRequest) {
   });
   const userData = await userRes.json();
 
-  const baseUrl = process.env.SERVICE_URL_NEXTJS ?? "https://localhost";
+  const baseUrl = `https://${host}`;
   const session = await getSession();
 
   if (session) {
