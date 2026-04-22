@@ -1,32 +1,10 @@
 import { test, expect, Page } from "@playwright/test";
-import { openLoginModal, openRegisterModal, logout } from "./utils";
-
-type Credentials = {
-  email: string;
-  username: string;
-  password: string;
-};
-
-function createCredentials(): Credentials {
-  const id = `${Date.now()}-${Math.floor(Math.random() * 1_000_000)}`;
-  return {
-    email: `settings-user-${id}@example.com`,
-    username: `settingsuser${id}`,
-    password: "SecurePass123!",
-  };
-}
-
-async function registerAndLoginWithCredentials(page: Page, creds: Credentials) {
-  await openRegisterModal(page);
-
-  await page.fill("#email", creds.email);
-  await page.fill("#username", creds.username);
-  await page.fill("#password", creds.password);
-  await page.fill("#confirmPassword", creds.password);
-  await page.getByRole("button", { name: /^submit$/i }).click();
-
-  await expect(page.getByText(creds.username).first()).toBeVisible();
-}
+import {
+  createCredentials,
+  openLoginModal,
+  logout,
+  registerAndLogin,
+} from "./utils";
 
 async function openSettings(page: Page) {
   await page.goto("/settings");
@@ -57,10 +35,10 @@ async function clickPasswordChange(page: Page) {
 
 test.describe("settings critical account flows (section C)", () => {
   test("C-UN-01 — Change username (happy path)", async ({ page }) => {
-    const creds = createCredentials();
+    const creds = createCredentials("settings-user", "settingsuser");
     const newUsername = `${creds.username}_new`;
 
-    await registerAndLoginWithCredentials(page, creds);
+    await registerAndLogin(page, creds);
     await openSettings(page);
 
     await clickUsernameChange(page);
@@ -82,12 +60,12 @@ test.describe("settings critical account flows (section C)", () => {
       "Postponed: username error rendering/handling to be implemented later",
     );
 
-    const userA = createCredentials();
-    const userB = createCredentials();
+    const userA = createCredentials("settings-user", "settingsuser");
+    const userB = createCredentials("settings-user", "settingsuser");
 
-    await registerAndLoginWithCredentials(page, userA);
+    await registerAndLogin(page, userA);
     await logout(page);
-    await registerAndLoginWithCredentials(page, userB);
+    await registerAndLogin(page, userB);
     await openSettings(page);
 
     await clickUsernameChange(page);
@@ -104,9 +82,9 @@ test.describe("settings critical account flows (section C)", () => {
       "Postponed: invalid username validation spec/UI to be implemented later",
     );
 
-    const creds = createCredentials();
+    const creds = createCredentials("settings-user", "settingsuser");
 
-    await registerAndLoginWithCredentials(page, creds);
+    await registerAndLogin(page, creds);
     await openSettings(page);
 
     await clickUsernameChange(page);
@@ -118,9 +96,9 @@ test.describe("settings critical account flows (section C)", () => {
   });
 
   test("C-UN-04 — Cancel username change", async ({ page }) => {
-    const creds = createCredentials();
+    const creds = createCredentials("settings-user", "settingsuser");
 
-    await registerAndLoginWithCredentials(page, creds);
+    await registerAndLogin(page, creds);
     await openSettings(page);
 
     await clickUsernameChange(page);
@@ -134,10 +112,10 @@ test.describe("settings critical account flows (section C)", () => {
   });
 
   test("C-PW-01 — Change password (happy path)", async ({ page }) => {
-    const creds = createCredentials();
+    const creds = createCredentials("settings-user", "settingsuser");
     const newPassword = "BetterPass456!";
 
-    await registerAndLoginWithCredentials(page, creds);
+    await registerAndLogin(page, creds);
     await openSettings(page);
 
     await clickPasswordChange(page);
@@ -170,9 +148,9 @@ test.describe("settings critical account flows (section C)", () => {
   });
 
   test("C-PW-02 — Wrong current password", async ({ page }) => {
-    const creds = createCredentials();
+    const creds = createCredentials("settings-user", "settingsuser");
 
-    await registerAndLoginWithCredentials(page, creds);
+    await registerAndLogin(page, creds);
     await openSettings(page);
 
     await clickPasswordChange(page);
@@ -185,9 +163,9 @@ test.describe("settings critical account flows (section C)", () => {
   });
 
   test("C-PW-03 — New passwords mismatch", async ({ page }) => {
-    const creds = createCredentials();
+    const creds = createCredentials("settings-user", "settingsuser");
 
-    await registerAndLoginWithCredentials(page, creds);
+    await registerAndLogin(page, creds);
     await openSettings(page);
 
     await clickPasswordChange(page);
@@ -202,9 +180,9 @@ test.describe("settings critical account flows (section C)", () => {
   });
 
   test("C-PW-04 — New password too weak", async ({ page }) => {
-    const creds = createCredentials();
+    const creds = createCredentials("settings-user", "settingsuser");
 
-    await registerAndLoginWithCredentials(page, creds);
+    await registerAndLogin(page, creds);
     await openSettings(page);
 
     await clickPasswordChange(page);
@@ -217,9 +195,9 @@ test.describe("settings critical account flows (section C)", () => {
   });
 
   test("C-PW-05 — New password equals old password", async ({ page }) => {
-    const creds = createCredentials();
+    const creds = createCredentials("settings-user", "settingsuser");
 
-    await registerAndLoginWithCredentials(page, creds);
+    await registerAndLogin(page, creds);
     await openSettings(page);
 
     await clickPasswordChange(page);
@@ -232,9 +210,9 @@ test.describe("settings critical account flows (section C)", () => {
   });
 
   test("C-PW-06 — Cancel password change", async ({ page }) => {
-    const creds = createCredentials();
+    const creds = createCredentials("settings-user", "settingsuser");
 
-    await registerAndLoginWithCredentials(page, creds);
+    await registerAndLogin(page, creds);
     await openSettings(page);
 
     await clickPasswordChange(page);

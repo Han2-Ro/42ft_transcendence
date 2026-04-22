@@ -1,5 +1,23 @@
 import { expect } from "@playwright/test";
 
+export type Credentials = {
+  email: string;
+  username: string;
+  password: string;
+};
+
+export function createCredentials(
+  emailPrefix = "fe-user",
+  usernamePrefix = "feuser",
+): Credentials {
+  const id = `${Date.now()}-${Math.floor(Math.random() * 1_000_000)}`;
+  return {
+    email: `${emailPrefix}-${id}@example.com`,
+    username: `${usernamePrefix}${id}`,
+    password: "SecurePass123!",
+  };
+}
+
 export async function getVisibleMenuAction(
   page: import("@playwright/test").Page,
   actionName: RegExp,
@@ -43,29 +61,27 @@ export async function clickMenuAction(
   await (await getVisibleMenuAction(page, actionName)).click();
 }
 
-export async function registerAndLogin(page: import("@playwright/test").Page) {
-  const ts = Date.now();
-  const credentials = {
-    email: `fe-user-${ts}@example.com`,
-    username: `feuser${ts}`,
-    password: "SecurePass123!",
-  };
+export async function registerAndLogin(
+  page: import("@playwright/test").Page,
+  credentials?: Credentials,
+) {
+  const userCredentials = credentials ?? createCredentials();
 
   await openRegisterModal(page);
   await expect(page.getByText("Guest")).toBeVisible();
   const heading = page.getByRole("heading", { name: /register/i });
   await expect(heading).toBeVisible();
 
-  await page.fill("#email", credentials.email);
-  await page.fill("#username", credentials.username);
-  await page.fill("#password", credentials.password);
-  await page.fill("#confirmPassword", credentials.password);
+  await page.fill("#email", userCredentials.email);
+  await page.fill("#username", userCredentials.username);
+  await page.fill("#password", userCredentials.password);
+  await page.fill("#confirmPassword", userCredentials.password);
   await page.getByRole("button", { name: /^submit$/i }).click();
 
   await Promise.race([
     expect(heading).not.toBeVisible(),
-    expect(page.getByText(credentials.username).first()).toBeVisible(),
+    expect(page.getByText(userCredentials.username).first()).toBeVisible(),
   ]);
 
-  await expect(page.getByText(credentials.username).first()).toBeVisible();
+  return userCredentials;
 }
