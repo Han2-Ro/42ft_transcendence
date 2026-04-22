@@ -27,7 +27,9 @@ test.describe.serial("section D game modes (without connect4)", () => {
 
   async function startMatch(pages: Page[], buttonName: RegExp) {
     await Promise.all(
-      pages.map((page) => page.getByRole("button", { name: buttonName }).click()),
+      pages.map((page) =>
+        page.getByRole("button", { name: buttonName }).click(),
+      ),
     );
   }
 
@@ -79,7 +81,9 @@ test.describe.serial("section D game modes (without connect4)", () => {
     try {
       await startMatch(pages, /find chess match \(10 minutes\)/i);
       await Promise.all(
-        pages.map((page) => expect(page.getByTestId("player-card-self")).toBeVisible()),
+        pages.map((page) =>
+          expect(page.getByTestId("player-card-self")).toBeVisible(),
+        ),
       );
 
       const initialSeconds = await readFirstClockSeconds(pages[0]);

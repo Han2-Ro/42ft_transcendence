@@ -8,7 +8,9 @@ import {
 
 async function openSettings(page: Page) {
   await page.goto("/settings");
-  await expect(page.getByRole("heading", { name: /^settings$/i })).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: /^settings$/i }),
+  ).toBeVisible();
 }
 
 async function clickUsernameChange(page: Page) {
@@ -171,9 +173,7 @@ test.describe("settings critical account flows (section C)", () => {
     await clickPasswordChange(page);
     await page.getByLabel(/current password/i).fill(creds.password);
     await page.getByLabel(/^new password$/i).fill("BetterPass456!");
-    await page
-      .getByLabel(/confirm new password/i)
-      .fill("DifferentPass789!");
+    await page.getByLabel(/confirm new password/i).fill("DifferentPass789!");
     await page.getByRole("button", { name: /^submit$/i }).click();
 
     await expect(page.getByText(/new passwords do not match/i)).toBeVisible();
