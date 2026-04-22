@@ -32,13 +32,22 @@ const turnDotStyles: Record<PlayerColor, string> = {
 };
 
 // Connect to the exposed backend port
+const isBrowser = typeof window !== "undefined";
+const isLocalhost =
+  isBrowser &&
+  ["localhost", "127.0.0.1", "::1"].includes(window.location.hostname);
+
+const socketUrl = isBrowser
+  ? process.env.NEXT_PUBLIC_GAME_SERVER_URL || window.location.origin
+  : "";
+
 const socket: Socket<SToCEvents, CToSEvents> = io(
-  typeof window !== "undefined"
-    ? `https://${window.location.hostname}`
-    : "https://localhost",
+  socketUrl,
   {
     withCredentials: true,
     autoConnect: false,
+    transports: isLocalhost ? ["polling"] : ["websocket", "polling"],
+    upgrade: !isLocalhost,
   },
 );
 
@@ -77,7 +86,7 @@ export default function Page() {
         console.log("You are connected to the game server to many times");
         setServerConnectionStatus("TooManySocketsConnected");
       } else {
-        console.error("Couldn't connect to game server:", err.message);
+        console.log("Couldn't connect to game server:", err.message);
         setServerConnectionStatus("error");
       }
     });
@@ -149,10 +158,6 @@ export default function Page() {
         label: "Resign",
         onClick: emitPlayerResign,
         icon: <DeadKing size={20} className=" text-red-600" />,
-      },
-      {
-        label: "🤝 Offer Draw",
-        onClick: () => console.error("TODO: Not implemented yet"),
       },
     ]);
 
