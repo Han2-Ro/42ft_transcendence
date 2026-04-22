@@ -266,14 +266,14 @@ export class Room {
       const redPlayerId =
         this.players[this.assignedColors.indexOf("red")].playerid;
       const reason = this.gameLogic.gameStatus.reason;
-      fetch(`${nextjsUrl}/api/internal/game`, {
+      fetch(`${nextjsUrl}/api/internal/connectGame`, {
         method: "Post",
         headers: {
           "x-internal-secret": secret,
         },
         body: JSON.stringify({
-          yellowPlayerId: Number(yellowPlayerId),
-          redPlayerId: Number(redPlayerId),
+          connectYellowPlayerId: Number(yellowPlayerId),
+          connectRedPlayerId: Number(redPlayerId),
           winner,
           reason,
         }),
