@@ -181,7 +181,7 @@ export default function Page() {
           onClick={() =>
             user.fortyTwoLogin
               ? unlinkFortyTwo().then(() => refreshUser())
-              : (window.location.href = "https://localhost/api/auth/42")
+              : (window.location.href = "/api/auth/42")
           }
         >
           {user.fortyTwoLogin ? "Unlink" : "Link"}

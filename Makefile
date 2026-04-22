@@ -1,7 +1,11 @@
+GREEN = \033[0;32m
+RESET = \033[0m
 COMPOSE_LOCAL = docker compose -f docker-compose.yml -f docker-compose.traefik.yml
+LOCAL_IP = $(shell ip route get 1.1.1.1 | grep -oP 'src \K\S+')
 
 run:
 	$(COMPOSE_LOCAL) up --build -d
+	@echo -n "\n\n\n$(GREEN)You can remotely access to this web app from same network with $(RESET)https://$(LOCAL_IP)\n\n"
 
 dev:
 	$(COMPOSE_LOCAL) -f docker-compose.override.yml up

@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { openRegisterModal, openLoginModal } from "./utils";
+import { openRegisterModal, openLoginModal, logout } from "./utils";
 
 const ts = Date.now();
 const feUser = {
@@ -53,7 +53,7 @@ test.describe.serial("auth UI flows", () => {
     await expect(page.getByText(feUser.username)).toBeVisible();
 
     // Log out
-    await page.getByRole("button", { name: /log out/i }).click();
+    await logout(page);
     await expect(page.getByText("Guest")).toBeVisible();
   });
 
