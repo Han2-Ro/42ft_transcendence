@@ -66,23 +66,6 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 - `pnpm run format:check` - check the fromatting without writing
 - `pnpm run format` - format all files with writing and saving
 
-## Modules
-
-| Modul                         | Points |
-| ----------------------------- | ------ |
-| Full Stack Framework          | 2      |
-| real-time feature (websocket) | 2      |
-| ORM                           | 1      |
-| additional Browsers           | 1      |
-| game statistics & history     | 1      |
-| OAth 2.0 (42 intra)           | 1      |
-| 2FA                           | 1      |
-| Complete Web based Game       | 2      |
-| Remote players                | 2      |
-| Multiplayer                   | 2      |
-| Add another Game              | 2      |
-| TOTAL                         | 17     |
-
 ## Folder Structure
 
 - **nextjs/** - Next.js frontend and backend API
@@ -125,7 +108,32 @@ Assigned roles: Techincal Lead/Architect, Developer
 
 ## Project Management
 
-## Technical Stack:
+We used GitHub issues to have an overview of all tasks. Team members mostly picked tasked themself based on personal preferance and knowledge. We communicated over discord and also worked a lot on together on campus for better and faster communication.
+
+## Technical Stack
+
+## Database Schema
+
+## Features List
+
+## Modules
+
+| Modul                         | Points |
+| ----------------------------- | ------ |
+| Full Stack Framework          | 2      |
+| real-time feature (websocket) | 2      |
+| ORM                           | 1      |
+| additional Browsers           | 1      |
+| game statistics & history     | 1      |
+| OAth 2.0 (42 intra)           | 1      |
+| 2FA                           | 1      |
+| Complete Web based Game       | 2      |
+| Remote players                | 2      |
+| Multiplayer                   | 2      |
+| Add another Game              | 2      |
+| TOTAL                         | 17     |
+
+## Individual Contributions
 
 ## Resources
 
