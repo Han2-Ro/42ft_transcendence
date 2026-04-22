@@ -76,44 +76,46 @@ test.describe("settings critical account flows (section C)", () => {
     await expect(page.getByText(newUsername).first()).toBeVisible();
   });
 
-  test.fixme(
-    "C-UN-02 — Change username to existing username",
-    "Postponed: username error rendering/handling to be implemented later",
-    async ({ page }) => {
-      const userA = createCredentials();
-      const userB = createCredentials();
+  test("C-UN-02 — Change username to existing username", async ({ page }) => {
+    test.fixme(
+      true,
+      "Postponed: username error rendering/handling to be implemented later",
+    );
 
-      await registerAndLoginWithCredentials(page, userA);
-      await logout(page);
-      await registerAndLoginWithCredentials(page, userB);
-      await openSettings(page);
+    const userA = createCredentials();
+    const userB = createCredentials();
 
-      await clickUsernameChange(page);
-      await page.getByLabel(/new username/i).fill(userA.username);
-      await page.getByRole("button", { name: /^submit$/i }).click();
+    await registerAndLoginWithCredentials(page, userA);
+    await logout(page);
+    await registerAndLoginWithCredentials(page, userB);
+    await openSettings(page);
 
-      await expect(page.getByText(/failed to update username/i)).toBeVisible();
-      await expect(page.getByText(`Username: ${userB.username}`)).toBeVisible();
-    },
-  );
+    await clickUsernameChange(page);
+    await page.getByLabel(/new username/i).fill(userA.username);
+    await page.getByRole("button", { name: /^submit$/i }).click();
 
-  test.fixme(
-    "C-UN-03 — Change username to invalid value",
-    "Postponed: invalid username validation spec/UI to be implemented later",
-    async ({ page }) => {
-      const creds = createCredentials();
+    await expect(page.getByText(/failed to update username/i)).toBeVisible();
+    await expect(page.getByText(`Username: ${userB.username}`)).toBeVisible();
+  });
 
-      await registerAndLoginWithCredentials(page, creds);
-      await openSettings(page);
+  test("C-UN-03 — Change username to invalid value", async ({ page }) => {
+    test.fixme(
+      true,
+      "Postponed: invalid username validation spec/UI to be implemented later",
+    );
 
-      await clickUsernameChange(page);
-      await page.getByLabel(/new username/i).fill("   ");
-      await page.getByRole("button", { name: /^submit$/i }).click();
+    const creds = createCredentials();
 
-      await expect(page.getByText(/failed to update username/i)).toBeVisible();
-      await expect(page.getByText(`Username: ${creds.username}`)).toBeVisible();
-    },
-  );
+    await registerAndLoginWithCredentials(page, creds);
+    await openSettings(page);
+
+    await clickUsernameChange(page);
+    await page.getByLabel(/new username/i).fill("   ");
+    await page.getByRole("button", { name: /^submit$/i }).click();
+
+    await expect(page.getByText(/failed to update username/i)).toBeVisible();
+    await expect(page.getByText(`Username: ${creds.username}`)).toBeVisible();
+  });
 
   test("C-UN-04 — Cancel username change", async ({ page }) => {
     const creds = createCredentials();
@@ -149,6 +151,7 @@ test.describe("settings critical account flows (section C)", () => {
     ).not.toBeVisible();
 
     await logout(page);
+    await expect(page.getByText("Guest")).toBeVisible();
 
     await openLoginModal(page);
     await page.fill("#username", creds.email);
@@ -157,6 +160,7 @@ test.describe("settings critical account flows (section C)", () => {
     await expect(page.getByText(creds.username).first()).toBeVisible();
 
     await logout(page);
+    await expect(page.getByText("Guest")).toBeVisible();
 
     await openLoginModal(page);
     await page.fill("#username", creds.email);
@@ -244,6 +248,7 @@ test.describe("settings critical account flows (section C)", () => {
     ).not.toBeVisible();
 
     await logout(page);
+    await expect(page.getByText("Guest")).toBeVisible();
     await openLoginModal(page);
     await page.fill("#username", creds.email);
     await page.fill("#password", creds.password);
