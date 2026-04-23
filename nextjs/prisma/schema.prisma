@@ -20,26 +20,36 @@ model User {
   twoFactorSecret  String?
   twoFactorEnabled Boolean  @default(false)
 
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
   // Forty two creds
   fortyTwoId       String?  @unique
   fortyTwoEmail    String?
   fortyTwoLogin    String?
 
-  // Stats
+  // Chess Stats
   wins             Int      @default(0)
   losses           Int      @default(0)
   draws            Int      @default(0)
-  
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
 
+  // Two player chess
   gamesAsWhite     Game[]   @relation("WhitePlayer")
   gamesAsBlack     Game[]   @relation("BlackPlayer")
 
-  gamesAsBlue     GameFour[]   @relation("BluePlayer")
-  gamesAsYellow     GameFour[]   @relation("YellowPlayer")
-  gamesAsRed     GameFour[]   @relation("RedPlayer")
+  // Four player chess
+  gamesAsBlue      GameFour[]   @relation("BluePlayer")
+  gamesAsYellow    GameFour[]   @relation("YellowPlayer")
+  gamesAsRed       GameFour[]   @relation("RedPlayer")
   gamesAsGreen     GameFour[]   @relation("GreenPlayer")
+
+  // Connect Stats
+  connectWins      Int      @default(0)
+  connectLosses    Int      @default(0)
+  connectDraws     Int      @default(0)
+
+  connectgameAsRed        connectGame[]  @relation("connectRedPlayer")
+  connectgameAsYellow     connectGame[]  @relation("connectYellowPlayer")
 }
 
 model Game {
@@ -71,6 +81,23 @@ model GameFour {
   yellowPlayer   User     @relation("YellowPlayer", fields: [yellowPlayerId], references: [id])
   redPlayer   User      @relation("RedPlayer", fields: [redPlayerId], references: [id])
   greenPlayer   User      @relation("GreenPlayer", fields: [greenPlayerId], references: [id])
+
+  winner        String?
+  reason        String?
+
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+  finishedAt    DateTime?
+}
+
+model connectGame {
+  id           Int         @id @default(autoincrement())
+
+  connectRedPlayerId     Int
+  connectYellowPlayerId  Int
+
+  connectRedPlayer          User    @relation("connectRedPlayer", fields: [connectRedPlayerId], references: [id])
+  connectYellowPlayer       User    @relation("connectYellowPlayer", fields: [connectYellowPlayerId], references: [id])
 
   winner        String?
   reason        String?

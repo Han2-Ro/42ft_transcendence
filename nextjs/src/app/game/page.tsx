@@ -30,6 +30,7 @@ const turnDotStyles: Record<PlayerColor, string> = {
   green: "bg-emerald-500",
   blue: "bg-sky-500",
 };
+console.log("node nev", process.env.NODE_ENV);
 
 // Connect to the exposed backend port
 const isBrowser = typeof window !== "undefined";
@@ -55,6 +56,7 @@ export default function Page() {
   const [color, setColor] = useState<PlayerColor>("white");
   const [boardState, setBoardState] = useState<BoardState>(startingBoardState);
   const [times, setTimes] = useState<number[] | null>(null);
+  const [playerIDs, setPlayerIDs] = useState<number[] | null>(null);
   const [result, setResult] = useState<GameResult | null>(null);
   const [resultReason, setResultReason] = useState<string | null>(null);
   const [searching, setSearching] = useState<Games[]>([]);
@@ -95,6 +97,7 @@ export default function Page() {
       setBoardState(data.boardState);
       setColor(data.color);
       setTimes(data.times);
+      setPlayerIDs(data.playerIDs);
       setSearching([]);
     });
 

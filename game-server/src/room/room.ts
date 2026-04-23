@@ -74,6 +74,7 @@ export class Room {
           color: this.assignedColors[index],
           boardState: this.gameLogic.boardState,
           times: this.getTimes(),
+          playerIDs: this.getPlayerIDs(),
         });
       });
     });
@@ -98,6 +99,7 @@ export class Room {
       color: this.assignedColors[playerIndex],
       boardState: this.gameLogic.boardState,
       times: this.getTimes(),
+      playerIDs: this.getPlayerIDs(),
     });
   }
 
@@ -148,6 +150,16 @@ export class Room {
       }
     });
     return times;
+  }
+  private getPlayerIDs(): number[] {
+    const ids: number[] = [];
+    this.order.forEach((value: PlayerColor) => {
+      const colorIndex = this.assignedColors.indexOf(value);
+      if (colorIndex >= 0) {
+        ids.push(this.players[colorIndex].playerid);
+      }
+    });
+    return ids;
   }
 
   private checkTimeout(time_passed: number) {
@@ -254,14 +266,14 @@ export class Room {
       const redPlayerId =
         this.players[this.assignedColors.indexOf("red")].playerid;
       const reason = this.gameLogic.gameStatus.reason;
-      fetch(`${nextjsUrl}/api/internal/game`, {
+      fetch(`${nextjsUrl}/api/internal/connectGame`, {
         method: "Post",
         headers: {
           "x-internal-secret": secret,
         },
         body: JSON.stringify({
-          yellowPlayerId: Number(yellowPlayerId),
-          redPlayerId: Number(redPlayerId),
+          connectYellowPlayerId: Number(yellowPlayerId),
+          connectRedPlayerId: Number(redPlayerId),
           winner,
           reason,
         }),
