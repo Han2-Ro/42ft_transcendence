@@ -1,6 +1,8 @@
 import { Move, PlayerColor, BoardStateCon4, Square } from "shared";
 import Image from "next/image";
 
+//TODO: complete redsign
+//TODO: add player cards
 export default function ConnectFourBoard({
   boardState,
   onPlayerMove,
