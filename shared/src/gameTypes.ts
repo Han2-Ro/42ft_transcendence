@@ -43,11 +43,16 @@ export type PieceOrNull = Piece | null;
 
 export type Board = PieceOrNull[];
 
+export type EnPassantSquare = {
+  pos: number;
+  color: PlayerColor;
+} | null;
+
 export type BoardStateChess = {
   board: Board;
   turn: PlayerColor;
   movesPlayed: number;
-  enPassantSquare: number | null;
+  enPassantSquare: EnPassantSquare;
 };
 
 export type PlayerColorCon4 = "red" | "yellow";
