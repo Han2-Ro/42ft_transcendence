@@ -33,12 +33,11 @@ const turnDotStyles: Record<PlayerColor, string> = {
 
 // Connect to the exposed backend port
 const isBrowser = typeof window !== "undefined";
-const isLocalhost =
-  isBrowser &&
-  ["localhost", "127.0.0.1", "::1"].includes(window.location.hostname);
 
 const socketUrl = isBrowser
-  ? process.env.NEXT_PUBLIC_GAME_SERVER_URL || window.location.origin
+  ? process.env.NODE_ENV === "development" 
+  ? process.env.NEXT_PUBLIC_GAME_SERVER_URL 
+  : `https://${window.location.hostname}`
   : "";
 
 const socket: Socket<SToCEvents, CToSEvents> = io(
@@ -46,8 +45,7 @@ const socket: Socket<SToCEvents, CToSEvents> = io(
   {
     withCredentials: true,
     autoConnect: false,
-    transports: isLocalhost ? ["polling"] : ["websocket", "polling"],
-    upgrade: !isLocalhost,
+    transports: ["websocket"],
   },
 );
 
