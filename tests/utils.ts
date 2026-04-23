@@ -62,7 +62,6 @@ export async function registerAndLogin(page: import("@playwright/test").Page) {
   await page.fill("#confirmPassword", credentials.password);
   await page.getByRole("button", { name: /^submit$/i }).click();
 
-  // Wait for either the heading to disappear OR the username to appear
   await Promise.race([
     expect(heading).not.toBeVisible(),
     expect(page.getByText(credentials.username).first()).toBeVisible(),
