@@ -279,4 +279,4 @@ process.on("SIGINT", () => {
   running = false;
 });
 
-console.log("Game Server running on port 4000");
+console.log(`Game Server running on port 4000 in ${process.env.NODE_ENV} mode`);

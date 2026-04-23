@@ -4,8 +4,7 @@
   "version": "1.0.0",
   "description": "ft_transcendence monorepo",
   "scripts": {
-    "dev": "pnpm --parallel --stream run dev",
-    "dev:db": "docker compose up -d db && POSTGRES_ADDRESS=localhost pnpm --parallel --stream run dev",
+    "dev": "docker compose up -d db && POSTGRES_ADDRESS=localhost SERVICE_URL_NEXTJS=http://localhost:3000 NEXT_PUBLIC_GAMESERVER_URL=http://localhost:4000 pnpm --parallel --stream run dev",
     "start": "pnpm --parallel --stream run start",
     "build": "pnpm --recursive run build",
     "lint": "pnpm eslint",
