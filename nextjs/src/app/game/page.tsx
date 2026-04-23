@@ -118,6 +118,16 @@ export default function Page() {
       socket.off("moveMade");
       socket.off("gameOver");
       socket.off("setSearching");
+      setGameId(null);
+      setGameType(null);
+      setColor("white");
+      setBoardState(startingBoardState);
+      setTimes(null);
+      setPlayerIDs(null);
+      setResult(null);
+      setResultReason(null);
+      setSearching([]);
+      setServerConnectionStatus("waiting");
       socket.disconnect();
     };
   }, [user]);
