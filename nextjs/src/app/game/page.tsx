@@ -42,7 +42,7 @@ const socket: Socket<SToCEvents, CToSEvents> = io(
   {
     withCredentials: true,
     autoConnect: false,
-	transports: ["websocket"],
+    transports: ["websocket"],
   },
 );
 
