@@ -1,3 +1,6 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import { Move, PlayerColor, BoardStateCon4 } from "shared";
 
 const COLS = 7;
@@ -14,18 +17,25 @@ export default function ConnectFourBoard({
   playerColor: PlayerColor;
   times: number[];
 }) {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    const id = requestAnimationFrame(() => setMounted(true));
+    return () => cancelAnimationFrame(id);
+  }, []);
+
   return (
-    <div className="relative w-[min(100vw,56vh)] md:w-[min(50vw,70vh)] aspect-7/6 p-3">
+    <div className="relative w-[min(100vw,56vh)] md:w-[min(50vw,70vh)] aspect-7/6 p-3 overflow-hidden">
       <div className="absolute inset-3 grid grid-cols-7 grid-rows-6 gap-0">
         {boardState.board.map((square, index) => (
           <div key={index} className="relative">
-            {square !== "empty" && (
-              <div
-                className={`absolute inset-[14%] rounded-full ${
-                  square === "yellow" ? "bg-yellow-400" : "bg-red-600"
-                }`}
-              />
-            )}
+            <div
+              className={`absolute inset-[12%] rounded-full transition-all duration-500 ease-in ${
+                square === "empty"
+                  ? "opacity-0 -translate-y-[700%]"
+                  : `${square === "yellow" ? "bg-yellow-400" : "bg-red-600"} opacity-100 ${mounted ? "translate-y-0" : "-translate-y-[700%]"}`
+              }`}
+            />
           </div>
         ))}
       </div>
