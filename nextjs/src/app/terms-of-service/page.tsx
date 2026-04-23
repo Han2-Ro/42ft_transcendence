@@ -1,6 +1,13 @@
 "use client";
+import { useEffect, useState } from "react";
 
 export default function Page() {
+  const [hostname, setHostname] = useState("");
+
+  useEffect(() => {
+    setHostname(window.location.hostname);
+  }, []);
+
   return (
     <main className="p-4 prose prose-invert">
       <h1>Terms of Service for 42Chess</h1>
@@ -10,10 +17,10 @@ export default function Page() {
 
       <h2>Agreement to Terms</h2>
       <p>
-        By accessing or using the services provided by 42Chess at URL (the
-        &quot;Service&quot;), you agree to be bound by these Terms of Service
-        (&quot;Terms&quot;). If you disagree with any part of these terms, you
-        may not access the Service.
+        By accessing or using the services provided by 42Chess at {hostname}{" "}
+        (the &quot;Service&quot;), you agree to be bound by these Terms of
+        Service (&quot;Terms&quot;). If you disagree with any part of these
+        terms, you may not access the Service.
       </p>
 
       <h2>Use of Service</h2>
@@ -43,10 +50,10 @@ export default function Page() {
       <h2>Intellectual Property</h2>
       <p>
         The Service and its original content, features, and functionality are
-        and will remain the exclusive property of 42Chess. The Service is protected
-        by copyright, trademark, and other laws. Our trademarks may not be used
-        in connection with any product or service without our prior written
-        consent.
+        and will remain the exclusive property of 42Chess. The Service is
+        protected by copyright, trademark, and other laws. Our trademarks may
+        not be used in connection with any product or service without our prior
+        written consent.
       </p>
 
       <h2>User Content</h2>
@@ -69,11 +76,11 @@ export default function Page() {
 
       <h2>Limitation of Liability</h2>
       <p>
-        In no event shall 42Chess, nor its directors, employees, partners, agents,
-        suppliers, or affiliates, be liable for any indirect, incidental,
-        special, consequential, or punitive damages, including without
-        limitation, loss of profits, data, use, goodwill, or other intangible
-        losses, resulting from:
+        In no event shall 42Chess, nor its directors, employees, partners,
+        agents, suppliers, or affiliates, be liable for any indirect,
+        incidental, special, consequential, or punitive damages, including
+        without limitation, loss of profits, data, use, goodwill, or other
+        intangible losses, resulting from:
       </p>
       <ul>
         <li>
@@ -129,7 +136,7 @@ export default function Page() {
       </p>
       <ul>
         <li>By email: support@42chess.mail</li>
-        <li>By visiting: URL</li>
+        <li>By visiting: {hostname}</li>
       </ul>
     </main>
   );
