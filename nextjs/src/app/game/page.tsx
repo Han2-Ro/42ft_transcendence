@@ -42,6 +42,7 @@ const socket: Socket<SToCEvents, CToSEvents> = io(
   {
     withCredentials: true,
     autoConnect: false,
+	transports: ["websocket"],
   },
 );
 
@@ -71,8 +72,7 @@ export default function Page() {
     });
 
     socket.on("connect_error", (err) => {
-      console.log("connect_error", err.message);
-      if (err.message === "Unauthorized") {
+      if (err.message === "Authentication error: Unauthorized") {
         console.log("You need to log in");
         setServerConnectionStatus("unauthorized");
       } else if (
@@ -81,7 +81,7 @@ export default function Page() {
         console.log("You are connected to the game server to many times");
         setServerConnectionStatus("TooManySocketsConnected");
       } else {
-        console.error("Couldn't connect to game server:", err.message);
+        console.log("Couldn't connect to game server:", err.message);
         setServerConnectionStatus("error");
       }
     });
@@ -154,10 +154,6 @@ export default function Page() {
         label: "Resign",
         onClick: emitPlayerResign,
         icon: <DeadKing size={20} className=" text-red-600" />,
-      },
-      {
-        label: "🤝 Offer Draw",
-        onClick: () => console.error("TODO: Not implemented yet"),
       },
     ]);
 
