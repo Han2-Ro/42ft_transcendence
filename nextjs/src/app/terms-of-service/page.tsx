@@ -1,11 +1,4 @@
-"use client";
-import { useState } from "react";
-
 export default function Page() {
-  const [hostname] = useState(() =>
-    typeof window !== "undefined" ? window.location.hostname : "",
-  );
-
   return (
     <main className="p-4 prose prose-invert">
       <h1>Terms of Service for 42Chess</h1>
@@ -15,10 +8,10 @@ export default function Page() {
 
       <h2>Agreement to Terms</h2>
       <p>
-        By accessing or using the services provided by 42Chess at {hostname}
-        (the &quot;Service&quot;), you agree to be bound by these Terms of
-        Service (&quot;Terms&quot;). If you disagree with any part of these
-        terms, you may not access the Service.
+        By accessing or using the services provided by 42Chess (the
+        &quot;Service&quot;), you agree to be bound by these Terms of Service
+        (&quot;Terms&quot;). If you disagree with any part of these terms, you
+        may not access the Service.
       </p>
 
       <h2>Use of Service</h2>
@@ -134,7 +127,6 @@ export default function Page() {
       </p>
       <ul>
         <li>By email: support@42chess.mail</li>
-        <li>By visiting: {hostname}</li>
       </ul>
     </main>
   );

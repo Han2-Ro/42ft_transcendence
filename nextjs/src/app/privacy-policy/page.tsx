@@ -1,10 +1,4 @@
-"use client";
-import { useState } from "react";
-
 export default function Page() {
-  const [hostname] = useState(() =>
-    typeof window !== "undefined" ? window.location.hostname : "",
-  );
   return (
     <main className="p-4 prose prose-invert">
       <h1>Privacy Policy for 42Chess</h1>
@@ -14,12 +8,12 @@ export default function Page() {
 
       <h2>Introduction</h2>
       <p>
-        42Chess (&quot;we,&quot; &quot;us,&quot; or &quot;our&quot;) operates{" "}
-        {hostname}
-        (the &quot;Service&quot;). This Privacy Policy explains how we collect,
-        use, disclose, and safeguard your information when you visit our
-        Service. Please read this privacy policy carefully. If you do not agree
-        with the terms of this privacy policy, please do not access the Service.
+        42Chess (&quot;we,&quot; &quot;us,&quot; or &quot;our&quot;) operates
+        this website and related services (the &quot;Service&quot;). This
+        Privacy Policy explains how we collect, use, disclose, and safeguard
+        your information when you visit our Service. Please read this privacy
+        policy carefully. If you do not agree with the terms of this privacy
+        policy, please do not access the Service.
       </p>
 
       <h2>Information We Collect</h2>
