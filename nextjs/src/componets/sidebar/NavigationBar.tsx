@@ -33,7 +33,9 @@ export default function NavigationBar() {
       </div>
       <div className="p-4 lg:py-10 flex flex-col items-center">
         <span>{user ? user.username : "Guest"}</span>
-        {user && level !== null && <span className="text-sm text-slate-500">Level {level}</span>}
+        {user && level !== null && (
+          <span className="text-sm text-slate-500">Level {level}</span>
+        )}
       </div>
     </div>
   );

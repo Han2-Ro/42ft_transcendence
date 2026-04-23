@@ -7,7 +7,6 @@ import { getSession } from "./session";
 import { generateSecret, generateURI, verify } from "otplib";
 import QRCode from "qrcode";
 import { createToken, getCookieOptions } from "./token";
-import { error } from "console";
 
 type ActionResult<T> =
   | { success: true; data: T }

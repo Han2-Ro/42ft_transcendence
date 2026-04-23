@@ -131,7 +131,7 @@ export default function Page() {
     setTimes(null);
     setBoardState(startingBoardState);
     setColor("white");
-	window.location.reload();
+    window.location.reload();
   };
 
   const emitPlayerMove = (move: Move) => {
