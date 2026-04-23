@@ -7,6 +7,7 @@ import {
   PieceType,
   Pos2,
   MoveChess,
+  EnPassantSquare,
 } from "../../gameTypes";
 
 export function validateMove(
@@ -56,7 +57,7 @@ function updateBoard(
   board: Board,
   move: MoveChess,
   turn: PlayerColor,
-): number | null {
+): EnPassantSquare {
   const piece = board[move.from];
   if (piece) piece.hasMoved = true;
   board[move.to] = board[move.from];
@@ -85,7 +86,7 @@ function updateBoard(
       if (move.promotion && piece) piece.type = move.promotion;
     }
     if (move.special == "double_move") {
-      return getEnPassantableSquare(move);
+      return getEnPassantableSquare(move, turn);
     }
     if (move.special == "en_passant") {
       if (turn == "black") {
@@ -98,7 +99,10 @@ function updateBoard(
   return null;
 }
 
-function getEnPassantableSquare(move: MoveChess): number {
+function getEnPassantableSquare(
+  move: MoveChess,
+  turn: PlayerColor,
+): EnPassantSquare {
   const from2d: Pos2 = { x: -1, y: -1 };
   from2d.x = (move.from % 8) + 1;
   from2d.y = Math.floor(move.from / 8) + 1;
@@ -108,13 +112,13 @@ function getEnPassantableSquare(move: MoveChess): number {
   to2d.y = Math.floor(move.to / 8) + 1;
 
   const sq2d: Pos2 = { x: (from2d.x + to2d.x) / 2, y: (from2d.y + to2d.y) / 2 };
-  return (sq2d.y - 1) * 8 + (sq2d.x - 1);
+  return { pos: (sq2d.y - 1) * 8 + (sq2d.x - 1), color: turn };
 }
 
 export function checkMates(
   board: Board,
   turn: PlayerColor,
-  enPassantSquare: number | null,
+  enPassantSquare: EnPassantSquare,
 ): GameStatus {
   const moves = generateAllMoves(board, turn, enPassantSquare);
   if (moves.length == 0) {
@@ -131,7 +135,7 @@ export function checkMates(
 export function generateAllMoves(
   board: Board,
   color: PlayerColor,
-  enPassantSquare: number | null,
+  enPassantSquare: EnPassantSquare,
 ): Array<MoveChess> {
   const moves: MoveChess[] = [];
   for (let sq = 0; sq < 64; sq++) {
@@ -146,7 +150,7 @@ export function generateAllMoves(
 export function generateMoves(
   board: Board,
   sq: number,
-  enPassantSquare: number | null,
+  enPassantSquare: EnPassantSquare,
 ): Array<MoveChess> {
   let moves: MoveChess[] = [];
 
@@ -185,7 +189,7 @@ function generatePawnMoves(
   sq: number,
   color: PlayerColor,
   hasMoved: boolean,
-  enPassantSquare: number | null,
+  enPassantSquare: EnPassantSquare,
 ): Array<MoveChess> {
   const moves: MoveChess[] = [];
   let dir = 1;
@@ -216,14 +220,20 @@ function generatePawnMoves(
   if (
     newPos != null &&
     ((checkSquare(board, newPos, color) && !checkSquareEmpty(board, newPos)) ||
-      newPos === enPassantSquare)
+      (enPassantSquare !== null &&
+        newPos === enPassantSquare.pos &&
+        color != enPassantSquare.color))
   ) {
     if (
       (color == "white" && newPos > -1 && newPos < 8) ||
       (color == "black" && newPos > 55 && newPos < 64)
     )
       moves.push({ from: sq, to: newPos, special: "promotion" });
-    else if (newPos === enPassantSquare)
+    else if (
+      enPassantSquare !== null &&
+      newPos === enPassantSquare.pos &&
+      color != enPassantSquare.color
+    )
       moves.push({ from: sq, to: newPos, special: "en_passant" });
     else moves.push({ from: sq, to: newPos, special: null });
   }
@@ -231,14 +241,20 @@ function generatePawnMoves(
   if (
     newPos != null &&
     ((checkSquare(board, newPos, color) && !checkSquareEmpty(board, newPos)) ||
-      newPos === enPassantSquare)
+      (enPassantSquare !== null &&
+        newPos === enPassantSquare.pos &&
+        color != enPassantSquare.color))
   ) {
     if (
       (color == "white" && newPos > -1 && newPos < 8) ||
       (color == "black" && newPos > 55 && newPos < 64)
     )
       moves.push({ from: sq, to: newPos, special: "promotion" });
-    else if (newPos === enPassantSquare)
+    else if (
+      enPassantSquare !== null &&
+      newPos === enPassantSquare.pos &&
+      color != enPassantSquare.color
+    )
       moves.push({ from: sq, to: newPos, special: "en_passant" });
     else moves.push({ from: sq, to: newPos, special: null });
   }
