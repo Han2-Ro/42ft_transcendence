@@ -485,7 +485,7 @@ export async function getUsername(id: number) {
   return { username: user.username };
 }
 
-export function xpToLevel(xp: number): number {
+export async function xpToLevel(xp: number): Promise<number> {
   return Math.floor(Math.sqrt(xp));
 }
 
