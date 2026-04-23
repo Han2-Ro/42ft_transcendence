@@ -34,7 +34,8 @@ export async function POST(req: NextRequest) {
   }
 
   const getStatUpdate = (color: "blue" | "green" | "yellow" | "red") => {
-    if (winner === "draw") return { draws: { increment: 1 }, xp: { increment: 1 } };
+    if (winner === "draw")
+      return { draws: { increment: 1 }, xp: { increment: 1 } };
     if (
       (winner === "blue" || winner === "green") &&
       (color === "blue" || color === "green")

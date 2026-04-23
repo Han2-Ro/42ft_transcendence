@@ -34,9 +34,11 @@ console.log("node nev", process.env.NODE_ENV);
 
 // Connect to the exposed backend port
 const socket: Socket<SToCEvents, CToSEvents> = io(
-  process.env.NODE_ENV === "development"
-    ? process.env.NEXT_PUBLIC_GAMESERVER_URL
-    : `https://${window.location.hostname}`,
+  typeof window !== "undefined"
+    ? process.env.NODE_ENV === "development"
+      ? process.env.NEXT_PUBLIC_GAMESERVER_URL
+      : `https://${window.location.hostname}`
+    : `https://localhost`,
   {
     withCredentials: true,
     autoConnect: false,

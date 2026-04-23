@@ -28,9 +28,11 @@ export async function POST(req: NextRequest) {
   }
 
   const getStatUpdate = (color: "white" | "black") => {
-    if (winner === color) return { wins: { increment: 1 } , xp: {increment: 2}};
-    if (winner === "draw") return { draws: { increment: 1 } , xp: {increment: 1}};
-    return { losses: { increment: 1 }, xp: {increment: 1}};
+    if (winner === color)
+      return { wins: { increment: 1 }, xp: { increment: 2 } };
+    if (winner === "draw")
+      return { draws: { increment: 1 }, xp: { increment: 1 } };
+    return { losses: { increment: 1 }, xp: { increment: 1 } };
   };
 
   try {
