@@ -36,19 +36,16 @@ console.log("node nev", process.env.NODE_ENV);
 const isBrowser = typeof window !== "undefined";
 
 const socketUrl = isBrowser
-  ? process.env.NODE_ENV === "development" 
-  ? process.env.NEXT_PUBLIC_GAME_SERVER_URL 
-  : `https://${window.location.hostname}`
+  ? process.env.NODE_ENV === "development"
+    ? process.env.NEXT_PUBLIC_GAME_SERVER_URL
+    : `https://${window.location.hostname}`
   : "";
 
-const socket: Socket<SToCEvents, CToSEvents> = io(
-  socketUrl,
-  {
-    withCredentials: true,
-    autoConnect: false,
-    transports: ["websocket"],
-  },
-);
+const socket: Socket<SToCEvents, CToSEvents> = io(socketUrl, {
+  withCredentials: true,
+  autoConnect: false,
+  transports: ["websocket"],
+});
 
 export default function Page() {
   const [gameId, setGameId] = useState<string | null>(null);
