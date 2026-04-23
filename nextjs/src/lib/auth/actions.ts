@@ -174,6 +174,11 @@ export async function changeUsername(
   const session = await getSession();
   const user = await prisma.user.findUnique({ where: { id: session?.userId } });
   if (!user) return { success: false, error: "User not found" };
+  const usernameExists = await prisma.user.findUnique({
+    where: { username: newUsername },
+  });
+  if (usernameExists)
+    return { success: false, error: "Username already taken." };
   const userId = session?.userId;
 
   try {

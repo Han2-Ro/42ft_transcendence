@@ -3,13 +3,20 @@
 import MainMenu from "./MainMenu";
 import { HamburgerMenuIcon } from "../icons/HamburgerMenuIcon";
 import { CloseIcon } from "../icons/CloseIcon";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuthConetxt } from "../AuthProvider";
 import { Popup } from "../Popup";
+import { getLevel } from "@/lib/auth/actions";
 
 export default function NavigationBar() {
   const [showMenu, setShowMenu] = useState(false);
   const { user } = useAuthConetxt();
+  const [level, setLevel] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (!user) return;
+    getLevel().then(setLevel);
+  }, [user]);
 
   return (
     <div className="lg:w-40 bg-background-secondary flex flex-row lg:flex-col justify-between items-center">
@@ -24,7 +31,10 @@ export default function NavigationBar() {
       <div className="hidden lg:block h-full w-full">
         <MainMenu />
       </div>
-      <div className="p-4 lg:py-10">{user ? user.username : "Guest"}</div>
+      <div className="p-4 lg:py-10 flex flex-col items-center">
+        <span>{user ? user.username : "Guest"}</span>
+        {user && level !== null && <span className="text-sm text-slate-500">Level {level}</span>}
+      </div>
     </div>
   );
 }

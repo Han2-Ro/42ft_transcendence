@@ -7,7 +7,6 @@ import { TextInput } from "@/componets/TextInput";
 import {
   changePassword,
   changeUsername,
-  setup2FA,
   unlinkFortyTwo,
 } from "@/lib/auth/actions";
 import { useState } from "react";
