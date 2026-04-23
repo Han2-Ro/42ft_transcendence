@@ -20,7 +20,7 @@ export default async function Home({
         <ErrorMessage errorMsg="This 42 account is already linked to another 42Chess account."></ErrorMessage>
       )}
       {error === "42_no_acc_linked" && (
-        <ErrorMessage errorMsg="No 42chess account is linked to this 42account."></ErrorMessage>
+        <ErrorMessage errorMsg="No 42Chess account is linked to this 42 account."></ErrorMessage>
       )}
       <p className="text-4xl">Better than chess.com!</p>
       <section className="lg:grid lg:grid-cols-2 py-10 gap-10 w-full">

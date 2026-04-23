@@ -173,6 +173,11 @@ export async function changeUsername(
   const session = await getSession();
   const user = await prisma.user.findUnique({ where: { id: session?.userId } });
   if (!user) return { success: false, error: "User not found" };
+  const usernameExists = await prisma.user.findUnique({
+    where: { username: newUsername },
+  });
+  if (usernameExists)
+    return { success: false, error: "Username already taken." };
   const userId = session?.userId;
 
   try {
@@ -472,4 +477,31 @@ export async function connectGameHistory() {
         reason: connectGame.reason,
       };
     });
+}
+
+export async function getUsername(id: number) {
+  const session = await getSession();
+  if (!session) return { error: "Not logged in." };
+
+  const user = await prisma.user.findUnique({ where: { id: id } });
+  if (!user) return { error: "Unknown" };
+
+  return { username: user.username };
+}
+
+export async function xpToLevel(xp: number): Promise<number> {
+  return Math.floor(Math.sqrt(xp));
+}
+
+export async function getLevel(): Promise<number | null> {
+  const session = await getSession();
+  if (!session) return null;
+
+  const user = await prisma.user.findUnique({
+    where: { id: session.userId },
+    select: { xp: true },
+  });
+
+  if (!user) return null;
+  return xpToLevel(user.xp);
 }
