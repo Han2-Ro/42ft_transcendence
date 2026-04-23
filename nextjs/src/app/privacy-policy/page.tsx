@@ -2,8 +2,8 @@
 import { useState } from "react";
 
 export default function Page() {
-  const [hostname] = useState(() => 
-    typeof window !== 'undefined' ? window.location.hostname : ''
+  const [hostname] = useState(() =>
+    typeof window !== "undefined" ? window.location.hostname : "",
   );
   return (
     <main className="p-4 prose prose-invert">
