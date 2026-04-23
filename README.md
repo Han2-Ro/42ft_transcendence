@@ -81,5 +81,6 @@ There are end-to-end tests with playwright in `./tests/`:
 - `pnpm --filter tests exec playwright install` to install playwright
 - `pnpm test` to execute them
 - `pnpm test:ui` to see what the tests are doing
+- For timed-mode E2E tests, set `GAME_TIMED_MODE_SECONDS` (e.g. `8`) before `make run` to avoid long waits
 
 It will be much apreciated if you write tests for everything you implement!

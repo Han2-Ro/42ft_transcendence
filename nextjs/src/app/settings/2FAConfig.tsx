@@ -97,7 +97,7 @@ export default function Config2FA({ checked }: { checked: boolean }) {
           {dialogMode === "enable" && (
             <>
               <p className="mb-8">
-                Scan the QR Code with your Authenitcator App and enter the 6
+                Scan the QR Code with your Authenticator App and enter the 6
                 digit code below.
               </p>
               {qrCode ? (

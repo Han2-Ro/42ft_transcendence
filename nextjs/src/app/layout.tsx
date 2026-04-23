@@ -37,7 +37,7 @@ export default async function RootLayout({
         <AuthProvider initialUser={user}>
           <SidebarActionsProvider>
             <NavigationBar />
-            <div className="w-full min-h-full flex flex-col flex-1 bg-background-primary">
+            <div className="w-full h-screen overflow-y-auto flex flex-col flex-1 bg-background-primary">
               <div className="flex-1">{children}</div>
               <Footer />
             </div>

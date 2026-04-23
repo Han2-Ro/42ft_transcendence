@@ -6,6 +6,25 @@ import { FourPlayerChess } from "../games/4pChess/4pChess.js";
 import { GameSocket, Player } from "../../server.js";
 import { ConnectFour } from "../games/connectFour/connectFour.js";
 
+const DEFAULT_TIMED_MODE_SECONDS = 600;
+
+function getTimedModeSeconds(): number {
+  const override = process.env.GAME_TIMED_MODE_SECONDS;
+  if (override === undefined || override.trim() === "") {
+    return DEFAULT_TIMED_MODE_SECONDS;
+  }
+
+  const parsed = Number(override);
+  if (!Number.isFinite(parsed) || parsed <= 0) {
+    console.log(
+      `Invalid GAME_TIMED_MODE_SECONDS="${override}", falling back to ${DEFAULT_TIMED_MODE_SECONDS}`,
+    );
+    return DEFAULT_TIMED_MODE_SECONDS;
+  }
+
+  return parsed;
+}
+
 export type GameStatus =
   | "checkmate"
   | "timeout"
@@ -37,7 +56,8 @@ export class Room {
       this.order = ["white", "black"];
       if (type == "timedChess") {
         this.timed = true;
-        this.playerTimes = [600, 600];
+        const timedModeSeconds = getTimedModeSeconds();
+        this.playerTimes = [timedModeSeconds, timedModeSeconds];
       } else {
         this.timed = false;
         this.playerTimes = [-1, -1];
@@ -48,7 +68,13 @@ export class Room {
       this.order = ["red", "blue", "yellow", "green"];
       if (type == "4pTimedChess") {
         this.timed = true;
-        this.playerTimes = [600, 600, 600, 600];
+        const timedModeSeconds = getTimedModeSeconds();
+        this.playerTimes = [
+          timedModeSeconds,
+          timedModeSeconds,
+          timedModeSeconds,
+          timedModeSeconds,
+        ];
       } else {
         this.timed = false;
         this.playerTimes = [-1, -1, -1, -1];
@@ -59,7 +85,8 @@ export class Room {
       this.order = ["yellow", "red"];
       if (type == "timedConnect4") {
         this.timed = true;
-        this.playerTimes = [600, 600];
+        const timedModeSeconds = getTimedModeSeconds();
+        this.playerTimes = [timedModeSeconds, timedModeSeconds];
       } else {
         this.timed = false;
         this.playerTimes = [-1, -1];
