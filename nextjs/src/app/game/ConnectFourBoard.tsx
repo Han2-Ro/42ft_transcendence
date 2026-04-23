@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Move, PlayerColor, BoardStateCon4 } from "shared";
+import { PlayerCard } from "./PlayerCard";
 
 const COLS = 7;
 const ROWS = 6;
@@ -54,103 +55,123 @@ export default function ConnectFourBoard({
   }, []);
 
   return (
-    <div className="relative w-[min(100vw,56vh)] md:w-[min(50vw,70vh)] aspect-7/6 overflow-hidden">
-      <div className="absolute inset-3">
-        {boardState.board.map((square, index) => {
-          const cell = getCellLayout(index);
-          return (
-            <div
-              key={index}
-              className="absolute"
-              style={{
-                left: `${(cell.x / SVG_W) * 100}%`,
-                top: `${(cell.y / SVG_H) * 100}%`,
-                width: `${(cell.w / SVG_W) * 100}%`,
-                height: `${(cell.h / SVG_H) * 100}%`,
-              }}
-            >
+    <div className="flex items-center justify-center gap-4">
+      <div className="relative w-[min(100vw,56vh)] md:w-[min(50vw,70vh)] aspect-7/6 overflow-hidden">
+        <div className="absolute inset-3">
+          {boardState.board.map((square, index) => {
+            const cell = getCellLayout(index);
+            return (
               <div
-                className={`absolute inset-[12%] rounded-full transition-all duration-500 ease-in ${
-                  square === "empty"
-                    ? "opacity-0 -translate-y-[700%]"
-                    : `${square === "yellow" ? "bg-yellow-400" : "bg-red-600"} opacity-100 ${mounted ? "translate-y-0" : "-translate-y-[700%]"}`
-                }`}
-              />
-            </div>
-          );
-        })}
-      </div>
-
-      <svg
-        className="absolute text-blue-800 inset-3 w-[calc(100%-1.5rem)] h-[calc(100%-1.5rem)] pointer-events-none"
-        viewBox={`0 0 ${SVG_W} ${SVG_H}`}
-        preserveAspectRatio="none"
-        aria-hidden
-      >
-        <defs>
-          <mask id="connect4-holes-mask">
-            <rect x="0" y="0" width={SVG_W} height={SVG_H} fill="white" />
-            {Array.from({ length: ROWS * COLS }, (_, i) => {
-              const cell = getCellLayout(i);
-              return (
-                <circle
-                  key={i}
-                  cx={cell.cx}
-                  cy={cell.cy}
-                  r={HOLE_R}
-                  fill="black"
+                key={index}
+                className="absolute"
+                style={{
+                  left: `${(cell.x / SVG_W) * 100}%`,
+                  top: `${(cell.y / SVG_H) * 100}%`,
+                  width: `${(cell.w / SVG_W) * 100}%`,
+                  height: `${(cell.h / SVG_H) * 100}%`,
+                }}
+              >
+                <div
+                  className={`absolute inset-[12%] rounded-full transition-all duration-500 ease-in ${
+                    square === "empty"
+                      ? "opacity-0 -translate-y-[700%]"
+                      : `${square === "yellow" ? "bg-yellow-400" : "bg-red-600"} opacity-100 ${mounted ? "translate-y-0" : "-translate-y-[700%]"}`
+                  }`}
                 />
-              );
-            })}
-          </mask>
-        </defs>
-        <rect
-          x={BOARD_INSET}
-          y={BOARD_INSET}
-          width={SVG_W - BOARD_STROKE}
-          height={SVG_H - BOARD_STROKE}
-          rx="25"
-          ry="25"
-          fill="currentColor"
-          mask="url(#connect4-holes-mask)"
-          stroke="#aaaadd"
-          strokeWidth={BOARD_STROKE}
-          strokeLinejoin="round"
-        />
-        {Array.from({ length: ROWS * COLS }, (_, i) => {
-          const cell = getCellLayout(i);
-          return (
-            <circle
-              key={`ring-${i}`}
-              cx={cell.cx}
-              cy={cell.cy}
-              r={HOLE_R}
-              fill="none"
-              stroke="#aaaadd"
-              strokeWidth="3"
-            />
-          );
-        })}
-      </svg>
+              </div>
+            );
+          })}
+        </div>
 
-      <div className="absolute inset-3">
-        {boardState.board.map((_, index) => {
-          const cell = getCellLayout(index);
-          return (
-            <button
-              key={index}
-              className="absolute opacity-25 rounded-md hover:bg-black"
-              style={{
-                left: `${(cell.x / SVG_W) * 100}%`,
-                top: `${(cell.y / SVG_H) * 100}%`,
-                width: `${(cell.w / SVG_W) * 100}%`,
-                height: `${(cell.h / SVG_H) * 100}%`,
-              }}
-              onClick={() => onPlayerMove(index % 7)}
-              aria-label={`Drop chip in column ${(index % 7) + 1}`}
-            />
-          );
-        })}
+        <svg
+          className="absolute text-blue-800 inset-3 w-[calc(100%-1.5rem)] h-[calc(100%-1.5rem)] pointer-events-none"
+          viewBox={`0 0 ${SVG_W} ${SVG_H}`}
+          preserveAspectRatio="none"
+          aria-hidden
+        >
+          <defs>
+            <mask id="connect4-holes-mask">
+              <rect x="0" y="0" width={SVG_W} height={SVG_H} fill="white" />
+              {Array.from({ length: ROWS * COLS }, (_, i) => {
+                const cell = getCellLayout(i);
+                return (
+                  <circle
+                    key={i}
+                    cx={cell.cx}
+                    cy={cell.cy}
+                    r={HOLE_R}
+                    fill="black"
+                  />
+                );
+              })}
+            </mask>
+          </defs>
+          <rect
+            x={BOARD_INSET}
+            y={BOARD_INSET}
+            width={SVG_W - BOARD_STROKE}
+            height={SVG_H - BOARD_STROKE}
+            rx="25"
+            ry="25"
+            fill="currentColor"
+            mask="url(#connect4-holes-mask)"
+            stroke="#aaaadd"
+            strokeWidth={BOARD_STROKE}
+            strokeLinejoin="round"
+          />
+          {Array.from({ length: ROWS * COLS }, (_, i) => {
+            const cell = getCellLayout(i);
+            return (
+              <circle
+                key={`ring-${i}`}
+                cx={cell.cx}
+                cy={cell.cy}
+                r={HOLE_R}
+                fill="none"
+                stroke="#aaaadd"
+                strokeWidth="3"
+              />
+            );
+          })}
+        </svg>
+
+        <div className="absolute inset-3">
+          {boardState.board.map((_, index) => {
+            const cell = getCellLayout(index);
+            return (
+              <button
+                key={index}
+                className="absolute opacity-25 rounded-md hover:bg-black"
+                style={{
+                  left: `${(cell.x / SVG_W) * 100}%`,
+                  top: `${(cell.y / SVG_H) * 100}%`,
+                  width: `${(cell.w / SVG_W) * 100}%`,
+                  height: `${(cell.h / SVG_H) * 100}%`,
+                }}
+                onClick={() => onPlayerMove(index % 7)}
+                aria-label={`Drop chip in column ${(index % 7) + 1}`}
+              />
+            );
+          })}
+        </div>
+      </div>
+      <div className="flex flex-col gap-4">
+        <PlayerCard
+          testId="player-card-opponent"
+          name={playerColor === "yellow" ? "Yellow Player" : "Red Player"}
+          color={playerColor === "white" ? "black" : "white"}
+          isTurn={boardState.turn != playerColor}
+          time={times[playerColor === "white" ? 1 : 0]}
+          isTimed={times[playerColor === "white" ? 1 : 0] !== -1}
+        />
+        <PlayerCard
+          testId="player-card-self"
+          name={playerColor === "yellow" ? "Yellow Player" : "Yellow Player"}
+          color={playerColor}
+          isTurn={boardState.turn === playerColor}
+          time={times[playerColor === "white" ? 0 : 1]}
+          isTimed={times[playerColor === "white" ? 0 : 1] !== -1}
+        />
       </div>
     </div>
   );
