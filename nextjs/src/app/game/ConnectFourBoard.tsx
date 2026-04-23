@@ -25,7 +25,7 @@ export default function ConnectFourBoard({
   }, []);
 
   return (
-    <div className="relative w-[min(100vw,56vh)] md:w-[min(50vw,70vh)] aspect-7/6 p-3 overflow-hidden">
+    <div className="relative w-[min(100vw,56vh)] md:w-[min(50vw,70vh)] aspect-7/6 overflow-hidden">
       <div className="absolute inset-3 grid grid-cols-7 grid-rows-6 gap-0">
         {boardState.board.map((square, index) => (
           <div key={index} className="relative">
@@ -41,7 +41,7 @@ export default function ConnectFourBoard({
       </div>
 
       <svg
-        className="absolute inset-3 w-[calc(100%-1.5rem)] h-[calc(100%-1.5rem)] pointer-events-none"
+        className="absolute text-blue-800 inset-3 w-[calc(100%-1.5rem)] h-[calc(100%-1.5rem)] pointer-events-none"
         viewBox="0 0 700 600"
         preserveAspectRatio="none"
         aria-hidden
@@ -71,7 +71,7 @@ export default function ConnectFourBoard({
           height="600"
           rx="28"
           ry="28"
-          fill="#1d4ed8"
+          fill="currentColor"
           mask="url(#connect4-holes-mask)"
         />
       </svg>
@@ -80,7 +80,7 @@ export default function ConnectFourBoard({
         {boardState.board.map((_, index) => (
           <button
             key={index}
-            className="w-full h-full"
+            className="w-full h-full opacity-25 rounded-md hover:bg-black"
             onClick={() => onPlayerMove(index % 7)}
             aria-label={`Drop chip in column ${(index % 7) + 1}`}
           />
