@@ -88,6 +88,11 @@ export default function Page() {
               required
               disabled={loading}
             />
+            {error && (
+              <div className="mb-4 p-2 bg-red-500/20 text-red-500 rounded">
+                {error}
+              </div>
+            )}
             <div className="flex flex-row mt-8 gap-4">
               <Button
                 className="flex-1 bg-background-primary"
