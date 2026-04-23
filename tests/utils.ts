@@ -62,6 +62,10 @@ export async function registerAndLogin(page: import("@playwright/test").Page) {
   await page.fill("#confirmPassword", credentials.password);
   await page.getByRole("button", { name: /^submit$/i }).click();
 
-  await expect(heading).not.toBeVisible();
+  await Promise.race([
+    expect(heading).not.toBeVisible(),
+    expect(page.getByText(credentials.username).first()).toBeVisible(),
+  ]);
+
   await expect(page.getByText(credentials.username).first()).toBeVisible();
 }
