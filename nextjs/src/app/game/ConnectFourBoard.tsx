@@ -65,15 +65,33 @@ export default function ConnectFourBoard({
           </mask>
         </defs>
         <rect
-          x="0"
-          y="0"
-          width="700"
-          height="600"
-          rx="28"
-          ry="28"
+          x="3"
+          y="3"
+          width="694"
+          height="594"
+          rx="25"
+          ry="25"
           fill="currentColor"
           mask="url(#connect4-holes-mask)"
+          stroke="#aaaadd"
+          strokeWidth="3"
+          strokeLinejoin="round"
         />
+        {Array.from({ length: ROWS * COLS }, (_, i) => {
+          const col = i % COLS;
+          const row = Math.floor(i / COLS);
+          return (
+            <circle
+              key={`ring-${i}`}
+              cx={col * 100 + 50}
+              cy={row * 100 + 50}
+              r={36}
+              fill="none"
+              stroke="#aaaadd"
+              strokeWidth="3"
+            />
+          );
+        })}
       </svg>
 
       <div className="absolute inset-3 grid grid-cols-7 grid-rows-6 gap-0">
