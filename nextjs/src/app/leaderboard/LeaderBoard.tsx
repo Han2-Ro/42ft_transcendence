@@ -1,5 +1,6 @@
 "use client";
 
+import { getWinRatio } from "@/lib/getWinRation";
 import { useMemo, useState } from "react";
 
 /* const sampleEntries: LeaderBoardEntry[] = [
@@ -21,16 +22,6 @@ export type LeaderBoardEntry = {
 
 type SortKey = "username" | "wins" | "losses" | "draws" | "winRatio";
 type SortDirection = "asc" | "desc";
-
-function getWinRatio(entry: LeaderBoardEntry): number {
-  const totalGames = entry.wins + entry.losses + entry.draws;
-
-  if (totalGames === 0) {
-    return 0;
-  }
-
-  return (0.5 * entry.draws + entry.wins) / totalGames;
-}
 
 export default function LeaderBoard({
   maxEntries = Infinity,
