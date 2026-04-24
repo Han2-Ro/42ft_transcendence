@@ -13,11 +13,11 @@ async function move(page: Page, from: number, to: number) {
   const chessBoard = await board(page);
   const fromSquare = chessBoard.locator("button").nth(from);
   const toSquare = chessBoard.locator("button").nth(to);
-  await fromSquare.click();
+  await fromSquare.evaluate((el) => (el as HTMLElement).click());
   await expect(
     toSquare.getByAltText(/position that the selected piece can move to\./i),
   ).toBeVisible();
-  await toSquare.click();
+  await toSquare.evaluate((el) => (el as HTMLElement).click());
 }
 
 async function moveApplied(
@@ -208,8 +208,8 @@ test("promotion requires explicit selection and uses chosen piece", async ({
     await expect(await pieceAltAt(whitePage, 9)).toBe("whitepawn");
     await expect(await pieceAltAt(whitePage, 0)).toBe("blackrook");
     const whiteBoard = await board(whitePage);
-    await whiteBoard.locator("button").nth(9).click();
-    await whiteBoard.locator("button").nth(0).click();
+    await whiteBoard.locator("button").nth(9).evaluate((el) => (el as HTMLElement).click());
+    await whiteBoard.locator("button").nth(0).evaluate((el) => (el as HTMLElement).click());
     await expect(promoteToKnight).toBeVisible();
 
     await expect(
