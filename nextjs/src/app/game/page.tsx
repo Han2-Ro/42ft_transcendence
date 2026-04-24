@@ -60,7 +60,7 @@ export default function Page() {
     useState<ConnectionStatus>("waiting");
   const { setActions, clearActions } = useSidebarActions();
 
-  const { user } = useAuthConetxt();
+  const { user, refreshUser } = useAuthConetxt();
 
   useEffect(() => {
     console.log("trying to connect socket");
@@ -141,7 +141,7 @@ export default function Page() {
     setTimes(null);
     setBoardState(startingBoardState);
     setColor("white");
-    window.location.reload();
+    refreshUser();
   };
 
   const emitPlayerMove = (move: Move) => {

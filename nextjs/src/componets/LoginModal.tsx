@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { useAuthConetxt } from "./AuthProvider";
 import { login, login2FA, register } from "@/lib/auth/actions";
 import { Popup } from "./Popup";
@@ -18,7 +17,6 @@ export const AuthModal = ({ onClose }: Props) => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [userId2FA, setuserId2FA] = useState<number | null>(null);
-  const router = useRouter();
   const { refreshUser } = useAuthConetxt();
 
   const handleRegister = async (formData: FormData) => {
@@ -41,7 +39,6 @@ export const AuthModal = ({ onClose }: Props) => {
     }
     onClose();
     await refreshUser();
-    await router.refresh();
   };
 
   const handleLogin = async (formData: FormData) => {
@@ -59,7 +56,6 @@ export const AuthModal = ({ onClose }: Props) => {
     }
     onClose();
     await refreshUser();
-    await router.refresh();
   };
 
   const handle2faLogin = async (formData: FormData) => {
@@ -75,7 +71,6 @@ export const AuthModal = ({ onClose }: Props) => {
     }
     onClose();
     await refreshUser();
-    await router.refresh();
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
