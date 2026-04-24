@@ -505,3 +505,21 @@ export async function getLevel(): Promise<number | null> {
   if (!user) return null;
   return xpToLevel(user.xp);
 }
+
+export async function getUserStats(user: string) {
+  const userLookup = await prisma.user.findUnique({
+    where: { username: user },
+    select: {
+      username: true,
+      wins: true,
+      losses: true,
+      draws: true,
+      connectWins: true,
+      connectLosses: true,
+      connectDraws: true,
+    },
+  });
+  if (!userLookup) return { error: "User not found." };
+
+  return { userLookup };
+}
