@@ -61,7 +61,7 @@ io.use((socket, next) => {
       if (player === undefined) {
         players.set(socket.data.user, {
           sockets: [socket],
-          playerid: socket.data.user,
+          playerid: session.userId,
           status: "lobby",
           game_id: null,
           searching: [],

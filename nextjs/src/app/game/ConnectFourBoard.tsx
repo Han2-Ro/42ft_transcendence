@@ -41,11 +41,13 @@ export default function ConnectFourBoard({
   onPlayerMove,
   playerColor,
   times,
+  usernames,
 }: {
   boardState: BoardStateCon4;
   onPlayerMove: (move: Move) => void;
   playerColor: PlayerColor;
   times: number[];
+  usernames?: Partial<Record<PlayerColor, string>>;
 }) {
   const [mounted, setMounted] = useState(false);
 
@@ -158,19 +160,19 @@ export default function ConnectFourBoard({
       <div className="flex flex-col gap-4">
         <PlayerCard
           testId="player-card-opponent"
-          name={playerColor === "yellow" ? "Yellow Player" : "Red Player"}
-          color={playerColor === "white" ? "black" : "white"}
+          name={usernames?.[playerColor === "yellow" ? "red" : "yellow"] ?? (playerColor === "yellow" ? "Red Player" : "Yellow Player")}
+          color={playerColor === "yellow" ? "red" : "yellow"}
           isTurn={boardState.turn != playerColor}
-          time={times[playerColor === "white" ? 1 : 0]}
-          isTimed={times[playerColor === "white" ? 1 : 0] !== -1}
+          time={times[playerColor === "yellow" ? 1 : 0]}
+          isTimed={times[playerColor === "yellow" ? 1 : 0] !== -1}
         />
         <PlayerCard
           testId="player-card-self"
-          name={playerColor === "yellow" ? "Yellow Player" : "Yellow Player"}
+          name={usernames?.[playerColor] ?? (playerColor === "yellow" ? "Yellow Player" : "Red Player")}
           color={playerColor}
           isTurn={boardState.turn === playerColor}
-          time={times[playerColor === "white" ? 0 : 1]}
-          isTimed={times[playerColor === "white" ? 0 : 1] !== -1}
+          time={times[playerColor === "yellow" ? 0 : 1]}
+          isTimed={times[playerColor === "yellow" ? 0 : 1] !== -1}
         />
       </div>
     </div>
