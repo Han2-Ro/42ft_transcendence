@@ -25,6 +25,7 @@ services:
       - NEXT_PUBLIC_GAMESERVER_URL=${NEXT_PUBLIC_GAMESERVER_URL}
       - SERVICE_URL_NEXTJS=${SERVICE_URL_NEXTJS:-http://localhost:${PORT}}
       - MAX_USERS=${MAX_USERS}
+      - COOLIFY_GAMESERVER_URL=${COOLIFY_GAMESERVER_URL}
     env_file:
       - .env
 
