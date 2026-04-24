@@ -89,12 +89,6 @@ export default function TwoPlayerBoard({
     setPendingPromotionMove(null);
   };
 
-  const formatTime = (time: number): string => {
-    const minutes = Math.floor(time / 60);
-    const seconds = Math.round(time % 60);
-    return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
-  };
-
   return (
     <div className="flex items-center justify-center gap-4">
       <div className={`${playerColor === "black" ? "rotate-180" : ""}`}>
@@ -104,16 +98,10 @@ export default function TwoPlayerBoard({
               key={index}
               onClick={() => handleSquareClick(index)}
               disabled={pendingPromotionMove !== null}
-              className="relative"
+              className={`relative ${index === selectedSquare ? "inset-ring-4 inset-ring-accent-primary" : ""}`}
               style={{
                 background:
-                  (index + Math.floor(index / 8)) % 2 === 1
-                    ? selectedSquare === index
-                      ? "#4b4b4bff"
-                      : "#202020ff"
-                    : selectedSquare === index
-                      ? "#aaaaaaff"
-                      : "#eee",
+                  (index + Math.floor(index / 8)) % 2 === 1 ? "#656" : "#fff",
               }}
             >
               {sq && (
@@ -121,8 +109,8 @@ export default function TwoPlayerBoard({
                   width="45"
                   height="45"
                   src={`/chess/${sq.color}/${sq.type}.svg`}
-                  alt={sq.color + sq.type}
-                  className={`w-full h-full ${playerColor === "black" ? "rotate-180" : ""}`}
+                  alt={sq.color + " " + sq.type}
+                  className={`size-full ${playerColor === "black" ? "rotate-180" : ""} ${index === selectedSquare ? "scale-110" : ""}`}
                 />
               )}
               {movesFromSquareInt &&
