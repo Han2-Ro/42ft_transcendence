@@ -33,19 +33,28 @@ const turnDotStyles: Record<PlayerColor, string> = {
 };
 console.log("node nev", process.env.NODE_ENV);
 
+function getGameServerUrl() {
+  if (process.env.COOLIFY_GAMESERVER_URL) {
+    return process.env.COOLIFY_GAMESERVER_URL;
+  }
+  if (
+    process.env.NODE_ENV === "development" &&
+    process.env.NEXT_PUBLIC_GAMESERVER_URL
+  ) {
+    return process.env.NEXT_PUBLIC_GAMESERVER_URL;
+  }
+  if (typeof window !== "undefined") {
+    return window.location.hostname;
+  }
+  return "https://localhost";
+}
+
 // Connect to the exposed backend port
-const socket: Socket<SToCEvents, CToSEvents> = io(
-  typeof window !== "undefined"
-    ? process.env.NODE_ENV === "development"
-      ? process.env.NEXT_PUBLIC_GAMESERVER_URL
-      : `https://${window.location.hostname}`
-    : `https://localhost`,
-  {
-    withCredentials: true,
-    autoConnect: false,
-    transports: ["websocket"],
-  },
-);
+const socket: Socket<SToCEvents, CToSEvents> = io(getGameServerUrl(), {
+  withCredentials: true,
+  autoConnect: false,
+  transports: ["websocket"],
+});
 
 export default function Page() {
   const [gameId, setGameId] = useState<string | null>(null);
@@ -87,7 +96,10 @@ export default function Page() {
         console.log("You are connected to the game server to many times");
         setServerConnectionStatus("TooManySocketsConnected");
       } else {
-        console.log("Couldn't connect to game server:", err.message);
+        console.log(
+          `Couldn't connect to game server at '${getGameServerUrl()}':`,
+          err.message,
+        );
         setServerConnectionStatus("error");
       }
     });

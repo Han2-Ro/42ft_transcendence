@@ -7,16 +7,6 @@ import AuthProvider from "@/componets/AuthProvider";
 import SidebarActionsProvider from "@/componets/sidebar/SidebarActionsProvider";
 import Footer from "./Footer";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
 export const metadata: Metadata = {
   title: "Chess 42",
   description: "Better than chess.com",
@@ -31,9 +21,7 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} min-h-screen antialiased flex flex-col lg:flex-row`}
-      >
+      <body className={`min-h-screen antialiased flex flex-col lg:flex-row`}>
         <AuthProvider initialUser={user}>
           <SidebarActionsProvider>
             <NavigationBar />
