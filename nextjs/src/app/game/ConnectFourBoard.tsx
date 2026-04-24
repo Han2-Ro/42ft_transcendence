@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Move, PlayerColor, BoardStateCon4 } from "shared";
 import { PlayerCard } from "./PlayerCard";
+import { useGameClock } from "./useGameClock";
 
 const COLS = 7;
 const ROWS = 6;
@@ -53,6 +54,10 @@ export default function ConnectFourBoard({
     const id = requestAnimationFrame(() => setMounted(true));
     return () => cancelAnimationFrame(id);
   }, []);
+
+
+const activePlayerIndex = boardState.turn === "yellow" ? 0 : 1;
+const { getDisplayTime } = useGameClock(times, activePlayerIndex);
 
   return (
     <div className="flex items-center justify-center gap-4">

@@ -9,9 +9,11 @@ import {
   BoardStateChess,
   MoveChess,
 } from "shared";
+
 import Image from "next/image";
 import { PromotionDialog } from "./PromotionDialog";
 import { PlayerCard } from "./PlayerCard";
+import { useGameClock } from "./useGameClock";
 
 export default function TwoPlayerBoard({
   boardState,
@@ -93,6 +95,9 @@ export default function TwoPlayerBoard({
     return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
   };
 
+  const activePlayerIndex = boardState.turn === "white" ? 0 : 1;
+  const { getDisplayTime } = useGameClock(times, activePlayerIndex);
+
   return (
     <div className="flex items-center justify-center gap-4">
       <div className={`${playerColor === "black" ? "rotate-180" : ""}`}>
@@ -145,7 +150,7 @@ export default function TwoPlayerBoard({
             name={playerColor === "white" ? "Black Player" : "White Player"}
             color={playerColor === "white" ? "black" : "white"}
             isTurn={boardState.turn != playerColor}
-            time={times[playerColor === "white" ? 1 : 0]}
+            time={getDisplayTime(playerColor === "white" ? 1 : 0)}
             isTimed={times[playerColor === "white" ? 1 : 0] !== -1}
           />
           <PlayerCard
@@ -153,7 +158,7 @@ export default function TwoPlayerBoard({
             name={playerColor === "white" ? "White Player" : "Black Player"}
             color={playerColor}
             isTurn={boardState.turn === playerColor}
-            time={times[playerColor === "white" ? 0 : 1]}
+            time={getDisplayTime(playerColor === "white" ? 0 : 1)}
             isTimed={times[playerColor === "white" ? 0 : 1] !== -1}
           />
         </div>
