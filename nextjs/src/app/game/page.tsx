@@ -142,7 +142,6 @@ export default function Page() {
     setBoardState(startingBoardState);
     setColor("white");
     refreshUser();
-    window.location.reload(); //TODO: test if refreshUser (above) is enough, if yes -> remove window reload
   };
 
   const emitPlayerMove = (move: Move) => {
