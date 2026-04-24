@@ -28,7 +28,7 @@ export interface SToCEvents {
     type: Games;
     boardState: BoardState;
     times: number[];
-    playerIDs: number[];
+    players: Record<PlayerColor, number>;
   }) => void;
 
   setSearching: (type: Games[]) => void;

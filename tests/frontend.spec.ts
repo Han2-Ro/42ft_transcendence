@@ -40,10 +40,10 @@ test("find match and resign", async ({ browser }) => {
   );
 
   await Promise.all([
-    expect(page1.getByText(/white player/i)).toBeVisible({ timeout: 15000 }),
-    expect(page1.getByText(/black player/i)).toBeVisible({ timeout: 15000 }),
-    expect(page2.getByText(/white player/i)).toBeVisible({ timeout: 15000 }),
-    expect(page2.getByText(/black player/i)).toBeVisible({ timeout: 15000 }),
+    expect(page1.getByText(/WHITE/i).first()).toBeVisible({ timeout: 15000 }),
+    expect(page1.getByText(/BLACK/i).first()).toBeVisible({ timeout: 15000 }),
+    expect(page2.getByText(/WHITE/i).first()).toBeVisible({ timeout: 15000 }),
+    expect(page2.getByText(/BLACK/i).first()).toBeVisible({ timeout: 15000 }),
   ]);
 
   await clickMenuAction(page1, /resign/i);

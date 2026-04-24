@@ -12,6 +12,7 @@ import { Result as GameResult } from "shared";
 import { useSidebarActions } from "@/componets/sidebar/SidebarActionsProvider";
 import { DeadKing } from "@/componets/icons/DeadKing";
 import { useAuthConetxt } from "@/componets/AuthProvider";
+import { getUsername } from "@/lib/auth/actions";
 
 const turnBadgeStyles: Record<PlayerColor, string> = {
   white: "border border-slate-300 bg-slate-100 text-slate-900",
@@ -61,7 +62,12 @@ export default function Page() {
   const [color, setColor] = useState<PlayerColor>("white");
   const [boardState, setBoardState] = useState<BoardState>(startingBoardState);
   const [times, setTimes] = useState<number[] | null>(null);
-  const [playerIDs, setPlayerIDs] = useState<number[] | null>(null);
+  const [players, setPlayerIDs] = useState<Record<PlayerColor, number> | null>(
+    null,
+  );
+  const [usernames, setUsernames] = useState<
+    Partial<Record<PlayerColor, string>>
+  >({});
   const [result, setResult] = useState<GameResult | null>(null);
   const [resultReason, setResultReason] = useState<string | null>(null);
   const [searching, setSearching] = useState<Games[]>([]);
@@ -104,7 +110,7 @@ export default function Page() {
       setBoardState(data.boardState);
       setColor(data.color);
       setTimes(data.times);
-      setPlayerIDs(data.playerIDs);
+      setPlayerIDs(data.players);
       setSearching([]);
     });
 
@@ -145,6 +151,21 @@ export default function Page() {
       socket.disconnect();
     };
   }, [user]);
+
+  useEffect(() => {
+    if (!players) return;
+    Promise.all(
+      (Object.entries(players) as [PlayerColor, number][]).map(
+        async ([color, id]) => {
+          const result = await getUsername(id);
+          return [color, "username" in result ? result.username : color] as [
+            PlayerColor,
+            string,
+          ];
+        },
+      ),
+    ).then((entries) => setUsernames(Object.fromEntries(entries)));
+  }, [players]);
 
   const closeResultScreen = () => {
     setResult(null);
@@ -203,6 +224,7 @@ export default function Page() {
           onPlayerMove={gameId && !result ? emitPlayerMove : () => {}}
           times={times ?? [-1]}
           isInGame={Boolean(gameId && !result)}
+          usernames={usernames}
         />
       </main>
       <aside className="w-full md:w-[360px] flex flex-col items-center gap-6 px-4 py-6">

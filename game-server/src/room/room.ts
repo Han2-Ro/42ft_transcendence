@@ -101,7 +101,7 @@ export class Room {
           color: this.assignedColors[index],
           boardState: this.gameLogic.boardState,
           times: this.getTimes(),
-          playerIDs: this.getPlayerIDs(),
+          players: this.getPlayerIDs(),
         });
       });
     });
@@ -126,7 +126,7 @@ export class Room {
       color: this.assignedColors[playerIndex],
       boardState: this.gameLogic.boardState,
       times: this.getTimes(),
-      playerIDs: this.getPlayerIDs(),
+      players: this.getPlayerIDs(),
     });
   }
 
@@ -178,15 +178,15 @@ export class Room {
     });
     return times;
   }
-  private getPlayerIDs(): number[] {
-    const ids: number[] = [];
+  private getPlayerIDs(): Record<PlayerColor, number> {
+    const gamePlayers = {} as Record<PlayerColor, number>;
     this.order.forEach((value: PlayerColor) => {
       const colorIndex = this.assignedColors.indexOf(value);
       if (colorIndex >= 0) {
-        ids.push(this.players[colorIndex].playerid);
+        gamePlayers[value] = this.players[colorIndex].playerid;
       }
     });
-    return ids;
+    return gamePlayers;
   }
 
   private checkTimeout(time_passed: number) {
@@ -246,7 +246,8 @@ export class Room {
       });
     } else if (this.gameType == "4pTimedChess" || this.gameType == "4pChess") {
       const winner = this.gameLogic.gameStatus.winners
-        ? this.gameLogic.gameStatus.winners[0] === "red" || "yellow"
+        ? this.gameLogic.gameStatus.winners[0] === "red" ||
+          this.gameLogic.gameStatus.winners[0] === "yellow"
           ? "yellow"
           : "blue"
         : "draw";
