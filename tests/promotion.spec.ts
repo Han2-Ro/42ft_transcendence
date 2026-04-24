@@ -208,8 +208,14 @@ test("promotion requires explicit selection and uses chosen piece", async ({
     await expect(await pieceAltAt(whitePage, 9)).toBe("whitepawn");
     await expect(await pieceAltAt(whitePage, 0)).toBe("blackrook");
     const whiteBoard = await board(whitePage);
-    await whiteBoard.locator("button").nth(9).evaluate((el) => (el as HTMLElement).click());
-    await whiteBoard.locator("button").nth(0).evaluate((el) => (el as HTMLElement).click());
+    await whiteBoard
+      .locator("button")
+      .nth(9)
+      .evaluate((el) => (el as HTMLElement).click());
+    await whiteBoard
+      .locator("button")
+      .nth(0)
+      .evaluate((el) => (el as HTMLElement).click());
     await expect(promoteToKnight).toBeVisible();
 
     await expect(
