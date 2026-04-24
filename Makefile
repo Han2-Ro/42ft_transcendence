@@ -30,3 +30,10 @@ migrate:
 
 copy-migration:
 	$(COMPOSE_LOCAL) cp nextjs:/app/nextjs/prisma/migrations/$(name) ./nextjs/prisma/migrations/
+
+test-all:
+	docker run -it --rm \
+	--add-host=host.docker.internal:host-gateway \
+	--ipc=host -v $(PWD):/work/ -w /work/tests/ \
+	mcr.microsoft.com/playwright:v1.58.2-noble \
+	/bin/bash -c "BASE_URL='http://host.docker.internal' npx playwright test"
