@@ -8,7 +8,6 @@ import { useState } from "react";
 import { LogoutIcon } from "../icons/LogoutIcon";
 import { useAuthConetxt } from "../AuthProvider";
 import { logout } from "@/lib/auth/actions";
-import { useRouter } from "next/navigation";
 import { GearIcon } from "../icons/GearIcon";
 import { HomeIcon } from "../icons/HomeIcon";
 import { useSidebarActions } from "./SidebarActionsProvider";
@@ -20,13 +19,11 @@ type Props = {
 export default function MainMenu({ onClose }: Props) {
   const [showLogin, setShowLogin] = useState(false);
   const { user, refreshUser } = useAuthConetxt();
-  const router = useRouter();
   const { actions } = useSidebarActions();
 
   const onLogoutClicked = async () => {
     await logout();
     await refreshUser();
-    router.refresh();
   };
 
   if (actions.length > 0) {
