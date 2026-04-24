@@ -36,4 +36,4 @@ test-all:
 	--add-host=host.docker.internal:host-gateway \
 	--ipc=host -v $(PWD):/work/ -w /work/tests/ \
 	mcr.microsoft.com/playwright:v1.58.2-noble \
-	/bin/bash -c "BASE_URL='http://host.docker.internal' npx playwright test"
+	/bin/bash -c "BASE_URL='https://host.docker.internal' npx playwright test"

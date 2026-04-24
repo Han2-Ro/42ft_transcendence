@@ -7,7 +7,7 @@ import {
 } from "./utils";
 
 async function openSettings(page: Page) {
-  await page.goto("/settings");
+  await page.goto("/settings", { waitUntil: "networkidle" });
   await expect(
     page.getByRole("heading", { name: /^settings$/i }),
   ).toBeVisible();
