@@ -74,11 +74,13 @@ export default function FourPlayerBoard({
   onPlayerMove,
   playerColor,
   times,
+  usernames,
 }: {
   boardState: BoardStateChess;
   onPlayerMove: (move: MoveChess) => void;
   playerColor: PlayerColor;
   times: number[];
+  usernames?: Partial<Record<PlayerColor, string>>;
 }) {
   const [selectedSquare, setSelectedSquare] = useState<number | null>(null);
   const [movesFromSquareInt, setMovesFromSquareInt] = useState<number[] | null>(
@@ -236,7 +238,10 @@ export default function FourPlayerBoard({
                   }}
                 >
                   <PlayerCard
-                    name={`${assignments.topLeft} Player`}
+                    name={
+                      usernames?.[assignments.topLeft] ??
+                      `${assignments.topLeft} Player`
+                    }
                     color={assignments.topLeft}
                     isTurn={boardState.turn === assignments.topLeft}
                     time={
@@ -263,7 +268,10 @@ export default function FourPlayerBoard({
                   }}
                 >
                   <PlayerCard
-                    name={`${assignments.topRight} Player`}
+                    name={
+                      usernames?.[assignments.topRight] ??
+                      `${assignments.topRight} Player`
+                    }
                     color={assignments.topRight}
                     isTurn={boardState.turn === assignments.topRight}
                     time={
@@ -290,7 +298,10 @@ export default function FourPlayerBoard({
                   }}
                 >
                   <PlayerCard
-                    name={`${assignments.bottomLeft} Player`}
+                    name={
+                      usernames?.[assignments.bottomLeft] ??
+                      `${assignments.bottomLeft} Player`
+                    }
                     color={assignments.bottomLeft}
                     isTurn={boardState.turn === assignments.bottomLeft}
                     time={
@@ -317,7 +328,10 @@ export default function FourPlayerBoard({
                   }}
                 >
                   <PlayerCard
-                    name={`${assignments.bottomRight} Player`}
+                    name={
+                      usernames?.[assignments.bottomRight] ??
+                      `${assignments.bottomRight} Player`
+                    }
                     color={assignments.bottomRight}
                     isTurn={boardState.turn === assignments.bottomRight}
                     isYou={true}

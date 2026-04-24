@@ -17,6 +17,7 @@ interface GameProps {
   times: number[];
   onPlayerMove: (move: Move) => void;
   isInGame: boolean;
+  usernames?: Partial<Record<PlayerColor, string>>;
 }
 
 function isBoardChess(boardState: BoardState): boardState is BoardStateChess {
@@ -30,6 +31,7 @@ export default function Game({
   onPlayerMove,
   times,
   isInGame,
+  usernames,
 }: GameProps) {
   return (
     <div className="text-center flex flex-col justify-center">
@@ -41,6 +43,7 @@ export default function Game({
           playerColor={color}
           times={times}
           isInGame={isInGame}
+          usernames={usernames}
         />
       ) : (gameType === "4pChess" || gameType === "4pTimedChess") &&
         isBoardChess(boardState) ? (
@@ -49,6 +52,7 @@ export default function Game({
           onPlayerMove={onPlayerMove}
           playerColor={color}
           times={times}
+          usernames={usernames}
         />
       ) : (
         <ConnectFourBoard
@@ -56,6 +60,7 @@ export default function Game({
           onPlayerMove={onPlayerMove}
           playerColor={color}
           times={times}
+          usernames={usernames}
         />
       )}
     </div>
