@@ -246,7 +246,7 @@ export class Room {
       });
     } else if (this.gameType == "4pTimedChess" || this.gameType == "4pChess") {
       const winner = this.gameLogic.gameStatus.winners
-        ? this.gameLogic.gameStatus.winners[0] === "red" || "yellow"
+        ? this.gameLogic.gameStatus.winners[0] === "red" || this.gameLogic.gameStatus.winners[0] === "yellow"
           ? "yellow"
           : "blue"
         : "draw";
