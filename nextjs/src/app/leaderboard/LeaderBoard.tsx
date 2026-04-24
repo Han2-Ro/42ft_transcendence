@@ -1,6 +1,8 @@
 "use client";
 
+import { PlainLink } from "@/componets/PlainLink";
 import { getWinRatio } from "@/lib/getWinRation";
+import Link from "next/link";
 import { useMemo, useState } from "react";
 
 /* const sampleEntries: LeaderBoardEntry[] = [
@@ -140,7 +142,12 @@ export default function LeaderBoard({
           {sortedEntries.slice(0, maxEntries).map((entry, index) => (
             <tr className="border-t border-gray-200" key={index}>
               <td className="p-1 lg:p-3 overflow-hidden text-ellipsis">
-                {entry.username}
+                <Link
+                  className="hover:underline"
+                  href={`/user-stats/${entry.username}`}
+                >
+                  {entry.username}
+                </Link>
               </td>
               <td className="p-1 lg:p-3">{entry.wins}</td>
               <td className="p-1 lg:p-3">{entry.losses}</td>
