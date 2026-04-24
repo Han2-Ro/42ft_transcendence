@@ -144,9 +144,7 @@ export default function TwoPlayerBoard({
             testId="player-card-opponent"
             name={playerColor === "white" ? "Black Player" : "White Player"}
             color={playerColor === "white" ? "black" : "white"}
-            isTurn={
-              boardState.turn === (playerColor === "white" ? "black" : "white")
-            }
+            isTurn={boardState.turn != playerColor}
             time={times[playerColor === "white" ? 1 : 0]}
             isTimed={times[playerColor === "white" ? 1 : 0] !== -1}
           />
