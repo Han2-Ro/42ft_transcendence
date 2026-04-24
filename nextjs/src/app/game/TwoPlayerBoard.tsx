@@ -156,7 +156,7 @@ export default function TwoPlayerBoard({
             color={playerColor === "white" ? "black" : "white"}
             isTurn={boardState.turn != playerColor}
             time={getDisplayTime(playerColor === "white" ? 1 : 0)}
-            isTimed={times[playerColor === "white" ? 1 : 0] !== -1}
+            isTimed={times[0] !== -1}
           />
           <PlayerCard
             testId="player-card-self"
@@ -167,7 +167,7 @@ export default function TwoPlayerBoard({
             color={playerColor}
             isTurn={boardState.turn === playerColor}
             time={getDisplayTime(playerColor === "white" ? 0 : 1)}
-            isTimed={times[playerColor === "white" ? 0 : 1] !== -1}
+            isTimed={times[0] !== -1}
           />
         </div>
       )}

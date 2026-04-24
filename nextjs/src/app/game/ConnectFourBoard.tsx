@@ -171,8 +171,8 @@ const { getDisplayTime } = useGameClock(times, activePlayerIndex);
           }
           color={playerColor === "yellow" ? "red" : "yellow"}
           isTurn={boardState.turn != playerColor}
-          time={times[playerColor === "yellow" ? 1 : 0]}
-          isTimed={times[playerColor === "yellow" ? 1 : 0] !== -1}
+          time={getDisplayTime(playerColor === "yellow" ? 1 : 0)}
+          isTimed={times[0] !== -1}
         />
         <PlayerCard
           testId="player-card-self"
@@ -182,8 +182,8 @@ const { getDisplayTime } = useGameClock(times, activePlayerIndex);
           }
           color={playerColor}
           isTurn={boardState.turn === playerColor}
-          time={times[playerColor === "yellow" ? 0 : 1]}
-          isTimed={times[playerColor === "yellow" ? 0 : 1] !== -1}
+          time={getDisplayTime(playerColor === "yellow" ? 0 : 1)}
+          isTimed={times[0] !== -1}
         />
       </div>
     </div>
