@@ -179,7 +179,7 @@ export class Room {
     return times;
   }
   private getPlayerIDs(): Record<PlayerColor, number> {
-	const gamePlayers = {} as Record<PlayerColor, number>;
+    const gamePlayers = {} as Record<PlayerColor, number>;
     this.order.forEach((value: PlayerColor) => {
       const colorIndex = this.assignedColors.indexOf(value);
       if (colorIndex >= 0) {
@@ -246,7 +246,8 @@ export class Room {
       });
     } else if (this.gameType == "4pTimedChess" || this.gameType == "4pChess") {
       const winner = this.gameLogic.gameStatus.winners
-        ? this.gameLogic.gameStatus.winners[0] === "red" || this.gameLogic.gameStatus.winners[0] === "yellow"
+        ? this.gameLogic.gameStatus.winners[0] === "red" ||
+          this.gameLogic.gameStatus.winners[0] === "yellow"
           ? "yellow"
           : "blue"
         : "draw";

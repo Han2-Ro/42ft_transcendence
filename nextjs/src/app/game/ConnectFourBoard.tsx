@@ -160,7 +160,10 @@ export default function ConnectFourBoard({
       <div className="flex flex-col gap-4">
         <PlayerCard
           testId="player-card-opponent"
-          name={usernames?.[playerColor === "yellow" ? "red" : "yellow"] ?? (playerColor === "yellow" ? "Red Player" : "Yellow Player")}
+          name={
+            usernames?.[playerColor === "yellow" ? "red" : "yellow"] ??
+            (playerColor === "yellow" ? "Red Player" : "Yellow Player")
+          }
           color={playerColor === "yellow" ? "red" : "yellow"}
           isTurn={boardState.turn != playerColor}
           time={times[playerColor === "yellow" ? 1 : 0]}
@@ -168,7 +171,10 @@ export default function ConnectFourBoard({
         />
         <PlayerCard
           testId="player-card-self"
-          name={usernames?.[playerColor] ?? (playerColor === "yellow" ? "Yellow Player" : "Red Player")}
+          name={
+            usernames?.[playerColor] ??
+            (playerColor === "yellow" ? "Yellow Player" : "Red Player")
+          }
           color={playerColor}
           isTurn={boardState.turn === playerColor}
           time={times[playerColor === "yellow" ? 0 : 1]}

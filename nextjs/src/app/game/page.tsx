@@ -53,8 +53,12 @@ export default function Page() {
   const [color, setColor] = useState<PlayerColor>("white");
   const [boardState, setBoardState] = useState<BoardState>(startingBoardState);
   const [times, setTimes] = useState<number[] | null>(null);
-  const [players, setPlayerIDs] = useState<Record<PlayerColor, number> | null>(null);
-  const [usernames, setUsernames] = useState<Partial<Record<PlayerColor, string>>>({});
+  const [players, setPlayerIDs] = useState<Record<PlayerColor, number> | null>(
+    null,
+  );
+  const [usernames, setUsernames] = useState<
+    Partial<Record<PlayerColor, string>>
+  >({});
   const [result, setResult] = useState<GameResult | null>(null);
   const [resultReason, setResultReason] = useState<string | null>(null);
   const [searching, setSearching] = useState<Games[]>([]);
@@ -139,10 +143,15 @@ export default function Page() {
   useEffect(() => {
     if (!players) return;
     Promise.all(
-      (Object.entries(players) as [PlayerColor, number][]).map(async ([color, id]) => {
-        const result = await getUsername(id);
-        return [color, "username" in result ? result.username : color] as [PlayerColor, string];
-      })
+      (Object.entries(players) as [PlayerColor, number][]).map(
+        async ([color, id]) => {
+          const result = await getUsername(id);
+          return [color, "username" in result ? result.username : color] as [
+            PlayerColor,
+            string,
+          ];
+        },
+      ),
     ).then((entries) => setUsernames(Object.fromEntries(entries)));
   }, [players]);
 

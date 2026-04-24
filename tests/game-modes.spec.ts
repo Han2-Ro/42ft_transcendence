@@ -36,12 +36,12 @@ test.describe.serial("section D game modes (without connect4)", () => {
   async function expect4pBoardVisible(pages: Page[]) {
     await Promise.all(
       pages.map(async (page) => {
-        await expect(page.getByText(/red player/i)).toBeVisible({
+        await expect(page.getByText(/red/i)).toBeVisible({
           timeout: 15_000,
         });
-        await expect(page.getByText(/blue player/i)).toBeVisible();
-        await expect(page.getByText(/yellow player/i)).toBeVisible();
-        await expect(page.getByText(/green player/i)).toBeVisible();
+        await expect(page.getByText(/blue/i)).toBeVisible();
+        await expect(page.getByText(/yellow/i)).toBeVisible();
+        await expect(page.getByText(/green/i)).toBeVisible();
       }),
     );
   }

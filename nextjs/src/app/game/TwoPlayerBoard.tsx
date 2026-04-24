@@ -144,7 +144,10 @@ export default function TwoPlayerBoard({
         <div className="flex flex-col gap-4">
           <PlayerCard
             testId="player-card-opponent"
-            name={usernames?.[playerColor === "white" ? "black" : "white"] ?? (playerColor === "white" ? "Black Player" : "White Player")}
+            name={
+              usernames?.[playerColor === "white" ? "black" : "white"] ??
+              (playerColor === "white" ? "Black Player" : "White Player")
+            }
             color={playerColor === "white" ? "black" : "white"}
             isTurn={boardState.turn != playerColor}
             time={times[playerColor === "white" ? 1 : 0]}
@@ -152,7 +155,10 @@ export default function TwoPlayerBoard({
           />
           <PlayerCard
             testId="player-card-self"
-            name={usernames?.[playerColor] ?? (playerColor === "white" ? "White Player" : "Black Player")}
+            name={
+              usernames?.[playerColor] ??
+              (playerColor === "white" ? "White Player" : "Black Player")
+            }
             color={playerColor}
             isTurn={boardState.turn === playerColor}
             time={times[playerColor === "white" ? 0 : 1]}
