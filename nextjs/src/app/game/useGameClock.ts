@@ -26,11 +26,10 @@ export function useGameClock(
   }, [isRunning, times]);
 
   const getDisplayTime = (player: PlayerColor) => {
-    if (!localTimes) return null; // 👈 key
+    if (!localTimes) return null;
 
     const baseTime = localTimes[player];
 
-    if (!isRunning) return baseTime;
     if (player !== activePlayer) return baseTime;
 
     const elapsed = (Date.now() - lastSync) / 1000;
