@@ -1,4 +1,5 @@
-import { test, expect } from "@playwright/test";
+import { test } from "./base-test";
+import { expect } from "@playwright/test";
 import { openRegisterModal, openLoginModal, logout } from "./utils";
 
 const ts = Date.now();

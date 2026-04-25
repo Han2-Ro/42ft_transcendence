@@ -2,8 +2,31 @@ import { defineConfig, globalIgnores } from "eslint/config";
 import nextVitals from "eslint-config-next/core-web-vitals";
 import nextTs from "eslint-config-next/typescript";
 
+const scopeToNextjs = (configs) =>
+  configs
+    .filter(
+      (config) => !("ignores" in config && Object.keys(config).length === 1),
+    )
+    .map((config) => {
+      if ("files" in config && Array.isArray(config.files)) {
+        return {
+          ...config,
+          files: config.files.map((pattern) =>
+            pattern.startsWith("!")
+              ? `!nextjs/${pattern.slice(1)}`
+              : `nextjs/${pattern}`,
+          ),
+        };
+      }
+
+      return {
+        ...config,
+        files: ["nextjs/**/*"],
+      };
+    });
+
 const eslintConfig = defineConfig([
-  ...nextVitals,
+  ...scopeToNextjs(nextVitals),
   ...nextTs,
   // Override default ignores of eslint-config-next.
   globalIgnores([

@@ -19,6 +19,12 @@ function checkPasswordStrength(password: string) {
   return true;
 }
 
+function checkUsername(username: string) {
+  if (username.length < 3 || username.length > 100) return false;
+  if (!/^[a-zA-Z0-9_\-\.]+$/.test(username)) return false;
+  return true;
+}
+
 export type LoginResult = ActionResult<
   | {
       requiresTwoFactor: false;
@@ -171,6 +177,8 @@ export async function changeUsername(
   newUsername: string,
 ): Promise<ActionResult<null>> {
   const session = await getSession();
+  if (!checkUsername(newUsername))
+    return { success: false, error: "Invalid username." };
   const user = await prisma.user.findUnique({ where: { id: session?.userId } });
   if (!user) return { success: false, error: "User not found" };
   const usernameExists = await prisma.user.findUnique({

@@ -31,16 +31,9 @@ const turnDotStyles: Record<PlayerColor, string> = {
   green: "bg-emerald-500",
   blue: "bg-sky-500",
 };
-console.log("node nev", process.env.NODE_ENV);
 
 function getGameServerUrl() {
-  if (process.env.COOLIFY_GAMESERVER_URL) {
-    return process.env.COOLIFY_GAMESERVER_URL;
-  }
-  if (
-    process.env.NODE_ENV === "development" &&
-    process.env.NEXT_PUBLIC_GAMESERVER_URL
-  ) {
+  if (process.env.NEXT_PUBLIC_GAMESERVER_URL) {
     return process.env.NEXT_PUBLIC_GAMESERVER_URL;
   }
   if (typeof window !== "undefined") {
@@ -227,7 +220,7 @@ export default function Page() {
           usernames={usernames}
         />
       </main>
-      <aside className="w-full md:w-[360px] flex flex-col items-center gap-6 px-4 py-6">
+      <aside className="w-full flex flex-col items-center gap-6 px-4 py-6">
         {result && (
           <EndScreen
             result={result}
