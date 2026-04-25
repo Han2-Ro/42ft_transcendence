@@ -191,7 +191,7 @@ io.on("connection", (socket) => {
         searchingPlayers.length === 2)
     ) {
       const gameId = crypto.randomUUID();
-      players.forEach((value: Player) => {
+      searchingPlayers.forEach((value: Player) => {
         value.game_id = gameId;
         value.status = "in_game";
         value.searching = [];

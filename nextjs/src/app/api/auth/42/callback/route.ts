@@ -52,7 +52,7 @@ export async function GET(req: NextRequest) {
         new URL("/?error=42_already_linked", baseUrl),
       );
     }
-    return NextResponse.redirect(new URL("/", baseUrl));
+    return NextResponse.redirect(new URL("/settings", baseUrl));
   }
 
   // User is not logged in — find by fortyTwoId and log in
