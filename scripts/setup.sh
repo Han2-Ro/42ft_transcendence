@@ -47,4 +47,4 @@ sudo apt install docker-ce docker-ce-cli containerd.io docker-buildx-plugin dock
 sudo apt install make -y
 
 # Giving user rights to run docker without sudo
-sudo setfacl -m user:$USER:rw /var/run/docker.sock
+sudo setfacl -m user:$SUDO_USER:rw /var/run/docker.sock
