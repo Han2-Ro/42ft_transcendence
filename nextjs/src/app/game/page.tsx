@@ -31,9 +31,15 @@ const turnDotStyles: Record<PlayerColor, string> = {
   green: "bg-emerald-500",
   blue: "bg-sky-500",
 };
-console.log("node nev", process.env.NODE_ENV);
 
 function getGameServerUrl() {
+  console.log("node nev", process.env.NODE_ENV);
+  console.log("COOLIFY_GAMESERVER_URL", process.env.COOLIFY_GAMESERVER_URL);
+  console.log(
+    "NEXT_PUBLIC_GAMESERVER_URL",
+    process.env.NEXT_PUBLIC_GAMESERVER_URL,
+  );
+  console.log("hostname", window?.location.hostname);
   if (process.env.COOLIFY_GAMESERVER_URL) {
     return process.env.COOLIFY_GAMESERVER_URL;
   }
