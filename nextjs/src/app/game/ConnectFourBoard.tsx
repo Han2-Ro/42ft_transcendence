@@ -59,7 +59,7 @@ export default function ConnectFourBoard({
     return () => cancelAnimationFrame(id);
   }, []);
 
-const { getDisplayTime } = useGameClock(times, boardState.turn, isInGame);
+  const { getDisplayTime } = useGameClock(times, boardState.turn, isInGame);
 
   return (
     <div className="flex items-center justify-center gap-4">
@@ -171,7 +171,10 @@ const { getDisplayTime } = useGameClock(times, boardState.turn, isInGame);
           }
           color={playerColor === "yellow" ? "red" : "yellow"}
           isTurn={boardState.turn != playerColor}
-          time={getDisplayTime(playerColor === "yellow" ? "red" : "yellow") ?? undefined}
+          time={
+            getDisplayTime(playerColor === "yellow" ? "red" : "yellow") ??
+            undefined
+          }
           isTimed={times !== null}
         />
         <PlayerCard

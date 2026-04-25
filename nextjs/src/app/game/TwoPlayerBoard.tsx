@@ -142,7 +142,10 @@ export default function TwoPlayerBoard({
             }
             color={playerColor === "white" ? "black" : "white"}
             isTurn={boardState.turn != playerColor}
-            time={getDisplayTime(playerColor === "white" ? "black" : "white") ?? undefined}
+            time={
+              getDisplayTime(playerColor === "white" ? "black" : "white") ??
+              undefined
+            }
             isTimed={times !== null}
           />
           <PlayerCard

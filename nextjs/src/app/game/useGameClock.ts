@@ -4,7 +4,7 @@ import { PlayerColor } from "shared";
 export function useGameClock(
   times: Record<PlayerColor, number> | null,
   activePlayer: PlayerColor,
-  isRunning: boolean
+  isRunning: boolean,
 ) {
   const [localTimes, setLocalTimes] = useState(times);
   const [lastSync, setLastSync] = useState(Date.now());

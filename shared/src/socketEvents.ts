@@ -33,7 +33,10 @@ export interface SToCEvents {
 
   setSearching: (type: Games[]) => void;
 
-  moveMade: (data: { boardState: BoardState; times: Record<PlayerColor, number> }) => void;
+  moveMade: (data: {
+    boardState: BoardState;
+    times: Record<PlayerColor, number>;
+  }) => void;
 
   gameOver: (data: { result: Result; reason: string }) => void;
 }

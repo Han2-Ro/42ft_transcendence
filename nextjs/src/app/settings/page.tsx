@@ -1,9 +1,9 @@
 "use client";
 
-import { useAuthConetxt } from "@/componets/AuthProvider";
-import Button from "@/componets/Button";
-import { Popup } from "@/componets/Popup";
-import { TextInput } from "@/componets/TextInput";
+import { useAuthConetxt } from "@/components/AuthProvider";
+import Button from "@/components/Button";
+import { Popup } from "@/components/Popup";
+import { TextInput } from "@/components/TextInput";
 import {
   changePassword,
   changeUsername,

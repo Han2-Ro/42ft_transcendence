@@ -9,9 +9,9 @@ import EndScreen from "./EndScreen";
 import { CToSEvents, startingBoardState, SToCEvents } from "shared";
 import { BoardState, PlayerColor, Move, Games } from "shared";
 import { Result as GameResult } from "shared";
-import { useSidebarActions } from "@/componets/sidebar/SidebarActionsProvider";
-import { DeadKing } from "@/componets/icons/DeadKing";
-import { useAuthConetxt } from "@/componets/AuthProvider";
+import { useSidebarActions } from "@/components/sidebar/SidebarActionsProvider";
+import { DeadKing } from "@/components/icons/DeadKing";
+import { useAuthConetxt } from "@/components/AuthProvider";
 import { getUsername } from "@/lib/auth/actions";
 
 const turnBadgeStyles: Record<PlayerColor, string> = {

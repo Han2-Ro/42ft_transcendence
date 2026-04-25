@@ -2,7 +2,7 @@
 
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
-import Button from "@/componets/Button";
+import Button from "@/components/Button";
 
 export default function Page() {
   const router = useRouter();

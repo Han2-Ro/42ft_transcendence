@@ -1,9 +1,9 @@
 "use client";
 
-import Button from "@/componets/Button";
-import ErrorMessage from "@/componets/ErrorMessage";
-import { Popup } from "@/componets/Popup";
-import { TextInput } from "@/componets/TextInput";
+import Button from "@/components/Button";
+import ErrorMessage from "@/components/ErrorMessage";
+import { Popup } from "@/components/Popup";
+import { TextInput } from "@/components/TextInput";
 import { disable2FA, setup2FA, verify2FA } from "@/lib/auth/actions";
 import { useState } from "react";
 
