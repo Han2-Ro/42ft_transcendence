@@ -1,4 +1,5 @@
-import { test, expect, BrowserContext, Page } from "@playwright/test";
+import { expect, BrowserContext, Page } from "@playwright/test";
+import { test } from "./base-test";
 import { registerAndLogin } from "./utils";
 
 test.describe.serial("section D game modes (without connect4)", () => {
