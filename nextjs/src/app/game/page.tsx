@@ -13,6 +13,7 @@ import { useSidebarActions } from "@/componets/sidebar/SidebarActionsProvider";
 import { DeadKing } from "@/componets/icons/DeadKing";
 import { useAuthConetxt } from "@/componets/AuthProvider";
 import { getUsername } from "@/lib/auth/actions";
+import { subscribeToLogoutEvent } from "@/lib/auth/tabBroadcast";
 
 const turnBadgeStyles: Record<PlayerColor, string> = {
   white: "border border-slate-300 bg-slate-100 text-slate-900",
@@ -144,6 +145,18 @@ export default function Page() {
       socket.disconnect();
     };
   }, [user]);
+
+  useEffect(() => {
+    const unsubscribe = subscribeToLogoutEvent(() => {
+      console.log("logout detected in another tab, reconnecting socket");
+      socket.disconnect();
+      socket.connect();
+    });
+
+    return () => {
+      unsubscribe();
+    };
+  }, []);
 
   useEffect(() => {
     if (!players) return;
