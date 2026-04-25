@@ -156,57 +156,57 @@ test("promotion requires explicit selection and uses chosen piece", async ({
     await expectTurn(whitePage, "white");
     await move(whitePage, 48, 32);
     await Promise.all([
-      moveApplied(whitePage, 48, 32, "whitepawn"),
-      moveApplied(blackPage, 48, 32, "whitepawn"),
+      moveApplied(whitePage, 48, 32, "white pawn"),
+      moveApplied(blackPage, 48, 32, "white pawn"),
     ]);
     await expectTurn(blackPage, "black");
     await move(blackPage, 15, 23);
     await Promise.all([
-      moveApplied(whitePage, 15, 23, "blackpawn"),
-      moveApplied(blackPage, 15, 23, "blackpawn"),
+      moveApplied(whitePage, 15, 23, "black pawn"),
+      moveApplied(blackPage, 15, 23, "black pawn"),
     ]);
     await expectTurn(whitePage, "white");
     await move(whitePage, 32, 24);
     await Promise.all([
-      moveApplied(whitePage, 32, 24, "whitepawn"),
-      moveApplied(blackPage, 32, 24, "whitepawn"),
+      moveApplied(whitePage, 32, 24, "white pawn"),
+      moveApplied(blackPage, 32, 24, "white pawn"),
     ]);
     await expectTurn(blackPage, "black");
     await move(blackPage, 23, 31);
     await Promise.all([
-      moveApplied(whitePage, 23, 31, "blackpawn"),
-      moveApplied(blackPage, 23, 31, "blackpawn"),
+      moveApplied(whitePage, 23, 31, "black pawn"),
+      moveApplied(blackPage, 23, 31, "black pawn"),
     ]);
     await expectTurn(whitePage, "white");
     await move(whitePage, 24, 16);
     await Promise.all([
-      moveApplied(whitePage, 24, 16, "whitepawn"),
-      moveApplied(blackPage, 24, 16, "whitepawn"),
+      moveApplied(whitePage, 24, 16, "white pawn"),
+      moveApplied(blackPage, 24, 16, "white pawn"),
     ]);
     await expectTurn(blackPage, "black");
     await move(blackPage, 14, 22);
     await Promise.all([
-      moveApplied(whitePage, 14, 22, "blackpawn"),
-      moveApplied(blackPage, 14, 22, "blackpawn"),
+      moveApplied(whitePage, 14, 22, "black pawn"),
+      moveApplied(blackPage, 14, 22, "black pawn"),
     ]);
     await expectTurn(whitePage, "white");
     await move(whitePage, 16, 9);
     await Promise.all([
-      moveApplied(whitePage, 16, 9, "whitepawn"),
-      moveApplied(blackPage, 16, 9, "whitepawn"),
+      moveApplied(whitePage, 16, 9, "white pawn"),
+      moveApplied(blackPage, 16, 9, "white pawn"),
     ]);
     await expectTurn(blackPage, "black");
     await move(blackPage, 22, 30);
     await Promise.all([
-      moveApplied(whitePage, 22, 30, "blackpawn"),
-      moveApplied(blackPage, 22, 30, "blackpawn"),
+      moveApplied(whitePage, 22, 30, "black pawn"),
+      moveApplied(blackPage, 22, 30, "black pawn"),
     ]);
     await expectTurn(whitePage, "white");
     const promoteToKnight = whitePage.getByRole("button", {
       name: /promote to knight/i,
     });
-    await expect(await pieceAltAt(whitePage, 9)).toBe("whitepawn");
-    await expect(await pieceAltAt(whitePage, 0)).toBe("blackrook");
+    await expect(await pieceAltAt(whitePage, 9)).toBe("white pawn");
+    await expect(await pieceAltAt(whitePage, 0)).toBe("black rook");
     const whiteBoard = await board(whitePage);
     await whiteBoard
       .locator("button")
@@ -220,10 +220,10 @@ test("promotion requires explicit selection and uses chosen piece", async ({
 
     await expect(
       whiteBoard.locator("button").nth(0).locator("img"),
-    ).toHaveAttribute("alt", "blackrook");
+    ).toHaveAttribute("alt", "black rook");
     await expect(
       whiteBoard.locator("button").nth(9).locator("img"),
-    ).toHaveAttribute("alt", "whitepawn");
+    ).toHaveAttribute("alt", "white pawn");
 
     // Ensure no automatic fallback (e.g. auto-queen) happens without user choice.
     await expect(promoteToKnight).toBeVisible();
@@ -234,10 +234,10 @@ test("promotion requires explicit selection and uses chosen piece", async ({
 
     await expect(
       whiteBoard.locator("button").nth(0).locator("img"),
-    ).toHaveAttribute("alt", "whiteknight");
+    ).toHaveAttribute("alt", "white knight");
     await expect(
       whiteBoard.locator("button").nth(0).locator("img"),
-    ).not.toHaveAttribute("alt", "whitequeen");
+    ).not.toHaveAttribute("alt", "white queen");
     await expect(
       whiteBoard.locator("button").nth(9).locator("img"),
     ).toHaveCount(0);
@@ -245,7 +245,7 @@ test("promotion requires explicit selection and uses chosen piece", async ({
     const blackBoard = await board(blackPage);
     await expect(
       blackBoard.locator("button").nth(0).locator("img"),
-    ).toHaveAttribute("alt", "whiteknight");
+    ).toHaveAttribute("alt", "white knight");
   } finally {
     await Promise.all(contexts.map((ctx) => ctx.close().catch(() => {})));
   }
