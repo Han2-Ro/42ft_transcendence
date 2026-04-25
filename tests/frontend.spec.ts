@@ -40,7 +40,7 @@ test("find match and resign", async ({ browser }) => {
       await registerAndLogin(page);
       await page.goto("/game");
       await page
-        .getByRole("button", { name: /find chess match \(no time limit\)/i })
+        .getByRole("button", { name: /\bchess\b$/i })
         .click();
     }),
   );

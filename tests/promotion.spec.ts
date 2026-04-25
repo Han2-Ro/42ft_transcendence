@@ -137,7 +137,7 @@ test("promotion requires explicit selection and uses chosen piece", async ({
     await Promise.all(
       [page1, page2].map((page) =>
         page
-          .getByRole("button", { name: /find chess match \(10 minutes\)/i })
+          .getByRole("button", { name: /\bchess \(10 min\)/i })
           .click(),
       ),
     );

@@ -70,7 +70,7 @@ test.describe.serial("section D game modes (without connect4)", () => {
     const { contexts, pages } = await createPlayers(browser, 4);
 
     try {
-      await startMatch(pages, /find 4 player chess match \(no time limit\)/i);
+      await startMatch(pages, /^♟️\s*chess:\s*4 players$/i);
       await expect4pBoardVisible(pages);
     } finally {
       await closeAll(contexts);
@@ -82,7 +82,7 @@ test.describe.serial("section D game modes (without connect4)", () => {
     const { contexts, pages } = await createPlayers(browser, 2);
 
     try {
-      await startMatch(pages, /find chess match \(10 minutes\)/i);
+      await startMatch(pages, /\bchess \(10 min\)/i);
       await Promise.all(
         pages.map((page) =>
           expect(page.getByTestId("player-card-self")).toBeVisible(),
@@ -106,7 +106,7 @@ test.describe.serial("section D game modes (without connect4)", () => {
     const { contexts, pages } = await createPlayers(browser, 4);
 
     try {
-      await startMatch(pages, /find 4 player chess match \(10 minutes\)/i);
+      await startMatch(pages, /\bchess:\s*4 players \(10 min\)/i);
       await expect4pBoardVisible(pages);
 
       const initialSeconds = await readFirstClockSeconds(pages[0]);
@@ -128,7 +128,7 @@ test.describe.serial("section D game modes (without connect4)", () => {
     const { contexts, pages } = await createPlayers(browser, 4);
 
     try {
-      await startMatch(pages, /find 4 player chess match \(no time limit\)/i);
+      await startMatch(pages, /^♟️\s*chess:\s*4 players$/i);
       await expect4pBoardVisible(pages);
 
       await contexts[0].close();
