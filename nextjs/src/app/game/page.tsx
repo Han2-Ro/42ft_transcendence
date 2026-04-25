@@ -61,7 +61,7 @@ export default function Page() {
   const [gameType, setGameType] = useState<Games | null>(null);
   const [color, setColor] = useState<PlayerColor>("white");
   const [boardState, setBoardState] = useState<BoardState>(startingBoardState);
-  const [times, setTimes] = useState<number[] | null>(null);
+  const [times, setTimes] = useState<Record<PlayerColor, number> | null>(null);
   const [players, setPlayerIDs] = useState<Record<PlayerColor, number> | null>(
     null,
   );
@@ -222,7 +222,7 @@ export default function Page() {
           gameType={gameType ?? "chess"}
           color={color ?? "white"}
           onPlayerMove={gameId && !result ? emitPlayerMove : () => {}}
-          times={times ?? [-1]}
+          times={times}
           isInGame={Boolean(gameId && !result)}
           usernames={usernames}
         />

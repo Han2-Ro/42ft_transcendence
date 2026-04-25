@@ -26,7 +26,7 @@ export default function TwoPlayerBoard({
   boardState: BoardStateChess;
   onPlayerMove: (move: Move) => void;
   playerColor: PlayerColor;
-  times: number[];
+  times: Record<PlayerColor, number> | null;
   isInGame?: boolean;
   usernames?: Partial<Record<PlayerColor, string>>;
 }) {
@@ -91,8 +91,7 @@ export default function TwoPlayerBoard({
     setPendingPromotionMove(null);
   };
 
-  const activePlayerIndex = boardState.turn === "white" ? 0 : 1;
-  const { getDisplayTime } = useGameClock(times, activePlayerIndex);
+  const { getDisplayTime } = useGameClock(times, boardState.turn, isInGame);
 
   return (
     <div className="flex items-center justify-center gap-4">
@@ -143,8 +142,8 @@ export default function TwoPlayerBoard({
             }
             color={playerColor === "white" ? "black" : "white"}
             isTurn={boardState.turn != playerColor}
-            time={getDisplayTime(playerColor === "white" ? 1 : 0)}
-            isTimed={times[0] !== -1}
+            time={getDisplayTime(playerColor === "white" ? "black" : "white") ?? undefined}
+            isTimed={times !== null}
           />
           <PlayerCard
             testId="player-card-self"
@@ -154,8 +153,8 @@ export default function TwoPlayerBoard({
             }
             color={playerColor}
             isTurn={boardState.turn === playerColor}
-            time={getDisplayTime(playerColor === "white" ? 0 : 1)}
-            isTimed={times[0] !== -1}
+            time={getDisplayTime(playerColor) ?? undefined}
+            isTimed={times !== null}
           />
         </div>
       )}
