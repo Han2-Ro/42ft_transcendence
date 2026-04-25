@@ -2,7 +2,7 @@ export default function ErrorMessage({
   errorMsg,
   className = "",
 }: {
-  errorMsg: string;
+  errorMsg: string | undefined;
   className?: string;
 }) {
   return (

@@ -1,4 +1,4 @@
-import LeaderBoard from "@/app/stats/LeaderBoard";
+import LeaderBoard from "@/app/leaderboard/LeaderBoard";
 import Link from "next/link";
 import GameHistory from "./history/GameHistory";
 import { getGameTwoHistory, getLeaderboard } from "@/lib/auth/actions";
@@ -25,7 +25,7 @@ export default async function Home({
       <p className="text-4xl">Better than chess.com!</p>
       <section className="lg:grid lg:grid-cols-2 py-10 gap-10 w-full">
         <div className="bg-linear-110 from-gray-600/50 to bg-neutral-800 p-2 mb-8 lg:mb-0 rounded-xl">
-          <Link href="/stats">
+          <Link href="/leaderboard">
             <h2 className="text-2xl w-full text-center pb-4 pt-2 hover:text-stone-400 after:ml-3 after:content-['›']">
               Leaderboard
             </h2>
