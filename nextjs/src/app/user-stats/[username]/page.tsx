@@ -1,6 +1,5 @@
 import { getUserStats } from "@/lib/auth/actions";
 import StatCards from "./StatCards";
-import ErrorMessage from "@/componets/ErrorMessage";
 import { getWinRatio } from "@/lib/getWinRation";
 import { notFound } from "next/navigation";
 
@@ -23,7 +22,10 @@ export default async function Page({
           { label: "Wins", value: stats.userLookup.wins },
           { label: "Losses", value: stats.userLookup.losses },
           { label: "Draws", value: stats.userLookup.draws },
-          { label: "Win Ration", value: getWinRatio(stats.userLookup) },
+          {
+            label: "Win Ratio",
+            value: (getWinRatio(stats.userLookup) * 100).toFixed(0) + "%",
+          },
         ]}
       />
       <h2 className="pb-2 pt-8 font-bold text-xl">Connect 4:</h2>
@@ -34,11 +36,14 @@ export default async function Page({
           { label: "Draws", value: stats.userLookup.connectDraws },
           {
             label: "Win Ratio",
-            value: getWinRatio({
-              wins: stats.userLookup.connectWins,
-              losses: stats.userLookup.connectLosses,
-              draws: stats.userLookup.connectDraws,
-            }),
+            value:
+              (
+                getWinRatio({
+                  wins: stats.userLookup.connectWins,
+                  losses: stats.userLookup.connectLosses,
+                  draws: stats.userLookup.connectDraws,
+                }) * 100
+              ).toFixed(0) + "%",
           },
         ]}
       />
