@@ -33,20 +33,7 @@ const turnDotStyles: Record<PlayerColor, string> = {
 };
 
 function getGameServerUrl() {
-  console.log("node nev", process.env.NODE_ENV);
-  console.log("COOLIFY_GAMESERVER_URL", process.env.COOLIFY_GAMESERVER_URL);
-  console.log(
-    "NEXT_PUBLIC_GAMESERVER_URL",
-    process.env.NEXT_PUBLIC_GAMESERVER_URL,
-  );
-  console.log("hostname", window?.location.hostname);
-  if (process.env.COOLIFY_GAMESERVER_URL) {
-    return process.env.COOLIFY_GAMESERVER_URL;
-  }
-  if (
-    process.env.NODE_ENV === "development" &&
-    process.env.NEXT_PUBLIC_GAMESERVER_URL
-  ) {
+  if (process.env.NEXT_PUBLIC_GAMESERVER_URL) {
     return process.env.NEXT_PUBLIC_GAMESERVER_URL;
   }
   if (typeof window !== "undefined") {
