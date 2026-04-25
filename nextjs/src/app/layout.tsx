@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import NavigationBar from "../componets/sidebar/NavigationBar";
 import { getSession } from "@/lib/auth/session";
