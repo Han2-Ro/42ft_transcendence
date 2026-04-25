@@ -3,7 +3,7 @@ RESET = \033[0m
 COMPOSE_LOCAL = docker compose -f docker-compose.yml -f docker-compose.traefik.yml
 LOCAL_IP = $(shell ip route get 1.1.1.1 | grep -oP 'src \K\S+')
 
-run:
+run: env
 	$(COMPOSE_LOCAL) up --build -d
 	@echo -n "\n\n\n$(GREEN)You can remotely access to this web app from same network with $(RESET)https://$(LOCAL_IP)\n\n"
 
@@ -37,3 +37,9 @@ test-all:
 	--ipc=host -v $(PWD):/work/ -w /work/tests/ \
 	mcr.microsoft.com/playwright:v1.58.2-noble \
 	/bin/bash -c "BASE_URL='https://host.docker.internal' npx playwright test"
+
+env:
+	@if [ ! -f .env ]; then \
+		cp .env.example .env; \
+		echo "Please populate newly created .env file in this repo"; \
+	fi
