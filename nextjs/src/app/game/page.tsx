@@ -220,7 +220,7 @@ export default function Page() {
           usernames={usernames}
         />
       </main>
-      <aside className="w-full md:w-[360px] flex flex-col items-center gap-6 px-4 py-6">
+      <aside className="w-full flex flex-col items-center gap-6 px-4 py-6">
         {result && (
           <EndScreen
             result={result}
