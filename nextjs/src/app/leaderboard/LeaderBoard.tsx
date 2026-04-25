@@ -1,5 +1,6 @@
 "use client";
 
+import { useAuthConetxt } from "@/componets/AuthProvider";
 import { getWinRatio } from "@/lib/getWinRation";
 import Link from "next/link";
 import { useMemo, useState } from "react";
@@ -33,6 +34,7 @@ export default function LeaderBoard({
 }) {
   const [sortKey, setSortKey] = useState<SortKey>("wins");
   const [sortDirection, setSortDirection] = useState<SortDirection>("desc");
+  const { user } = useAuthConetxt();
 
   const sortedEntries = useMemo(() => {
     const sorted = [...entries].sort((a, b) => {
@@ -88,7 +90,7 @@ export default function LeaderBoard({
   return (
     <div className="w-full max-w-240 min-w-0 overflow-x-auto rounded-lg border border-gray-300">
       <table className="w-full min-w-lg table-fixed border-collapse text-left">
-        <thead className="bg-accent-primary/50">
+        <thead className="bg-accent-primary">
           <tr>
             <th className="w-[25%] p-1 lg:p-3">
               <button
@@ -139,7 +141,10 @@ export default function LeaderBoard({
         </thead>
         <tbody>
           {sortedEntries.slice(0, maxEntries).map((entry, index) => (
-            <tr className="border-t border-gray-200" key={index}>
+            <tr
+              className={`border-t border-gray-200 ${user?.username === entry.username ? "bg-accent-primary/50" : ""}`}
+              key={index}
+            >
               <td className="p-1 lg:p-3 overflow-hidden text-ellipsis">
                 <Link
                   className="hover:underline"
