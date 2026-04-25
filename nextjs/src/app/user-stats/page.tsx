@@ -3,7 +3,6 @@
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import Button from "@/componets/Button";
-import { TextInput } from "@/componets/TextInput";
 
 export default function Page() {
   const router = useRouter();

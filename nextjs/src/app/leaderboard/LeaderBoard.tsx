@@ -1,6 +1,5 @@
 "use client";
 
-import { PlainLink } from "@/componets/PlainLink";
 import { getWinRatio } from "@/lib/getWinRation";
 import Link from "next/link";
 import { useMemo, useState } from "react";

@@ -2,7 +2,6 @@ import LeaderBoard from "@/app/leaderboard/LeaderBoard";
 import Link from "next/link";
 import GameHistory from "./history/GameHistory";
 import { getGameTwoHistory, getLeaderboard } from "@/lib/auth/actions";
-import { ChevronRight } from "@/componets/icons/ChevronRight";
 import ErrorMessage from "@/componets/ErrorMessage";
 
 export default async function Home({
