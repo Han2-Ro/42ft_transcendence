@@ -18,4 +18,3 @@ test("unknown page returns 404", async ({ page }) => {
   await expect(page.getByText(/not found/i)).toBeVisible();
   await expect(page.getByRole("link", { name: /go back home/i })).toBeVisible();
 });
-

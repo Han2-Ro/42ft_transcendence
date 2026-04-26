@@ -27,9 +27,7 @@ async function closeAll(contexts: BrowserContext[]) {
 
 async function startMatch(pages: Page[], buttonName: RegExp) {
   await Promise.all(
-    pages.map((page) =>
-      page.getByRole("button", { name: buttonName }).click(),
-    ),
+    pages.map((page) => page.getByRole("button", { name: buttonName }).click()),
   );
 }
 

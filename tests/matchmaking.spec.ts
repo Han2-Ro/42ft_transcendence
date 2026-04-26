@@ -15,7 +15,9 @@ async function createPlayers(
     pages.map(async (page) => {
       await registerAndLogin(page);
       await page.goto("/game");
-      await expect(page.getByRole("heading", { name: /chess lobby/i })).toBeVisible();
+      await expect(
+        page.getByRole("heading", { name: /chess lobby/i }),
+      ).toBeVisible();
     }),
   );
 
@@ -27,7 +29,9 @@ async function closeAll(contexts: BrowserContext[]) {
 }
 
 async function expectInGame(page: Page) {
-  await expect(page.getByTestId("player-card-self")).toBeVisible({ timeout: 20_000 });
+  await expect(page.getByTestId("player-card-self")).toBeVisible({
+    timeout: 20_000,
+  });
 }
 
 async function expect4pInGame(page: Page) {
@@ -38,13 +42,17 @@ async function expect4pInGame(page: Page) {
 }
 
 async function expectLobbySearching(page: Page) {
-  await expect(page.getByRole("heading", { name: /chess lobby/i })).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: /chess lobby/i }),
+  ).toBeVisible();
   await expect(page.getByText(/searching game lobby/i)).toBeVisible();
 }
 
 async function closeEndScreen(page: Page) {
   await page.getByRole("button", { name: /close/i }).click();
-  await expect(page.getByRole("heading", { name: /chess lobby/i })).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: /chess lobby/i }),
+  ).toBeVisible();
 }
 
 test.describe.serial("matchmaking robustness", () => {
@@ -78,7 +86,9 @@ test.describe.serial("matchmaking robustness", () => {
     const [user1, user2, user3, user4] = pages;
 
     try {
-      await user1.getByRole("button", { name: /^♟️\s*chess:\s*4 players$/i }).click();
+      await user1
+        .getByRole("button", { name: /^♟️\s*chess:\s*4 players$/i })
+        .click();
       await user1
         .getByRole("button", { name: /\bchess:\s*4 players \(10 min\)/i })
         .click();
@@ -113,7 +123,9 @@ test.describe.serial("matchmaking robustness", () => {
     const [user1, user2] = pages;
 
     try {
-      await user1.getByRole("button", { name: /^♟️\s*chess:\s*4 players$/i }).click();
+      await user1
+        .getByRole("button", { name: /^♟️\s*chess:\s*4 players$/i })
+        .click();
       await user1.getByRole("button", { name: /🟡🔴\s*connect/i }).click();
       await user2.getByRole("button", { name: /🟡🔴\s*connect/i }).click();
 
@@ -130,7 +142,9 @@ test.describe.serial("matchmaking robustness", () => {
 
       await expect(user1.getByText(/ready when you are/i)).toBeVisible();
       await expect(user1.getByText(/searching game lobby/i)).toHaveCount(0);
-      await expect(user1.getByRole("heading", { name: /chess lobby/i })).toBeVisible();
+      await expect(
+        user1.getByRole("heading", { name: /chess lobby/i }),
+      ).toBeVisible();
     } finally {
       await closeAll(contexts);
     }
@@ -148,11 +162,16 @@ test.describe.serial("matchmaking robustness", () => {
       await timed4pButton.click();
       await expectLobbySearching(page);
 
-      await page.getByRole("button", { name: /finding game/i }).first().click();
+      await page
+        .getByRole("button", { name: /finding game/i })
+        .first()
+        .click();
 
       await expect(page.getByText(/searching game lobby/i)).toHaveCount(0);
       await expect(page.getByText(/ready when you are/i)).toBeVisible();
-      await expect(page.getByRole("heading", { name: /chess lobby/i })).toBeVisible();
+      await expect(
+        page.getByRole("heading", { name: /chess lobby/i }),
+      ).toBeVisible();
     } finally {
       await closeAll(contexts);
     }

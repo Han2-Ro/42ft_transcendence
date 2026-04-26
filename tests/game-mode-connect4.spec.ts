@@ -36,7 +36,9 @@ async function startConnect4Match(pages: Page[]) {
 async function startTimedConnect4Match(pages: Page[]) {
   await Promise.all(
     pages.map((page) =>
-      page.getByRole("button", { name: /⏳\s*connect\s*4\s*\(10 min\)/i }).click(),
+      page
+        .getByRole("button", { name: /⏳\s*connect\s*4\s*\(10 min\)/i })
+        .click(),
     ),
   );
 }
@@ -83,13 +85,17 @@ async function expectSelfTurn(page: Page, expected: boolean) {
 
 async function dropChip(page: Page, column: number) {
   await page
-    .getByRole("button", { name: new RegExp(`drop chip in column ${column}`, "i") })
+    .getByRole("button", {
+      name: new RegExp(`drop chip in column ${column}`, "i"),
+    })
     .first()
     .click();
 }
 
 function chipLocator(page: Page, color: "yellow" | "red") {
-  return page.locator(color === "yellow" ? "div.bg-yellow-400" : "div.bg-red-600");
+  return page.locator(
+    color === "yellow" ? "div.bg-yellow-400" : "div.bg-red-600",
+  );
 }
 
 async function expectChipCountOnBoth(
@@ -98,7 +104,9 @@ async function expectChipCountOnBoth(
   expectedCount: number,
 ) {
   await Promise.all(
-    pages.map((page) => expect(chipLocator(page, color)).toHaveCount(expectedCount)),
+    pages.map((page) =>
+      expect(chipLocator(page, color)).toHaveCount(expectedCount),
+    ),
   );
 }
 
