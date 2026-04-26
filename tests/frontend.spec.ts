@@ -53,5 +53,15 @@ strictTest("find match and resign", async ({ browser }) => {
     expect(page2.getByText(/Reason: Resignation/i)).toBeVisible(),
   ]);
 
+  await Promise.all(
+    [page1, page2].map(async (page) => {
+      const closeButton = await page.getByRole("button", { name: /close/i });
+      await closeButton.click();
+      await expect(
+        page.getByRole("heading", { name: /Chess Lobby/i }),
+      ).toBeVisible();
+    }),
+  );
+
   await Promise.all(contexts.map((ctx) => ctx.close()));
 });
