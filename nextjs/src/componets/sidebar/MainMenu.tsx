@@ -11,7 +11,6 @@ import { logout } from "@/lib/auth/actions";
 import { GearIcon } from "../icons/GearIcon";
 import { HomeIcon } from "../icons/HomeIcon";
 import { useSidebarActions } from "./SidebarActionsProvider";
-import { broadcastLogoutEvent } from "@/lib/auth/tabBroadcast";
 
 type Props = {
   onClose?: () => void;
@@ -24,7 +23,6 @@ export default function MainMenu({ onClose }: Props) {
 
   const onLogoutClicked = async () => {
     await logout();
-    broadcastLogoutEvent();
     await refreshUser();
   };
 
