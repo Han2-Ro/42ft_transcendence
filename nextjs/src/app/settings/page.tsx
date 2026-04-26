@@ -11,8 +11,8 @@ import {
 } from "@/lib/auth/actions";
 import { useState } from "react";
 import Config2FA from "./2FAConfig";
-import ErrorMessage from "@/componets/ErrorMessage";
-import { AuthModal } from "@/componets/LoginModal";
+import ErrorMessage from "@/components/ErrorMessage";
+import { AuthModal } from "@/components/LoginModal";
 
 export default function Page() {
   const { user, refreshUser } = useAuthConetxt();
