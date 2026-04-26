@@ -1,6 +1,6 @@
 import LeaderBoard from "./LeaderBoard";
 import { getLeaderboard } from "@/lib/auth/actions";
-import StatsNavigationTabs from "@/componets/StatsNavigationTabs";
+import StatsNavigationTabs from "@/components/StatsNavigationTabs";
 
 export default async function Page() {
   const entries = await getLeaderboard();

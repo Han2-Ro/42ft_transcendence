@@ -4,7 +4,7 @@ import {
   getGameTwoHistory,
 } from "@/lib/auth/actions";
 import GameHistory from "./GameHistory";
-import StatsNavigationTabs from "@/componets/StatsNavigationTabs";
+import StatsNavigationTabs from "@/components/StatsNavigationTabs";
 
 export default async function Page() {
   const history2p = await getGameTwoHistory();
