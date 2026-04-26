@@ -169,7 +169,7 @@ export class Room {
   }
 
   private getTimes(): Record<PlayerColor, number> | null {
-	if (!this.timed) return null;
+    if (!this.timed) return null;
     const times = {} as Record<PlayerColor, number>;
     this.order.forEach((value: PlayerColor) => {
       const colorIndex = this.assignedColors.indexOf(value);

@@ -30,7 +30,8 @@ export function useGameClock(
 
     if (player !== activePlayer) return baseTime;
 
-    const elapsed = lastSync.current !== null ? (Date.now() - lastSync.current) / 1000 : 0;
+    const elapsed =
+      lastSync.current !== null ? (Date.now() - lastSync.current) / 1000 : 0;
     return Math.max(0, baseTime - elapsed);
   };
 
