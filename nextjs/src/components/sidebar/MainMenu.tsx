@@ -24,7 +24,6 @@ export default function MainMenu({ onClose }: Props) {
   const [showLogoutConfirmation, setShowLogoutConfirmation] = useState(false);
 
   const onLogoutClicked = async () => {
-    setShowLogoutConfirmation(false);
     await logout();
     await refreshUser();
   };

@@ -4,6 +4,7 @@ import { useAuthConetxt } from "@/components/AuthProvider";
 import Button from "@/components/Button";
 import { Popup } from "@/components/Popup";
 import { TextInput } from "@/components/TextInput";
+import { ConfirmationDialog } from "@/components/ConfirmationDialog";
 import {
   changePassword,
   changeUsername,
@@ -21,6 +22,7 @@ export default function Page() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [showAuthModal, setShowAuthoModal] = useState(false);
+  const [showUnlinkConfirmation, setShowUnlinkConfirmation] = useState(false);
 
   if (!user) {
     return (
@@ -87,6 +89,11 @@ export default function Page() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const onUnlink42Account = async () => {
+    await unlinkFortyTwo();
+    await refreshUser();
   };
 
   return (
@@ -171,6 +178,13 @@ export default function Page() {
         </Popup>
       )}
 
+      <ConfirmationDialog
+        open={showUnlinkConfirmation}
+        onClose={() => setShowUnlinkConfirmation(false)}
+        title="Are you sure you want to unlink your 42 account?"
+        onConfirm={onUnlink42Account}
+      />
+
       <h1 className="text-3xl p-3 text-center">Settings</h1>
       <h2 className="text-xl px-2">Account</h2>
       <hr />
@@ -198,7 +212,7 @@ export default function Page() {
           className="min-w-28 bg-background-secondary"
           onClick={() =>
             user.fortyTwoLogin
-              ? unlinkFortyTwo().then(() => refreshUser())
+              ? setShowUnlinkConfirmation(true)
               : (window.location.href = "/api/auth/42")
           }
         >

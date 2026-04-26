@@ -20,6 +20,11 @@ export const ConfirmationDialog = ({
     return null;
   }
 
+  const onConfirmClicked = async () => {
+    await onConfirm();
+    onClose();
+  };
+
   return (
     <Popup className="p-6" onClose={onClose}>
       <h2 className="text-xl pb-4">{title}</h2>
@@ -31,7 +36,7 @@ export const ConfirmationDialog = ({
         >
           Cancel
         </Button>
-        <Button onClick={onConfirm} className="flex-1">
+        <Button onClick={onConfirmClicked} className="flex-1">
           Confirm
         </Button>
       </div>
