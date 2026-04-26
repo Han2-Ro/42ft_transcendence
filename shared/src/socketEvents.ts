@@ -27,7 +27,7 @@ export interface SToCEvents {
     color: PlayerColor;
     type: Games;
     boardState: BoardState;
-    times: Record<PlayerColor, number>;
+    times: Record<PlayerColor, number> | null;
     players: Record<PlayerColor, number>;
   }) => void;
 
