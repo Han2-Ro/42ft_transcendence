@@ -2,7 +2,17 @@
 
 import { fetchSession } from "@/lib/auth/actions";
 import { User } from "@/lib/auth/session";
-import { createContext, useCallback, useContext, useState } from "react";
+import {
+  broadcastRefreshSessionEvent,
+  subscribeToRefreshSessionEvent,
+} from "@/lib/auth/tabBroadcast";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 
 type AuthContextType = {
   user: User | null;
@@ -22,6 +32,14 @@ export default function AuthProvider({
 
   const refreshUser = useCallback(async () => {
     setUser(await fetchSession());
+    broadcastRefreshSessionEvent();
+  }, []);
+
+  useEffect(() => {
+    const unsubscribe = subscribeToRefreshSessionEvent(async () => {
+      setUser(await fetchSession());
+    });
+    return unsubscribe;
   }, []);
 
   return (

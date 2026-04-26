@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { PlayerColor } from "shared";
 
 export function useGameClock(
@@ -6,13 +6,11 @@ export function useGameClock(
   activePlayer: PlayerColor,
   isRunning: boolean,
 ) {
-  const [localTimes, setLocalTimes] = useState(times);
-  const [lastSync, setLastSync] = useState(Date.now());
+  const lastSync = useRef<number | null>(null);
   const [, forceRender] = useState(0);
 
   useEffect(() => {
-    setLocalTimes(times);
-    setLastSync(Date.now());
+    lastSync.current = Date.now();
   }, [times]);
 
   useEffect(() => {
@@ -26,13 +24,13 @@ export function useGameClock(
   }, [isRunning, times]);
 
   const getDisplayTime = (player: PlayerColor) => {
-    if (!localTimes) return null;
+    if (!times) return null;
 
-    const baseTime = localTimes[player];
+    const baseTime = times[player];
 
     if (player !== activePlayer) return baseTime;
 
-    const elapsed = (Date.now() - lastSync) / 1000;
+    const elapsed = lastSync.current !== null ? (Date.now() - lastSync.current) / 1000 : 0;
     return Math.max(0, baseTime - elapsed);
   };
 

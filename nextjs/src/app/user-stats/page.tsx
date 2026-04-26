@@ -14,18 +14,21 @@ export default function Page() {
   };
 
   return (
-    <main className="flex flex-col gap-4 items-center h-full justify-center">
-      <h1 className="text-4xl">Search for a user</h1>
-      <form onSubmit={handleSubmit} className="flex gap-4">
-        <input
-          className="px-2 py-1 border-2 rounded-sm border-gray-500"
-          type="text"
-          value={username}
-          onChange={(event) => setUsername(event.target.value)}
-          placeholder="Enter username"
-        />
-        <Button type="submit">Submit</Button>
-      </form>
-    </main>
+    <>
+      <StatsNavigationTabs />
+      <main className="flex flex-col gap-4 items-center h-full justify-center">
+        <h1 className="text-4xl">Search for a user</h1>
+        <form onSubmit={handleSubmit} className="flex gap-4">
+          <input
+            className="px-2 py-1 border-2 rounded-sm border-gray-500"
+            type="text"
+            value={username}
+            onChange={(event) => setUsername(event.target.value)}
+            placeholder="Enter username"
+          />
+          <Button type="submit">Submit</Button>
+        </form>
+      </main>
+    </>
   );
 }

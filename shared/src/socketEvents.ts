@@ -35,7 +35,7 @@ export interface SToCEvents {
 
   moveMade: (data: {
     boardState: BoardState;
-    times: Record<PlayerColor, number>;
+    times: Record<PlayerColor, number> | null;
   }) => void;
 
   gameOver: (data: { result: Result; reason: string }) => void;

@@ -168,7 +168,8 @@ export class Room {
     return false;
   }
 
-  private getTimes(): Record<PlayerColor, number> {
+  private getTimes(): Record<PlayerColor, number> | null {
+	if (!this.timed) return null;
     const times = {} as Record<PlayerColor, number>;
     this.order.forEach((value: PlayerColor) => {
       const colorIndex = this.assignedColors.indexOf(value);
