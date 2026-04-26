@@ -114,7 +114,8 @@ Responsibilities:
 Assigned roles: Technical Lead/Architect, Developer  
 Responsibilities:
 
-> TODO
+- Frontend: design & implementation
+- Project setup and architecture: Defining how different parts of the code interact with each other
 
 ## Project Management
 
@@ -238,7 +239,7 @@ Blood, sweat and tears. A lot of nerves, time and dedication.
 
 ### hrother
 
-> TODO
+See [Features List](#features-list) and [Team Information](#team-information)
 
 ## Resources
 
