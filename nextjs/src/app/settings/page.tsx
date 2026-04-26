@@ -11,6 +11,8 @@ import {
 } from "@/lib/auth/actions";
 import { useState } from "react";
 import Config2FA from "./2FAConfig";
+import ErrorMessage from "@/componets/ErrorMessage";
+import { AuthModal } from "@/componets/LoginModal";
 
 export default function Page() {
   const { user, refreshUser } = useAuthConetxt();
@@ -18,9 +20,21 @@ export default function Page() {
   const [showPasswordDialog, setShowPasswordDialog] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [showAuthModal, setShowAuthoModal] = useState(false);
 
   if (!user) {
-    return <main>Log in to change settings</main>;
+    return (
+      <main className="p-8">
+        <ErrorMessage
+          className=" my-auto"
+          errorMsg="You need to log in to edit settings."
+        />
+        <Button onClick={() => setShowAuthoModal(true)}>Log In</Button>
+        {showAuthModal && (
+          <AuthModal onClose={() => setShowAuthoModal(false)} />
+        )}
+      </main>
+    );
   }
 
   const submitNewUsername = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -163,7 +177,7 @@ export default function Page() {
       <div className="flex flex-row justify-between items-center p-2 w-full">
         <p>Username: {user ? user.username : "None"}</p>
         <Button
-          className=" bg-background-secondary"
+          className="min-w-28 bg-background-secondary"
           onClick={() => setShowUsernameDialog(true)}
         >
           Change
@@ -172,7 +186,7 @@ export default function Page() {
       <div className="flex flex-row justify-between items-center p-2 w-full">
         <p>Password: ****</p>
         <Button
-          className="bg-background-secondary"
+          className="min-w-28 bg-background-secondary"
           onClick={() => setShowPasswordDialog(true)}
         >
           Change
@@ -181,7 +195,7 @@ export default function Page() {
       <div className="flex flex-row justify-between items-center p-2 w-full">
         <p>42 Account: {user.fortyTwoLogin ?? "Not linked"}</p>
         <Button
-          className="bg-background-secondary"
+          className="min-w-28 bg-background-secondary"
           onClick={() =>
             user.fortyTwoLogin
               ? unlinkFortyTwo().then(() => refreshUser())
