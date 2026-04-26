@@ -62,7 +62,7 @@ export default function ConnectFourBoard({
   const { getDisplayTime } = useGameClock(times, boardState.turn, isInGame);
 
   return (
-    <div className="flex items-center justify-center gap-4">
+    <div className="flex flex-col md:flex-row items-center justify-center gap-4">
       <div className="relative w-[min(100vw,56vh)] md:w-[min(50vw,70vh)] aspect-7/6 overflow-hidden">
         <div className="absolute inset-3">
           {boardState.board.map((square, index) => {
@@ -162,7 +162,7 @@ export default function ConnectFourBoard({
           })}
         </div>
       </div>
-      <div className="flex flex-col gap-4">
+      <div className="md:w-auto w-full p-4 flex flex-row md:flex-col gap-4">
         <PlayerCard
           testId="player-card-opponent"
           name={
