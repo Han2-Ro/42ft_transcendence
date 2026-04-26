@@ -50,7 +50,10 @@ export default function MainMenu({ onClose }: Props) {
     <>
       <ConfirmationDialog
         open={showLogoutConfirmation}
-        onClose={() => setShowLogoutConfirmation(false)}
+        onClose={() => {
+          setShowLogoutConfirmation(false);
+          onClose?.();
+        }}
         title="Are you sure you want to logout?"
         onConfirm={onLogoutClicked}
       />
@@ -72,7 +75,6 @@ export default function MainMenu({ onClose }: Props) {
           <MenuButton
             onClick={() => {
               setShowLogoutConfirmation(true);
-              onClose?.();
             }}
             icon={<LogoutIcon size={20} />}
             label="Log Out"
