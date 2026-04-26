@@ -277,11 +277,11 @@ export async function getGameFourHistory() {
       const playedAsRed = gameFour.redPlayerId === userId;
 
       const opponents = [];
-      let teammate: "blue" | "green" | "yellow" | "red";
-      if (playedAsBlue) teammate = "green";
-      else if (playedAsGreen) teammate = "blue";
-      else if (playedAsYellow) teammate = "red";
-      else teammate = "yellow";
+      let teammate;
+      if (playedAsBlue) teammate = gameFour.greenPlayer.username;
+      else if (playedAsGreen) teammate = gameFour.bluePlayer.username;
+      else if (playedAsYellow) teammate = gameFour.redPlayer.username;
+      else teammate = gameFour.yellowPlayer.username;
 
       if (playedAsBlue || playedAsGreen) {
         opponents.push(gameFour.yellowPlayer.username);
