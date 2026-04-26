@@ -143,7 +143,7 @@ export default function Page() {
       setServerConnectionStatus("waiting");
       socket.disconnect();
     };
-  }, [user]);
+  }, [user?.userId]);
 
   useEffect(() => {
     if (!players) return;
