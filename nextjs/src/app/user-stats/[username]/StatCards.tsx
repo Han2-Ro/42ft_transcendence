@@ -1,7 +1,7 @@
 export default function StatCards({
   stats,
 }: {
-  stats: { label: string; value: number }[];
+  stats: { label: string; value: number | string }[];
 }) {
   return (
     <div className="flex flex-row flex-wrap gap-4">

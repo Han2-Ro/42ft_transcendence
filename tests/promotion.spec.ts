@@ -1,4 +1,5 @@
-import { test, expect, Page } from "@playwright/test";
+import { expect, Page } from "@playwright/test";
+import { test } from "./base-test";
 import { registerAndLogin } from "./utils";
 
 async function board(page: Page) {
