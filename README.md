@@ -161,22 +161,22 @@ Responsibilities:
 <img width="1758" height="921" alt="image" src="https://github.com/user-attachments/assets/7a59b30f-986f-478b-aa18-3df51949ca43" />
 
 ## Features List
- - **2 player chess with two game modes (no time limit, 10min.).**   (hrother, fstark, jlomic and aprevrha)
- - **4 player chess with two game modes (no time limit, 10min.).**  (hrother, fstark, jlomic and aprevrha)
- - **4connect game with two game modes (no time limit, 10min.).**   (hrother, fstark, jlomic and aprevrha)
- - **User managment:**   (hrother, fstark and jlomic)
-   - Changing username
-   - Changing password
-   - Linking 42 account to the 42 chess account
-   - Enabling 2FA (6-digit code verification)
- - **User stats** (hrother, fstark and jlomic)
- - **Game history** (hrother and jlomic)
- - **Leaderboard** (hrother and jlomic)
- - **Levels** (jlomic)
- - **Remote players** (fstark and hrother)
- - **Multiplayer game** (hrother, fstark, jlomic and aprevrha)
- - **Real time sync. over websockets** (fstark and hrother)
 
+- **2 player chess with two game modes (no time limit, 10min.).** (hrother, fstark, jlomic and aprevrha)
+- **4 player chess with two game modes (no time limit, 10min.).** (hrother, fstark, jlomic and aprevrha)
+- **4connect game with two game modes (no time limit, 10min.).** (hrother, fstark, jlomic and aprevrha)
+- **User managment:** (hrother, fstark and jlomic)
+  - Changing username
+  - Changing password
+  - Linking 42 account to the 42 chess account
+  - Enabling 2FA (6-digit code verification)
+- **User stats** (hrother, fstark and jlomic)
+- **Game history** (hrother and jlomic)
+- **Leaderboard** (hrother and jlomic)
+- **Levels** (jlomic)
+- **Remote players** (fstark and hrother)
+- **Multiplayer game** (hrother, fstark, jlomic and aprevrha)
+- **Real time sync. over websockets** (fstark and hrother)
 
 ## Modules
 
@@ -198,38 +198,29 @@ Responsibilities:
 | **TOTAL**                     |       | **17** |
 
 ### Module implementation details
- - **Full Stack Framework**
-   - We used Next.js for front and backend.
-     
- - **Real-time feature**
-   - We used WebSockets for real time communication between Next.js and Game server.
-     
- - **ORM**
-   - We used PrismaORM for creating DB models.
-     
- - **Additional Browsers**
-   - We support different browsers.
-     
- - **Game statistics & history**
-   - We have user stats and user game history.
-     
- - **OAuth 2.0 (42 intra)**
-   - We support OAuth, you can login with your 42 account. We use 42 APIs.
-     
- - **2FA**
-   - We use otplib and qrcode to generate secret and QR code. Can be used with any auth app to enter 6 digit code.
-     
- - **Complete Web-based Game**
-   - Full web based chess game and 4connect game.
-     
- - **Remote players**
-   - Players can play from any device which is on the same network as server.
-     
- - **Multiplayer**
-   - 4 Player chess game mode.
-     
- - **Add another game**
-   - 4connect game with no time limit and 10min limit mode.
+
+- **Full Stack Framework**
+  - We used Next.js for front and backend.
+- **Real-time feature**
+  - We used WebSockets for real time communication between Next.js and Game server.
+- **ORM**
+  - We used PrismaORM for creating DB models.
+- **Additional Browsers**
+  - We support different browsers.
+- **Game statistics & history**
+  - We have user stats and user game history.
+- **OAuth 2.0 (42 intra)**
+  - We support OAuth, you can login with your 42 account. We use 42 APIs.
+- **2FA**
+  - We use otplib and qrcode to generate secret and QR code. Can be used with any auth app to enter 6 digit code.
+- **Complete Web-based Game**
+  - Full web based chess game and 4connect game.
+- **Remote players**
+  - Players can play from any device which is on the same network as server.
+- **Multiplayer**
+  - 4 Player chess game mode.
+- **Add another game**
+  - 4connect game with no time limit and 10min limit mode.
 
 ## Individual Contributions
 
