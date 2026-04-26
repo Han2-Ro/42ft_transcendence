@@ -94,7 +94,7 @@ export default function TwoPlayerBoard({
   const { getDisplayTime } = useGameClock(times, boardState.turn, isInGame);
 
   return (
-    <div className="flex items-center justify-center gap-4">
+    <div className="flex items-center flex-col md:flex-row justify-center gap-4">
       <div className={`${playerColor === "black" ? "rotate-180" : ""}`}>
         <div className="w-[min(100vw,50vh)] h-[min(100vw,50vh)] md:w-[min(50vw,70vh)] md:h-[min(50vw,70vh)] grid grid-rows-8 grid-cols-8">
           {boardState.board.map((sq: PieceOrNull, index: number) => (
@@ -133,7 +133,7 @@ export default function TwoPlayerBoard({
         </div>
       </div>
       {isInGame && (
-        <div className="flex flex-col gap-4">
+        <div className="flex md:w-auto w-full p-4 flex-row md:flex-col gap-4">
           <PlayerCard
             testId="player-card-opponent"
             name={
