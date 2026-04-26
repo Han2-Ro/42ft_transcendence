@@ -161,21 +161,21 @@ Responsibilities:
 <img width="1758" height="921" alt="image" src="https://github.com/user-attachments/assets/7a59b30f-986f-478b-aa18-3df51949ca43" />
 
 ## Features List
- - 2 player chess with two game modes (no time limit, 10min.).
- - 4 player chess with two game modes (no time limit, 10min.).
- - 4connect game with two game modes (no time limit, 10min.).
- - User managment:
+ - **2 player chess with two game modes (no time limit, 10min.).**   (hrother, fstark, jlomic and aprevrha)
+ - **4 player chess with two game modes (no time limit, 10min.).**  (hrother, fstark, jlomic and aprevrha)
+ - **4connect game with two game modes (no time limit, 10min.).**   (hrother, fstark, jlomic and aprevrha)
+ - **User managment:**   (hrother, fstark and jlomic)
    - Changing username
    - Changing password
    - Linking 42 account to the 42 chess account
    - Enabling 2FA (6-digit code verification)
- - User stats
- - Game history
- - Leaderboard
- - Levels
- - Remote players
- - Multiplayer game
- - Real time sync. over websockets
+ - **User stats** (hrother, fstark and jlomic)
+ - **Game history** (hrother and jlomic)
+ - **Leaderboard** (hrother and jlomic)
+ - **Levels** (jlomic)
+ - **Remote players** (fstark and hrother)
+ - **Multiplayer game** (hrother, fstark, jlomic and aprevrha)
+ - **Real time sync. over websockets** (fstark and hrother)
 
 
 ## Modules
