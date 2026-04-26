@@ -14,24 +14,6 @@ import { DeadKing } from "@/components/icons/DeadKing";
 import { useAuthConetxt } from "@/components/AuthProvider";
 import { getUsername } from "@/lib/auth/actions";
 
-const turnBadgeStyles: Record<PlayerColor, string> = {
-  white: "border border-slate-300 bg-slate-100 text-slate-900",
-  black: "border border-slate-700 bg-slate-900 text-white",
-  red: "border border-red-500 bg-red-500/10 text-red-400",
-  yellow: "border border-yellow-400 bg-yellow-300/10 text-yellow-950",
-  green: "border border-emerald-500 bg-emerald-500/10 text-emerald-900",
-  blue: "border border-sky-500 bg-sky-500/10 text-sky-900",
-};
-
-const turnDotStyles: Record<PlayerColor, string> = {
-  white: "bg-slate-300",
-  black: "bg-slate-900",
-  red: "bg-red-500",
-  yellow: "bg-yellow-400",
-  green: "bg-emerald-500",
-  blue: "bg-sky-500",
-};
-
 function getGameServerUrl() {
   if (process.env.NEXT_PUBLIC_GAMESERVER_URL) {
     return process.env.NEXT_PUBLIC_GAMESERVER_URL;
