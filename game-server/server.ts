@@ -72,10 +72,10 @@ io.use((socket, next) => {
       }
       next();
     })
-    .catch((error: unknown) => {
+    .catch((error: Error) => {
       console.log("Authentication error:", error);
       console.log("nextjsUrl", nextjsUrl);
-      next(new Error(`Authentication error: ${error}`));
+      next(new Error(`Authentication error: ${error.message}`));
     });
 });
 
