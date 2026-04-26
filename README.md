@@ -100,9 +100,7 @@ Responsibilities:
 ### jlomic
 
 Assigned roles: Project Manager, Developer  
-Responsibilities:
-
-> TODO
+Responsibilities: Backend (APIs, DB, Server actions...)
 
 ### aprevrha
 
@@ -197,7 +195,7 @@ Responsibilities:
 
 ### jlomic
 
-> TODO
+Blood, sweat and tears. A lot of nerves, time and dedication.
 
 ### aprevrha
 
