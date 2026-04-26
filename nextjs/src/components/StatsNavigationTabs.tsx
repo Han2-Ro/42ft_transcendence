@@ -1,7 +1,7 @@
 "use client";
 
-import { useAuthConetxt } from "@/componets/AuthProvider";
-import { PlainLink } from "@/componets/PlainLink";
+import { useAuthConetxt } from "@/components/AuthProvider";
+import { PlainLink } from "@/components/PlainLink";
 import { usePathname } from "next/navigation";
 
 export default function StatsNavigationTabs() {

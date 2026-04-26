@@ -1,6 +1,6 @@
 "use client";
 
-import { useAuthConetxt } from "@/componets/AuthProvider";
+import { useAuthConetxt } from "@/components/AuthProvider";
 import { getWinRatio } from "@/lib/getWinRation";
 import Link from "next/link";
 import { useMemo, useState } from "react";

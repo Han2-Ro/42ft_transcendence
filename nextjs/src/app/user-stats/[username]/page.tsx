@@ -1,8 +1,9 @@
 import { getUserStats } from "@/lib/auth/actions";
 import StatCards from "./StatCards";
+import ErrorMessage from "@/components/ErrorMessage";
 import { getWinRatio } from "@/lib/getWinRation";
 import { notFound } from "next/navigation";
-import StatsNavigationTabs from "@/componets/StatsNavigationTabs";
+import StatsNavigationTabs from "@/components/StatsNavigationTabs";
 
 export default async function Page({
   params,

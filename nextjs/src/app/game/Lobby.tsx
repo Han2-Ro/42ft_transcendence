@@ -1,6 +1,6 @@
 import { Games } from "shared";
 
-import Button from "../../componets/Button";
+import Button from "../../components/Button";
 
 export type ConnectionStatus =
   | "connected"

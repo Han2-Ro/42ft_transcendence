@@ -1,7 +1,7 @@
 "use client";
 
-import Button from "@/componets/Button";
-import { Popup } from "../../componets/Popup";
+import Button from "@/components/Button";
+import { Popup } from "../../components/Popup";
 import { PromotablePieceType } from "shared";
 
 const PROMOTION_OPTIONS: PromotablePieceType[] = [

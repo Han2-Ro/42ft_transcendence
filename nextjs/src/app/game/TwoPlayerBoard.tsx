@@ -9,9 +9,11 @@ import {
   BoardStateChess,
   MoveChess,
 } from "shared";
+
 import Image from "next/image";
 import { PromotionDialog } from "./PromotionDialog";
 import { PlayerCard } from "./PlayerCard";
+import { useGameClock } from "./useGameClock";
 
 export default function TwoPlayerBoard({
   boardState,
@@ -24,7 +26,7 @@ export default function TwoPlayerBoard({
   boardState: BoardStateChess;
   onPlayerMove: (move: Move) => void;
   playerColor: PlayerColor;
-  times: number[];
+  times: Record<PlayerColor, number> | null;
   isInGame?: boolean;
   usernames?: Partial<Record<PlayerColor, string>>;
 }) {
@@ -89,6 +91,8 @@ export default function TwoPlayerBoard({
     setPendingPromotionMove(null);
   };
 
+  const { getDisplayTime } = useGameClock(times, boardState.turn, isInGame);
+
   return (
     <div className="flex items-center justify-center gap-4">
       <div className={`${playerColor === "black" ? "rotate-180" : ""}`}>
@@ -138,8 +142,11 @@ export default function TwoPlayerBoard({
             }
             color={playerColor === "white" ? "black" : "white"}
             isTurn={boardState.turn != playerColor}
-            time={times[playerColor === "white" ? 1 : 0]}
-            isTimed={times[playerColor === "white" ? 1 : 0] !== -1}
+            time={
+              getDisplayTime(playerColor === "white" ? "black" : "white") ??
+              undefined
+            }
+            isTimed={times !== null}
           />
           <PlayerCard
             testId="player-card-self"
@@ -149,8 +156,8 @@ export default function TwoPlayerBoard({
             }
             color={playerColor}
             isTurn={boardState.turn === playerColor}
-            time={times[playerColor === "white" ? 0 : 1]}
-            isTimed={times[playerColor === "white" ? 0 : 1] !== -1}
+            time={getDisplayTime(playerColor) ?? undefined}
+            isTimed={times !== null}
           />
         </div>
       )}

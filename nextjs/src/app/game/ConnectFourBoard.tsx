@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Move, PlayerColor, BoardStateCon4 } from "shared";
 import { PlayerCard } from "./PlayerCard";
+import { useGameClock } from "./useGameClock";
 
 const COLS = 7;
 const ROWS = 6;
@@ -41,12 +42,14 @@ export default function ConnectFourBoard({
   onPlayerMove,
   playerColor,
   times,
+  isInGame = true,
   usernames,
 }: {
   boardState: BoardStateCon4;
   onPlayerMove: (move: Move) => void;
   playerColor: PlayerColor;
-  times: number[];
+  times: Record<PlayerColor, number> | null;
+  isInGame?: boolean;
   usernames?: Partial<Record<PlayerColor, string>>;
 }) {
   const [mounted, setMounted] = useState(false);
@@ -55,6 +58,8 @@ export default function ConnectFourBoard({
     const id = requestAnimationFrame(() => setMounted(true));
     return () => cancelAnimationFrame(id);
   }, []);
+
+  const { getDisplayTime } = useGameClock(times, boardState.turn, isInGame);
 
   return (
     <div className="flex items-center justify-center gap-4">
@@ -166,8 +171,11 @@ export default function ConnectFourBoard({
           }
           color={playerColor === "yellow" ? "red" : "yellow"}
           isTurn={boardState.turn != playerColor}
-          time={times[playerColor === "yellow" ? 1 : 0]}
-          isTimed={times[playerColor === "yellow" ? 1 : 0] !== -1}
+          time={
+            getDisplayTime(playerColor === "yellow" ? "red" : "yellow") ??
+            undefined
+          }
+          isTimed={times !== null}
         />
         <PlayerCard
           testId="player-card-self"
@@ -177,8 +185,8 @@ export default function ConnectFourBoard({
           }
           color={playerColor}
           isTurn={boardState.turn === playerColor}
-          time={times[playerColor === "yellow" ? 0 : 1]}
-          isTimed={times[playerColor === "yellow" ? 0 : 1] !== -1}
+          time={getDisplayTime(playerColor) ?? undefined}
+          isTimed={times !== null}
         />
       </div>
     </div>
