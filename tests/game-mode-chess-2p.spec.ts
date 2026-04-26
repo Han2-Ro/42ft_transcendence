@@ -324,6 +324,63 @@ test.describe.serial("chess 2-player modes", () => {
     }
   });
 
+  test("2-player chess ends by checkmate", async ({ browser }) => {
+    test.setTimeout(120_000);
+    const { contexts, pages } = await createPlayers(browser, 2);
+    const [page1, page2] = pages;
+
+    try {
+      await Promise.all(
+        [page1, page2].map((page) =>
+          page.getByRole("button", { name: /\bchess \(10 min\)/i }).click(),
+        ),
+      );
+      await Promise.all([
+        expect(page1.getByTestId("player-card-self")).toBeVisible(),
+        expect(page2.getByTestId("player-card-self")).toBeVisible(),
+      ]);
+
+      const { whitePage, blackPage } = await resolvePlayerPages(page1, page2);
+
+      await expectTurn(whitePage, "white");
+      await move(whitePage, 53, 45);
+      await Promise.all([
+        moveApplied(whitePage, 53, 45, "white pawn"),
+        moveApplied(blackPage, 53, 45, "white pawn"),
+      ]);
+
+      await expectTurn(blackPage, "black");
+      await move(blackPage, 12, 28);
+      await Promise.all([
+        moveApplied(whitePage, 12, 28, "black pawn"),
+        moveApplied(blackPage, 12, 28, "black pawn"),
+      ]);
+
+      await expectTurn(whitePage, "white");
+      await move(whitePage, 54, 38);
+      await Promise.all([
+        moveApplied(whitePage, 54, 38, "white pawn"),
+        moveApplied(blackPage, 54, 38, "white pawn"),
+      ]);
+
+      await expectTurn(blackPage, "black");
+      await move(blackPage, 3, 39);
+      await Promise.all([
+        moveApplied(whitePage, 3, 39, "black queen"),
+        moveApplied(blackPage, 3, 39, "black queen"),
+      ]);
+
+      await Promise.all([
+        expect(whitePage.getByText(/result:\s*lose/i)).toBeVisible(),
+        expect(whitePage.getByText(/reason:\s*checkmate/i)).toBeVisible(),
+        expect(blackPage.getByText(/result:\s*win/i)).toBeVisible(),
+        expect(blackPage.getByText(/reason:\s*checkmate/i)).toBeVisible(),
+      ]);
+    } finally {
+      await closeAll(contexts);
+    }
+  });
+
   test("D4 — timed 2-player chess ends by timeout", async ({ browser }) => {
     test.setTimeout(120_000);
     const { contexts, pages } = await createPlayers(browser, 2);
