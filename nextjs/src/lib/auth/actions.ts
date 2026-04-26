@@ -213,6 +213,7 @@ export async function getGameTwoHistory() {
       blackPlayer: { select: { id: true, username: true } },
     },
     orderBy: { createdAt: "desc" },
+    take: 50,
   });
 
   return games
@@ -266,6 +267,7 @@ export async function getGameFourHistory() {
       redPlayer: { select: { id: true, username: true } },
     },
     orderBy: { createdAt: "desc" },
+    take: 50,
   });
 
   return gamesFour
@@ -456,6 +458,7 @@ export async function connectGameHistory() {
       connectRedPlayer: { select: { id: true, username: true } },
     },
     orderBy: { createdAt: "desc" },
+    take: 50,
   });
 
   return connectGames
