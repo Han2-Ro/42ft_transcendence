@@ -160,7 +160,7 @@ Responsibilities:
 
 ## Database Schema
 
-> TODO
+<img width="1758" height="921" alt="image" src="https://github.com/user-attachments/assets/7a59b30f-986f-478b-aa18-3df51949ca43" />
 
 ## Features List
 
