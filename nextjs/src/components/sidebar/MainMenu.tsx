@@ -11,6 +11,7 @@ import { logout } from "@/lib/auth/actions";
 import { GearIcon } from "../icons/GearIcon";
 import { HomeIcon } from "../icons/HomeIcon";
 import { useSidebarActions } from "./SidebarActionsProvider";
+import { ConfirmationDialog } from "../ConfirmationDialog";
 
 type Props = {
   onClose?: () => void;
@@ -20,8 +21,10 @@ export default function MainMenu({ onClose }: Props) {
   const [showLogin, setShowLogin] = useState(false);
   const { user, refreshUser } = useAuthConetxt();
   const { actions } = useSidebarActions();
+  const [showLogoutConfirmation, setShowLogoutConfirmation] = useState(false);
 
   const onLogoutClicked = async () => {
+    setShowLogoutConfirmation(false);
     await logout();
     await refreshUser();
   };
@@ -46,6 +49,12 @@ export default function MainMenu({ onClose }: Props) {
 
   return (
     <>
+      <ConfirmationDialog
+        open={showLogoutConfirmation}
+        onClose={() => setShowLogoutConfirmation(false)}
+        title="Are you sure you want to logout?"
+        onConfirm={onLogoutClicked}
+      />
       {showLogin && <AuthModal onClose={() => setShowLogin(false)} />}
       <nav className="h-full w-full py-6 flex flex-col justify-center gap-4 items-start">
         <MenuButton
@@ -63,7 +72,7 @@ export default function MainMenu({ onClose }: Props) {
         {user ? (
           <MenuButton
             onClick={() => {
-              onLogoutClicked();
+              setShowLogoutConfirmation(true);
               onClose?.();
             }}
             icon={<LogoutIcon size={20} />}
