@@ -9,9 +9,9 @@ import EndScreen from "./EndScreen";
 import { CToSEvents, startingBoardState, SToCEvents } from "shared";
 import { BoardState, PlayerColor, Move, Games } from "shared";
 import { Result as GameResult } from "shared";
-import { useSidebarActions } from "@/componets/sidebar/SidebarActionsProvider";
-import { DeadKing } from "@/componets/icons/DeadKing";
-import { useAuthConetxt } from "@/componets/AuthProvider";
+import { useSidebarActions } from "@/components/sidebar/SidebarActionsProvider";
+import { DeadKing } from "@/components/icons/DeadKing";
+import { useAuthConetxt } from "@/components/AuthProvider";
 import { getUsername } from "@/lib/auth/actions";
 
 const turnBadgeStyles: Record<PlayerColor, string> = {
@@ -54,7 +54,7 @@ export default function Page() {
   const [gameType, setGameType] = useState<Games | null>(null);
   const [color, setColor] = useState<PlayerColor>("white");
   const [boardState, setBoardState] = useState<BoardState>(startingBoardState);
-  const [times, setTimes] = useState<number[] | null>(null);
+  const [times, setTimes] = useState<Record<PlayerColor, number> | null>(null);
   const [players, setPlayerIDs] = useState<Record<PlayerColor, number> | null>(
     null,
   );
@@ -215,7 +215,7 @@ export default function Page() {
           gameType={gameType ?? "chess"}
           color={color ?? "white"}
           onPlayerMove={gameId && !result ? emitPlayerMove : () => {}}
-          times={times ?? [-1]}
+          times={times}
           isInGame={Boolean(gameId && !result)}
           usernames={usernames}
         />

@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import NavigationBar from "../componets/sidebar/NavigationBar";
+import NavigationBar from "../components/sidebar/NavigationBar";
 import { getSession } from "@/lib/auth/session";
-import AuthProvider from "@/componets/AuthProvider";
-import SidebarActionsProvider from "@/componets/sidebar/SidebarActionsProvider";
+import AuthProvider from "@/components/AuthProvider";
+import SidebarActionsProvider from "@/components/sidebar/SidebarActionsProvider";
 import Footer from "./Footer";
 
 export const metadata: Metadata = {

@@ -1,4 +1,4 @@
-import ErrorMessage from "@/componets/ErrorMessage";
+import ErrorMessage from "@/components/ErrorMessage";
 import type { getGameFourHistory, getGameTwoHistory } from "@/lib/auth/actions";
 
 /* const sampleEntries: GameHistoryEntry[] = [

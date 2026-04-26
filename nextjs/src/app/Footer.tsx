@@ -1,4 +1,4 @@
-import { PlainLink } from "@/componets/PlainLink";
+import { PlainLink } from "@/components/PlainLink";
 
 export default function Footer() {
   return (

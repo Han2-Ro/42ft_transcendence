@@ -12,6 +12,7 @@ import {
 import Image from "next/image";
 import { PromotionDialog } from "./PromotionDialog";
 import { PlayerCard } from "./PlayerCard";
+import { useGameClock } from "./useGameClock";
 
 const boardRotation: Record<string, string> = {
   red: "",
@@ -62,24 +63,19 @@ const cornerAssignments: Record<
   },
 };
 
-const colorToIndex: Record<"red" | "blue" | "yellow" | "green", number> = {
-  red: 0,
-  blue: 1,
-  yellow: 2,
-  green: 3,
-};
-
 export default function FourPlayerBoard({
   boardState,
   onPlayerMove,
   playerColor,
   times,
+  isInGame = true,
   usernames,
 }: {
   boardState: BoardStateChess;
   onPlayerMove: (move: MoveChess) => void;
   playerColor: PlayerColor;
-  times: number[];
+  times: Record<PlayerColor, number> | null;
+  isInGame?: boolean;
   usernames?: Partial<Record<PlayerColor, string>>;
 }) {
   const [selectedSquare, setSelectedSquare] = useState<number | null>(null);
@@ -146,6 +142,9 @@ export default function FourPlayerBoard({
     const seconds = Math.round(time % 60);
     return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
   };
+
+  //const activePlayerIndex = colorToIndex[ boardState.turn as keyof typeof colorToIndex] ?? 0;
+  const { getDisplayTime } = useGameClock(times, boardState.turn, isInGame);
 
   return (
     <div className="flex flex-col justify-center items-center h-full gap-4">
@@ -244,18 +243,8 @@ export default function FourPlayerBoard({
                     }
                     color={assignments.topLeft}
                     isTurn={boardState.turn === assignments.topLeft}
-                    time={
-                      times[
-                        colorToIndex[
-                          assignments.topLeft as
-                            | "red"
-                            | "blue"
-                            | "yellow"
-                            | "green"
-                        ]
-                      ]
-                    }
-                    isTimed={times[0] !== -1}
+                    time={getDisplayTime(assignments.topLeft) ?? undefined}
+                    isTimed={times !== null}
                   />
                 </div>
                 <div
@@ -274,18 +263,8 @@ export default function FourPlayerBoard({
                     }
                     color={assignments.topRight}
                     isTurn={boardState.turn === assignments.topRight}
-                    time={
-                      times[
-                        colorToIndex[
-                          assignments.topRight as
-                            | "red"
-                            | "blue"
-                            | "yellow"
-                            | "green"
-                        ]
-                      ]
-                    }
-                    isTimed={times[0] !== -1}
+                    time={getDisplayTime(assignments.topRight) ?? undefined}
+                    isTimed={times !== null}
                   />
                 </div>
                 <div
@@ -304,18 +283,8 @@ export default function FourPlayerBoard({
                     }
                     color={assignments.bottomLeft}
                     isTurn={boardState.turn === assignments.bottomLeft}
-                    time={
-                      times[
-                        colorToIndex[
-                          assignments.bottomLeft as
-                            | "red"
-                            | "blue"
-                            | "yellow"
-                            | "green"
-                        ]
-                      ]
-                    }
-                    isTimed={times[0] !== -1}
+                    time={getDisplayTime(assignments.bottomLeft) ?? undefined}
+                    isTimed={times !== null}
                   />
                 </div>
                 <div
@@ -335,18 +304,8 @@ export default function FourPlayerBoard({
                     color={assignments.bottomRight}
                     isTurn={boardState.turn === assignments.bottomRight}
                     isYou={true}
-                    time={
-                      times[
-                        colorToIndex[
-                          assignments.bottomRight as
-                            | "red"
-                            | "blue"
-                            | "yellow"
-                            | "green"
-                        ]
-                      ]
-                    }
-                    isTimed={times[0] !== -1}
+                    time={getDisplayTime(assignments.bottomRight) ?? undefined}
+                    isTimed={times !== null}
                   />
                 </div>
               </>

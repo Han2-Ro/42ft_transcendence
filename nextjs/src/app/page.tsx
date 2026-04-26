@@ -2,7 +2,7 @@ import LeaderBoard from "@/app/leaderboard/LeaderBoard";
 import Link from "next/link";
 import GameHistory from "./history/GameHistory";
 import { getGameTwoHistory, getLeaderboard } from "@/lib/auth/actions";
-import ErrorMessage from "@/componets/ErrorMessage";
+import ErrorMessage from "@/components/ErrorMessage";
 
 export default async function Home({
   searchParams,

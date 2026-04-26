@@ -14,7 +14,7 @@ interface GameProps {
   boardState: BoardState;
   gameType: Games;
   color: PlayerColor;
-  times: number[];
+  times: Record<PlayerColor, number> | null;
   onPlayerMove: (move: Move) => void;
   isInGame: boolean;
   usernames?: Partial<Record<PlayerColor, string>>;
@@ -52,6 +52,7 @@ export default function Game({
           onPlayerMove={onPlayerMove}
           playerColor={color}
           times={times}
+          isInGame={isInGame}
           usernames={usernames}
         />
       ) : (
@@ -60,6 +61,7 @@ export default function Game({
           onPlayerMove={onPlayerMove}
           playerColor={color}
           times={times}
+          isInGame={isInGame}
           usernames={usernames}
         />
       )}
