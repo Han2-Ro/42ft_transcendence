@@ -170,9 +170,8 @@ export default function Page() {
 
     setActions([
       {
-        label: "Resign",
+        label: "😹 Resign",
         onClick: emitPlayerResign,
-        icon: <DeadKing size={20} className=" text-red-600" />,
       },
     ]);
 
