@@ -21,6 +21,8 @@ services:
       - "traefik.http.routers.nextjs.rule=PathPrefix(`/`)"
       - "traefik.http.routers.nextjs.entrypoints=websecure"
       - "traefik.http.routers.nextjs.tls=true"
+      - "traefik.http.routers.nextjs.middlewares=nextjs-internal-header"
+      - "traefik.http.middlewares.nextjs-internal-header.headers.customrequestheaders.x-internal-secret=${INTERNAL_SECRET}"
       - "traefik.http.services.nextjs.loadbalancer.server.port=${PORT:-3000}"
 
   gamesserver:
