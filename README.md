@@ -93,9 +93,7 @@ It will be much apreciated if you write tests for everything you implement!
 ### fstark
 
 Assigned roles: Developer  
-Responsibilities:
-
-> TODO
+Responsibilities: Socketserver, game logic (Chess / 4PlayerChess / Connect4)
 
 ### jlomic
 
@@ -227,7 +225,7 @@ Responsibilities:
 
 ### fstark
 
-> TODO
+Wrote the Games logic and the Socketserver (basically everything in the game-server and shared folder) and wrote the worst looking frontend for the games ever seen (until it got fixed by someone else)
 
 ### jlomic
 
