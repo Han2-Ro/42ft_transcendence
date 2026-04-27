@@ -1,9 +1,6 @@
 import "server-only";
 
-import bcrypt from "bcrypt";
 import { SignJWT } from "jose";
-import { prisma } from "@/lib/prisma";
-import { cookies } from "next/headers";
 
 function getJwtSecret() {
   const secret = process.env.JWT_SECRET;

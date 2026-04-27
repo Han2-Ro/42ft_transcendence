@@ -1,6 +1,5 @@
 import { getUserStats } from "@/lib/auth/actions";
 import StatCards from "./StatCards";
-import ErrorMessage from "@/components/ErrorMessage";
 import { getWinRatio } from "@/lib/getWinRation";
 import { notFound } from "next/navigation";
 import StatsNavigationTabs from "@/components/StatsNavigationTabs";
