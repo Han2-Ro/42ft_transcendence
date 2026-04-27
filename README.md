@@ -238,6 +238,11 @@ See [Features List](#features-list) and [Team Information](#team-information)
 
 ## Resources
 
+### Image Sources
+
+- **[Wikipedia](https://commons.wikimedia.org/wiki/Template:SVG_chess_pieces)** - Chess pieces (also credited in the credits page)
+- **[SVG Repo](https://www.svgrepo.com/)** - some of the icons (also credited in the credits page)
+
 ### Documentation
 
 - **[Next.js](https://nextjs.org/docs)** - React framework for frontend and backend
