@@ -4,6 +4,7 @@ import { useAuthConetxt } from "@/components/AuthProvider";
 import Button from "@/components/Button";
 import { Popup } from "@/components/Popup";
 import { TextInput } from "@/components/TextInput";
+import { ConfirmationDialog } from "@/components/ConfirmationDialog";
 import {
   changePassword,
   changeUsername,
@@ -11,6 +12,8 @@ import {
 } from "@/lib/auth/actions";
 import { useState } from "react";
 import Config2FA from "./2FAConfig";
+import ErrorMessage from "@/components/ErrorMessage";
+import { AuthModal } from "@/components/LoginModal";
 
 export default function Page() {
   const { user, refreshUser } = useAuthConetxt();
@@ -18,9 +21,22 @@ export default function Page() {
   const [showPasswordDialog, setShowPasswordDialog] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [showAuthModal, setShowAuthoModal] = useState(false);
+  const [showUnlinkConfirmation, setShowUnlinkConfirmation] = useState(false);
 
   if (!user) {
-    return <main>Log in to change settings</main>;
+    return (
+      <main className="p-8">
+        <ErrorMessage
+          className=" my-auto"
+          errorMsg="You need to log in to edit settings."
+        />
+        <Button onClick={() => setShowAuthoModal(true)}>Log In</Button>
+        {showAuthModal && (
+          <AuthModal onClose={() => setShowAuthoModal(false)} />
+        )}
+      </main>
+    );
   }
 
   const submitNewUsername = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -73,6 +89,11 @@ export default function Page() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const onUnlink42Account = async () => {
+    await unlinkFortyTwo();
+    await refreshUser();
   };
 
   return (
@@ -157,13 +178,20 @@ export default function Page() {
         </Popup>
       )}
 
+      <ConfirmationDialog
+        open={showUnlinkConfirmation}
+        onClose={() => setShowUnlinkConfirmation(false)}
+        title="Are you sure you want to unlink your 42 account?"
+        onConfirm={onUnlink42Account}
+      />
+
       <h1 className="text-3xl p-3 text-center">Settings</h1>
       <h2 className="text-xl px-2">Account</h2>
       <hr />
       <div className="flex flex-row justify-between items-center p-2 w-full">
         <p>Username: {user ? user.username : "None"}</p>
         <Button
-          className=" bg-background-secondary"
+          className="min-w-28 bg-background-secondary"
           onClick={() => setShowUsernameDialog(true)}
         >
           Change
@@ -172,7 +200,7 @@ export default function Page() {
       <div className="flex flex-row justify-between items-center p-2 w-full">
         <p>Password: ****</p>
         <Button
-          className="bg-background-secondary"
+          className="min-w-28 bg-background-secondary"
           onClick={() => setShowPasswordDialog(true)}
         >
           Change
@@ -181,10 +209,10 @@ export default function Page() {
       <div className="flex flex-row justify-between items-center p-2 w-full">
         <p>42 Account: {user.fortyTwoLogin ?? "Not linked"}</p>
         <Button
-          className="bg-background-secondary"
+          className="min-w-28 bg-background-secondary"
           onClick={() =>
             user.fortyTwoLogin
-              ? unlinkFortyTwo().then(() => refreshUser())
+              ? setShowUnlinkConfirmation(true)
               : (window.location.href = "/api/auth/42")
           }
         >
