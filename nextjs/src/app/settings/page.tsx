@@ -27,7 +27,7 @@ export default function Page() {
   const [showPasswordDialog, setShowPasswordDialog] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [showAuthModal, setShowAuthoModal] = useState(false);
+  const [showAuthModal, setShowAuthModal] = useState(false);
   const [showUnlinkConfirmation, setShowUnlinkConfirmation] = useState(false);
 
   if (!user) {
@@ -37,13 +37,19 @@ export default function Page() {
           className=" my-auto"
           errorMsg="You need to log in to edit settings."
         />
-        <Button onClick={() => setShowAuthoModal(true)}>Log In</Button>
-        {showAuthModal && (
-          <AuthModal onClose={() => setShowAuthoModal(false)} />
-        )}
+        <Button onClick={() => setShowAuthModal(true)}>Log In</Button>
+        {showAuthModal && <AuthModal onClose={() => setShowAuthModal(false)} />}
       </main>
     );
   }
+
+  const closePopups = () => {
+    setShowAuthModal(false);
+    setShowPasswordDialog(false);
+    setShowUsernameDialog(false);
+    setShowUnlinkConfirmation(false);
+    setError("");
+  };
 
   const submitNewUsername = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -117,7 +123,7 @@ export default function Page() {
   return (
     <main className=" max-w-lg mx-auto p-2">
       {showUsernameDialog && (
-        <Popup className="p-8" onClose={() => setShowUsernameDialog(false)}>
+        <Popup className="p-8" onClose={closePopups}>
           <h2 className="mb-8 text-3xl">Change Username</h2>
           <form className="flex flex-col" onSubmit={submitNewUsername}>
             <TextInput
@@ -136,7 +142,7 @@ export default function Page() {
               <Button
                 className="flex-1 bg-background-primary"
                 type="button"
-                onClick={() => setShowUsernameDialog(false)}
+                onClick={closePopups}
               >
                 Cancel
               </Button>
@@ -148,7 +154,7 @@ export default function Page() {
         </Popup>
       )}
       {showPasswordDialog && (
-        <Popup className="p-8" onClose={() => setShowPasswordDialog(false)}>
+        <Popup className="p-8" onClose={closePopups}>
           <h2 className="mb-8 text-3xl">Change Password</h2>
           <form className="flex flex-col gap-2" onSubmit={submitNewPassword}>
             <TextInput
@@ -184,7 +190,7 @@ export default function Page() {
               <Button
                 className="flex-1 bg-background-primary"
                 type="button"
-                onClick={() => setShowPasswordDialog(false)}
+                onClick={closePopups}
               >
                 Cancel
               </Button>
