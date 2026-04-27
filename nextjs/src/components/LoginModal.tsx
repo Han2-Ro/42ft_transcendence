@@ -3,6 +3,12 @@
 import { useState } from "react";
 import { useAuthConetxt } from "./AuthProvider";
 import { login, login2FA, register } from "@/lib/auth/actions";
+import {
+  checkPasswordStrength,
+  checkUsername,
+  PASSWORD_REQUIREMENTS_MESSAGE,
+  USERNAME_REQUIREMENTS_MESSAGE,
+} from "@/lib/auth/validation";
 import { Popup } from "./Popup";
 import { TextInput } from "./TextInput";
 import Button from "./Button";
@@ -20,19 +26,25 @@ export const AuthModal = ({ onClose }: Props) => {
   const { refreshUser } = useAuthConetxt();
 
   const handleRegister = async (formData: FormData) => {
-    const email = formData.get("email");
-    const username = formData.get("username");
-    const password = formData.get("password");
-    const confirmPassword = formData.get("confirmPassword");
+    const email = formData.get("email") as string;
+    const username = formData.get("username") as string;
+    const password = formData.get("password") as string;
+    const confirmPassword = formData.get("confirmPassword") as string;
+
+    if (!checkUsername(username)) {
+      setError(USERNAME_REQUIREMENTS_MESSAGE);
+      return;
+    }
+    if (!checkPasswordStrength(password)) {
+      setError(PASSWORD_REQUIREMENTS_MESSAGE);
+      return;
+    }
     if (mode === "register" && password !== confirmPassword) {
       setError("Passwords do not match");
       return;
     }
-    const result = await register(
-      email as string,
-      username as string,
-      password as string,
-    );
+
+    const result = await register(email, username, password);
     if (!result.success) {
       setError(result.error);
       return;

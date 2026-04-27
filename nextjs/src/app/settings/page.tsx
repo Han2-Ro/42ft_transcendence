@@ -12,6 +12,12 @@ import {
 } from "@/lib/auth/actions";
 import { useState } from "react";
 import Config2FA from "./2FAConfig";
+import {
+  checkPasswordStrength,
+  checkUsername,
+  PASSWORD_REQUIREMENTS_MESSAGE,
+  USERNAME_REQUIREMENTS_MESSAGE,
+} from "@/lib/auth/validation";
 import ErrorMessage from "@/components/ErrorMessage";
 import { AuthModal } from "@/components/LoginModal";
 
@@ -45,8 +51,12 @@ export default function Page() {
     setError("");
     try {
       const formData = new FormData(e.currentTarget);
-      const newUsername = formData.get("newUsername");
-      const result = await changeUsername(newUsername as string);
+      const newUsername = formData.get("newUsername") as string;
+      if (!checkUsername(newUsername)) {
+        setError(USERNAME_REQUIREMENTS_MESSAGE);
+        return;
+      }
+      const result = await changeUsername(newUsername);
       if (!result.success) {
         setError(result.error);
         return;
@@ -73,6 +83,14 @@ export default function Page() {
 
       if (newPassword !== confirmNewPassword) {
         setError("New passwords do not match");
+        return;
+      }
+      if (!checkPasswordStrength(newPassword)) {
+        setError(PASSWORD_REQUIREMENTS_MESSAGE);
+        return;
+      }
+      if (newPassword === currentPassword) {
+        setError("New password can't be same as old one");
         return;
       }
 
