@@ -37,7 +37,7 @@ export default function NavigationBar() {
           //TODO: make it appear more clickable
           user ? (
             <Link
-              className="hover:text-gray-400"
+              className="hover:text-gray-400 max-w-38 overflow-hidden text-ellipsis"
               href={`/user-stats/${user.username}`}
             >
               {user.username}

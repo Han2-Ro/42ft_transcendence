@@ -18,7 +18,10 @@ export default async function Page({
       <StatsNavigationTabs />
       <main className="px-4 py-8 size-fit mx-auto">
         <h1 className="text-4xl pb-4 font-bold">
-          Stats for <span className="text-accent-primary">{username}</span>
+          Stats for{" "}
+          <span className="text-accent-primary overflow-hidden text-ellipsis">
+            {username}
+          </span>
         </h1>
         <h2 className="text-xl font-bold pb-2">Chess:</h2>
         <StatCards
