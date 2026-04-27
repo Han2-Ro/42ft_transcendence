@@ -1,11 +1,12 @@
 export default function Page() {
   return (
+	<main className="p-4 prose prose-invert">
     <div className="p-4">
       <h1>Image Sources & Licenses</h1>
 
       <p>
         This website uses chess piece images sourced from Wikipedia and
-        Wikimedia Commons. These images are licensed under the
+        Wikimedia Commons. These images are licensed under the{" "}
         <a
           href="https://creativecommons.org/licenses/by-sa/3.0/"
           target="_blank"
@@ -307,5 +308,7 @@ export default function Page() {
         derivative works are distributed under the same license.
       </p>
     </div>
+	Vectors and icons by <a href="https://www.svgrepo.com" target="_blank">SVG Repo</a>
+	</main>
   );
 }
