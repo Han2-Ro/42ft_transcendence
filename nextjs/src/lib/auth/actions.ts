@@ -25,6 +25,11 @@ function checkUsername(username: string) {
   return true;
 }
 
+function checkEmail(email: string) {
+  if (email.length > 254) return false;
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
 export type LoginResult = ActionResult<
   | {
       requiresTwoFactor: false;
@@ -87,6 +92,8 @@ export async function register(
 ): Promise<RegisterResult> {
   email = email.toLowerCase();
   username = username.toLowerCase();
+  if (!checkEmail(email))
+    return { success: false, error: "Invalid email address." };
   const userCount = await prisma.user.count();
   const maxUsers = parseInt(process.env.MAX_USERS ?? "0");
   if (maxUsers != 0 && userCount >= maxUsers) {
