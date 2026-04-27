@@ -6,7 +6,9 @@ export function proxy(req: NextRequest) {
   const hostHeader = (req.headers.get("host") || "").split(":")[0];
 
   const isLocalhost =
-    hostHeader === "localhost" || hostHeader === "127.0.0.1" || hostHeader === "::1";
+    hostHeader === "localhost" ||
+    hostHeader === "127.0.0.1" ||
+    hostHeader === "::1";
 
   if (isLocalhost) {
     return NextResponse.next();
