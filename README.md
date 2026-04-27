@@ -92,9 +92,7 @@ It will be much apreciated if you write tests for everything you implement!
 ### fstark
 
 Assigned roles: Developer  
-Responsibilities:
-
-> TODO
+Responsibilities: Socketserver, game logic (Chess / 4PlayerChess / Connect4)
 
 ### jlomic
 
@@ -111,7 +109,8 @@ Responsibilities: Frontend
 Assigned roles: Technical Lead/Architect, Developer  
 Responsibilities:
 
-> TODO
+- Frontend: design & implementation
+- Project setup and architecture: Defining how different parts of the code interact with each other
 
 ## Project Management
 
@@ -159,7 +158,21 @@ Responsibilities:
 
 ## Features List
 
-> TODO
+- **2 player chess with two game modes (no time limit, 10min.).** (hrother, fstark, jlomic and aprevrha)
+- **4 player chess with two game modes (no time limit, 10min.).** (hrother, fstark, jlomic and aprevrha)
+- **4connect game with two game modes (no time limit, 10min.).** (hrother, fstark, jlomic and aprevrha)
+- **User managment:** (hrother, fstark and jlomic)
+  - Changing username
+  - Changing password
+  - Linking 42 account to the 42 chess account
+  - Enabling 2FA (6-digit code verification)
+- **User stats** (hrother, fstark and jlomic)
+- **Game history** (hrother and jlomic)
+- **Leaderboard** (hrother and jlomic)
+- **Levels** (jlomic)
+- **Remote players** (fstark and hrother)
+- **Multiplayer game** (hrother, fstark, jlomic and aprevrha)
+- **Real time sync. over websockets** (fstark and hrother)
 
 ## Modules
 
@@ -182,13 +195,34 @@ Responsibilities:
 
 ### Module implementation details
 
-> TODO
+- **Full Stack Framework**
+  - We used Next.js for front and backend.
+- **Real-time feature**
+  - We used WebSockets for real time communication between Next.js and Game server.
+- **ORM**
+  - We used PrismaORM for creating DB models.
+- **Additional Browsers**
+  - We support different browsers.
+- **Game statistics & history**
+  - We have user stats and user game history.
+- **OAuth 2.0 (42 intra)**
+  - We support OAuth, you can login with your 42 account. We use 42 APIs.
+- **2FA**
+  - We use otplib and qrcode to generate secret and QR code. Can be used with any auth app to enter 6 digit code.
+- **Complete Web-based Game**
+  - Full web based chess game and 4connect game.
+- **Remote players**
+  - Players can play from any device which is on the same network as server.
+- **Multiplayer**
+  - 4 Player chess game mode.
+- **Add another game**
+  - 4connect game with no time limit and 10min limit mode.
 
 ## Individual Contributions
 
 ### fstark
 
-> TODO
+Wrote the Games logic and the Socketserver (basically everything in the game-server and shared folder) and wrote the worst looking frontend for the games ever seen (until it got fixed by someone else)
 
 ### jlomic
 
@@ -200,7 +234,7 @@ Playercards, Gamepage, Frontend, fixes and improvements.
 
 ### hrother
 
-> TODO
+See [Features List](#features-list) and [Team Information](#team-information)
 
 ## Resources
 

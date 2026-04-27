@@ -52,6 +52,7 @@ export async function openLoginModal(page: import("@playwright/test").Page) {
 
 export async function logout(page: import("@playwright/test").Page) {
   await (await getVisibleMenuAction(page, /log out/i)).click();
+  await page.getByRole("button", { name: /^confirm$/i }).click();
 }
 
 export async function clickMenuAction(
