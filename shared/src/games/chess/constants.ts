@@ -1,4 +1,4 @@
-import { Board, BoardState, BoardStateChess } from "../../gameTypes";
+import { Board, BoardStateChess } from "../../gameTypes";
 
 /**
  * The standard chess starting board configuration.

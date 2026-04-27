@@ -10,8 +10,8 @@ import { getSession } from "@/lib/auth/session";
  * @returns `userId` and `username` or `undefined` if there's no valid and active session token
  */
 export async function GET(req: NextRequest) {
-  /* const unauthorized = verifyInternalSecret(req);
-  if (unauthorized) return unauthorized; */
+  const unauthorized = verifyInternalSecret(req);
+  if (unauthorized) return unauthorized;
   const session = await getSession();
   if (!session) {
     console.log("auth failed");

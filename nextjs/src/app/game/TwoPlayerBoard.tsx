@@ -3,7 +3,6 @@ import {
   twoPlayer,
   Move,
   PieceOrNull,
-  BoardState,
   PlayerColor,
   PromotablePieceType,
   BoardStateChess,

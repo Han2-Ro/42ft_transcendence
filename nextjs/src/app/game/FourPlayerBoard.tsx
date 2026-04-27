@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import {
   fourPlayer,
   Move,
-  BoardState,
   PlayerColor,
   PromotablePieceType,
   BoardStateChess,
@@ -136,12 +135,6 @@ export default function FourPlayerBoard({
   };
 
   useEffect(() => {}, [movesFromSquareInt]);
-
-  const formatTime = (time: number): string => {
-    const minutes = Math.floor(time / 60);
-    const seconds = Math.round(time % 60);
-    return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
-  };
 
   //const activePlayerIndex = colorToIndex[ boardState.turn as keyof typeof colorToIndex] ?? 0;
   const { getDisplayTime } = useGameClock(times, boardState.turn, isInGame);

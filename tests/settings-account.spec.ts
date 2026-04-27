@@ -192,7 +192,11 @@ test.describe("settings critical account flows (section C)", () => {
     await page.getByLabel(/confirm new password/i).fill("short");
     await page.getByRole("button", { name: /^submit$/i }).click();
 
-    await expect(page.getByText(/weak password/i)).toBeVisible();
+    await expect(
+      page.getByText(
+        /password must be at least 8 characters.*one uppercase.*one lowercase.*one number/i,
+      ),
+    ).toBeVisible();
   });
 
   test("C-PW-05 — New password equals old password", async ({ page }) => {

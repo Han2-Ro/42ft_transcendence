@@ -27,7 +27,6 @@ test.describe.serial("auth UI flows", () => {
     await expect(heading).not.toBeVisible();
 
     // Modal should close and username should appear in the nav
-    // TODO: specify requirement: should a user be automatically logged in after registering?
     // await expect(page.getByText('Guest')).not.toBeVisible();
     // await expect(page.getByText(feUser.username)).toBeVisible();
   });

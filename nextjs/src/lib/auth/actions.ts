@@ -7,23 +7,16 @@ import { getSession } from "./session";
 import { generateSecret, generateURI, verify } from "otplib";
 import QRCode from "qrcode";
 import { createToken, getCookieOptions } from "./token";
+import {
+  checkPasswordStrength,
+  checkUsername,
+  PASSWORD_REQUIREMENTS_MESSAGE,
+  USERNAME_REQUIREMENTS_MESSAGE,
+} from "./validation";
 
 type ActionResult<T> =
   | { success: true; data: T }
   | { success: false; error: string };
-
-function checkPasswordStrength(password: string) {
-  if (password.length < 8) return false;
-  else if (!/[A-Z]/.test(password) || !/[a-z]/.test(password)) return false;
-  else if (!/[0-9]/.test(password)) return false;
-  return true;
-}
-
-function checkUsername(username: string) {
-  if (username.length < 3 || username.length > 100) return false;
-  if (!/^[a-zA-Z0-9_\-\.]+$/.test(username)) return false;
-  return true;
-}
 
 function checkEmail(email: string) {
   if (email.length > 254) return false;
@@ -99,11 +92,14 @@ export async function register(
   if (maxUsers != 0 && userCount >= maxUsers) {
     return { success: false, error: "Registrations are closed" };
   }
+  if (!checkUsername(username)) {
+    return { success: false, error: USERNAME_REQUIREMENTS_MESSAGE };
+  }
+
   if (!checkPasswordStrength(password)) {
     return {
       success: false,
-      error:
-        "Password must be at least 8 characters and contain one number, uppercase and lowecase letter.",
+      error: PASSWORD_REQUIREMENTS_MESSAGE,
     };
   }
 
@@ -166,7 +162,7 @@ export async function changePassword(
     return { success: false, error: "Invalid password" };
   }
   if (!checkPasswordStrength(newPassword))
-    return { success: false, error: "Weak password" };
+    return { success: false, error: PASSWORD_REQUIREMENTS_MESSAGE };
   if (newPassword === oldPassword)
     return { success: false, error: "New password can't be same as old one" };
   try {
@@ -185,7 +181,7 @@ export async function changeUsername(
 ): Promise<ActionResult<null>> {
   const session = await getSession();
   if (!checkUsername(newUsername))
-    return { success: false, error: "Invalid username." };
+    return { success: false, error: USERNAME_REQUIREMENTS_MESSAGE };
   const user = await prisma.user.findUnique({ where: { id: session?.userId } });
   if (!user) return { success: false, error: "User not found" };
   const usernameExists = await prisma.user.findUnique({

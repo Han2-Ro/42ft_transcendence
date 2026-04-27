@@ -1,9 +1,6 @@
 import "server-only";
 
-import bcrypt from "bcrypt";
 import { SignJWT } from "jose";
-import { prisma } from "@/lib/prisma";
-import { cookies } from "next/headers";
 
 function getJwtSecret() {
   const secret = process.env.JWT_SECRET;
@@ -32,7 +29,6 @@ export async function createToken(user: JwtUser): Promise<string> {
 
 export function getCookieOptions() {
   const cookieOptions = {
-    // TODO check if https is needed for this
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax" as const,

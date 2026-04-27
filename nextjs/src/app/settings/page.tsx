@@ -12,6 +12,12 @@ import {
 } from "@/lib/auth/actions";
 import { useState } from "react";
 import Config2FA from "./2FAConfig";
+import {
+  checkPasswordStrength,
+  checkUsername,
+  PASSWORD_REQUIREMENTS_MESSAGE,
+  USERNAME_REQUIREMENTS_MESSAGE,
+} from "@/lib/auth/validation";
 import ErrorMessage from "@/components/ErrorMessage";
 import { AuthModal } from "@/components/LoginModal";
 
@@ -21,7 +27,7 @@ export default function Page() {
   const [showPasswordDialog, setShowPasswordDialog] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [showAuthModal, setShowAuthoModal] = useState(false);
+  const [showAuthModal, setShowAuthModal] = useState(false);
   const [showUnlinkConfirmation, setShowUnlinkConfirmation] = useState(false);
 
   if (!user) {
@@ -31,13 +37,19 @@ export default function Page() {
           className=" my-auto"
           errorMsg="You need to log in to edit settings."
         />
-        <Button onClick={() => setShowAuthoModal(true)}>Log In</Button>
-        {showAuthModal && (
-          <AuthModal onClose={() => setShowAuthoModal(false)} />
-        )}
+        <Button onClick={() => setShowAuthModal(true)}>Log In</Button>
+        {showAuthModal && <AuthModal onClose={() => setShowAuthModal(false)} />}
       </main>
     );
   }
+
+  const closePopups = () => {
+    setShowAuthModal(false);
+    setShowPasswordDialog(false);
+    setShowUsernameDialog(false);
+    setShowUnlinkConfirmation(false);
+    setError("");
+  };
 
   const submitNewUsername = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -45,8 +57,12 @@ export default function Page() {
     setError("");
     try {
       const formData = new FormData(e.currentTarget);
-      const newUsername = formData.get("newUsername");
-      const result = await changeUsername(newUsername as string);
+      const newUsername = formData.get("newUsername") as string;
+      if (!checkUsername(newUsername)) {
+        setError(USERNAME_REQUIREMENTS_MESSAGE);
+        return;
+      }
+      const result = await changeUsername(newUsername);
       if (!result.success) {
         setError(result.error);
         return;
@@ -75,6 +91,14 @@ export default function Page() {
         setError("New passwords do not match");
         return;
       }
+      if (!checkPasswordStrength(newPassword)) {
+        setError(PASSWORD_REQUIREMENTS_MESSAGE);
+        return;
+      }
+      if (newPassword === currentPassword) {
+        setError("New password can't be same as old one");
+        return;
+      }
 
       const result = await changePassword(currentPassword, newPassword);
       if (!result.success) {
@@ -99,7 +123,7 @@ export default function Page() {
   return (
     <main className=" max-w-lg mx-auto p-2">
       {showUsernameDialog && (
-        <Popup className="p-8" onClose={() => setShowUsernameDialog(false)}>
+        <Popup className="p-8" onClose={closePopups}>
           <h2 className="mb-8 text-3xl">Change Username</h2>
           <form className="flex flex-col" onSubmit={submitNewUsername}>
             <TextInput
@@ -118,7 +142,7 @@ export default function Page() {
               <Button
                 className="flex-1 bg-background-primary"
                 type="button"
-                onClick={() => setShowUsernameDialog(false)}
+                onClick={closePopups}
               >
                 Cancel
               </Button>
@@ -130,7 +154,7 @@ export default function Page() {
         </Popup>
       )}
       {showPasswordDialog && (
-        <Popup className="p-8" onClose={() => setShowPasswordDialog(false)}>
+        <Popup className="p-8" onClose={closePopups}>
           <h2 className="mb-8 text-3xl">Change Password</h2>
           <form className="flex flex-col gap-2" onSubmit={submitNewPassword}>
             <TextInput
@@ -166,7 +190,7 @@ export default function Page() {
               <Button
                 className="flex-1 bg-background-primary"
                 type="button"
-                onClick={() => setShowPasswordDialog(false)}
+                onClick={closePopups}
               >
                 Cancel
               </Button>
@@ -189,7 +213,9 @@ export default function Page() {
       <h2 className="text-xl px-2">Account</h2>
       <hr />
       <div className="flex flex-row justify-between items-center p-2 w-full">
-        <p>Username: {user ? user.username : "None"}</p>
+        <p className="overflow-hidden text-ellipsis">
+          Username: {user ? user.username : "None"}
+        </p>
         <Button
           className="min-w-28 bg-background-secondary"
           onClick={() => setShowUsernameDialog(true)}

@@ -8,7 +8,6 @@ import { disable2FA, setup2FA, verify2FA } from "@/lib/auth/actions";
 import { useState } from "react";
 
 export default function Config2FA({ checked }: { checked: boolean }) {
-  // TODO: load real current value if 2FA is enabled
   const [checked2FA, setChecked2FA] = useState(checked);
   const [showDialog, setShowDialog] = useState(false);
   const [error, setError] = useState("");

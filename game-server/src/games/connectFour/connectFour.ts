@@ -4,7 +4,6 @@ import {
   GameStatus,
   Move,
   Con4,
-  MoveCon4,
   MoveChess,
   PlayerColorCon4,
 } from "shared";
