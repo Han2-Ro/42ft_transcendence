@@ -59,7 +59,6 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 ### pnpm scripts
 
 - `pnpm run dev` - run development server with hot reload
-- `pnpm run dev:db` - dev server with db
 - `pnpm run build` - build
 - `pnpm run start` - run the project after `pnpm build`
 - `pnpm run lint` - check eslint
@@ -105,9 +104,7 @@ Responsibilities: Backend (APIs, DB, Server actions...)
 ### aprevrha
 
 Assigned roles: Product Owner, Developer  
-Responsibilities:
-
-> TODO
+Responsibilities: Frontend
 
 ### hrother
 
@@ -199,7 +196,7 @@ Blood, sweat and tears. A lot of nerves, time and dedication.
 
 ### aprevrha
 
-> TODO
+Playercards, Gamepage, Frontend, fixes and improvements.
 
 ### hrother
 
