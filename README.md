@@ -23,12 +23,18 @@ Game modes:
 
 ### Prerequisites
 
+For running the server:
+
 - Docker
+
+For development:
+
 - pnpm
+- playwright (see [Tests](#tests))
 
 ### Getting Started
 
-Copy `.env.example` to `.env`. Optionally change the values as desired.
+Copy `.env.example` to `.env`. And populate the values.
 
 To run it in production run
 
@@ -42,6 +48,7 @@ To run the development server (with hot reload):
 
 ```bash
 pnpm install # run this at root of git directory to install dependecies
+pnpm --filter nextjs exec prisma generate
 pnpm run dev
 ```
 
