@@ -29,6 +29,7 @@ const socket: Socket<SToCEvents, CToSEvents> = io(getGameServerUrl(), {
   withCredentials: true,
   autoConnect: false,
   transports: ["websocket"],
+  reconnectionAttempts: 3,
 });
 
 export default function Page() {
@@ -77,6 +78,16 @@ export default function Page() {
       }
     });
 
+    socket.io.on("reconnect_failed", () => {
+      setServerConnectionStatus("error");
+      setGameId(null);
+      setGameType(null);
+      setBoardState(startingBoardState);
+      setTimes(null);
+      setSearching([]);
+      socket.disconnect();
+    });
+
     socket.on("gameStart", (data) => {
       setGameId(data.gameId);
       setGameType(data.type);
@@ -107,6 +118,7 @@ export default function Page() {
       console.log("disconnecting socket");
       socket.off("connect");
       socket.off("connect_error");
+      socket.io.off("reconnect_failed");
       socket.off("gameStart");
       socket.off("moveMade");
       socket.off("gameOver");
