@@ -45,10 +45,16 @@ io.use((socket, next) => {
     console.log("Authentication error: INTERNAL_NEXTJS_URL not set");
     return next(new Error("Authentication error: Server misconfiguration"));
   }
+  const secret = process.env.INTERNAL_SECRET;
+  if (!secret) {
+    console.log("Authentication error: INTERNAL_SECRET not set");
+    return next(new Error("Authentication error: Server misconfiguration"));
+  }
   fetch(`${nextjsUrl}/api/internal/user/authenticate`, {
     method: "GET",
     headers: {
       Cookie: `token=${token}`,
+      "x-internal-secret": secret,
     },
   })
     .then(async (response) => {

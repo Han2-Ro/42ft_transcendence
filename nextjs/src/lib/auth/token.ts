@@ -29,7 +29,6 @@ export async function createToken(user: JwtUser): Promise<string> {
 
 export function getCookieOptions() {
   const cookieOptions = {
-    // TODO check if https is needed for this
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax" as const,
