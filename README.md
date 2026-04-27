@@ -193,30 +193,41 @@ Responsibilities:
 | Add another game              | Major | 2      |
 | **TOTAL**                     |       | **17** |
 
-### Module implementation details
+### Module implementation details and reasoning
 
 - **Full Stack Framework**
   - We used Next.js for front and backend.
+  - **Why:** Because it fit in perfectly with our plan to create a custom Game (socket) server and handling everything else with one Framework.
 - **Real-time feature**
   - We used WebSockets for real time communication between Next.js and Game server.
+  - **Why:** Because we wanted to make a Real-time game.
 - **ORM**
   - We used PrismaORM for creating DB models.
+  - **Why:** Because it made interacting with the Database a lot easier.
 - **Additional Browsers**
   - We support different browsers.
+  - **Why:** Because we already needed our frontend to work accross all devices, so making it work with additional browsers was easy to implement.
 - **Game statistics & history**
   - We have user stats and user game history.
+  - **Why:** Because our website was somewhat inspired be the website chess.com and we deemed that to be a core feature of that website.
 - **OAuth 2.0 (42 intra)**
   - We support OAuth, you can login with your 42 account. We use 42 APIs.
+  - **Why:** Because it seemed interesting and was easy to implement.
 - **2FA**
   - We use otplib and qrcode to generate secret and QR code. Can be used with any auth app to enter 6 digit code.
+  - **Why:** Because it seemed interesting and was easy to implement.
 - **Complete Web-based Game**
   - Full web based chess game and 4connect game.
+  - **Why:** Because our project vision was a simpler version of the chess.com website and that of course includes a web-based game (chess).
 - **Remote players**
   - Players can play from any device which is on the same network as server.
+  - **Why:** Because it alligned with our project vision (as seen above).
 - **Multiplayer**
   - 4 Player chess game mode.
+  - **Why:** Because with chess already implemented it seemed like a interesting and managable extention to the game.
 - **Add another game**
   - 4connect game with no time limit and 10min limit mode.
+  - **Why:** Because with all of the socket logic already implemented it was easy to add.
 
 ## Individual Contributions
 
