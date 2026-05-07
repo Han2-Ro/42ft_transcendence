@@ -27,6 +27,17 @@ services:
       - MAX_USERS=${MAX_USERS}
     env_file:
       - .env
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.nextjs.rule=Host(`42chess.l0mke.com`)"
+      - "traefik.http.routers.nextjs.entrypoints=websecure"
+      - "traefik.http.routers.nextjs.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.nextjs.middlewares=nextjs-internal-header"
+      - "traefik.http.middlewares.nextjs-internal-header.headers.customrequestheaders.x-internal-secret=${INTERNAL_SECRET}"
+      - "traefik.http.services.nextjs.loadbalancer.server.port=${PORT:-3000}"
+    networks:
+      - web
+      - default
 
   gamesserver:
     build:
@@ -40,6 +51,15 @@ services:
       - GAME_TIMED_MODE_SECONDS=${GAME_TIMED_MODE_SECONDS:-600}
     env_file:
       - .env
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.gamesserver.rule=Host(`42chess.l0mke.com`) && PathPrefix(`/socket.io`)"
+      - "traefik.http.routers.gamesserver.entrypoints=websecure"
+      - "traefik.http.routers.gamesserver.tls.certresolver=letsencrypt"
+      - "traefik.http.services.gamesserver.loadbalancer.server.port=4000"
+    networks:
+      - web
+      - default
 
   db:
     image: postgres:16-alpine
@@ -64,3 +84,7 @@ services:
 
 volumes:
   postgres_data:
+
+networks:
+  web:
+    external: true
