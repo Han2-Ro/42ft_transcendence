@@ -3,6 +3,8 @@ FROM node:20-alpine
 COPY package.json pnpm-workspace.yaml pnpm-lock.yaml /app/
 COPY shared /app/shared
 COPY game-server /app/game-server
+COPY nextjs/package.json /app/nextjs/package.json
+COPY tests/package.json /app/tests/package.json
 
 WORKDIR /app
 

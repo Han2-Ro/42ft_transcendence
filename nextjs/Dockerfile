@@ -7,6 +7,8 @@ RUN corepack enable
 COPY package.json pnpm-workspace.yaml pnpm-lock.yaml /app/
 COPY shared /app/shared
 COPY nextjs /app/nextjs
+COPY game-server/package.json /app/game-server/package.json
+COPY tests/package.json /app/tests/package.json
 
 WORKDIR /app/nextjs
 
