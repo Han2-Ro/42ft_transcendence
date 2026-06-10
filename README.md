@@ -19,6 +19,8 @@ Game modes:
 - 4-Player Chess
 - Timed 4-Player Chess
 
+Deployed [here](https://chess.han2.dev)
+
 ## Instructions
 
 ### Prerequisites
