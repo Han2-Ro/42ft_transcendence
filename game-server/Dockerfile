@@ -1,4 +1,4 @@
-FROM node:20-alpine
+FROM node:24-alpine
 
 COPY package.json pnpm-workspace.yaml pnpm-lock.yaml /app/
 COPY shared /app/shared
