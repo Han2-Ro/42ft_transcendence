@@ -3,6 +3,7 @@ services:
     build:
       context: .
       dockerfile: nextjs/Dockerfile
+    init: true
     restart: unless-stopped
     depends_on:
       db:
