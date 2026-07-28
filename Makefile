@@ -1,6 +1,6 @@
 GREEN = \033[0;32m
 RESET = \033[0m
-COMPOSE_LOCAL = docker compose -f docker-compose.yml -f docker-compose.traefik.yml
+COMPOSE_LOCAL = docker compose -f docker-compose.yml
 LOCAL_IP = $(shell ip route get 1.1.1.1 | grep -oP 'src \K\S+')
 
 run: env
